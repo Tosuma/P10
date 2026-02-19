@@ -191,7 +191,7 @@ class MSAB(nn.Module):
         return out
 
 class MST(nn.Module):
-    def __init__(self, in_dim=31, out_dim=31, dim=31, stage=2, num_blocks=[2,4,4]):
+    def __init__(self, in_dim=4, out_dim=4, dim=31, stage=2, num_blocks=[2,4,4]):
         super(MST, self).__init__()
         self.dim = dim
         self.stage = stage
@@ -277,7 +277,7 @@ class MST_Plus_Plus(nn.Module):
         super(MST_Plus_Plus, self).__init__()
         self.stage = stage
         self.conv_in = nn.Conv2d(in_channels, n_feat, kernel_size=3, padding=(3 - 1) // 2,bias=False)
-        modules_body = [MST(dim=4, stage=2, num_blocks=[1,1,1]) for _ in range(stage)]
+        modules_body = [MST(dim=31, stage=2, num_blocks=[1,1,1]) for _ in range(stage)]
         self.body = nn.Sequential(*modules_body)
         self.conv_out = nn.Conv2d(n_feat, out_channels, kernel_size=3, padding=(3 - 1) // 2,bias=False)
 
@@ -296,17 +296,4 @@ class MST_Plus_Plus(nn.Module):
         h = self.conv_out(h)
         h += x
         return h[:, :, :h_inp, :w_inp]
-
-
-
-
-
-
-
-
-
-
-
-
-
 
