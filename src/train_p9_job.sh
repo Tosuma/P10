@@ -20,6 +20,7 @@ singularity exec --nv \
         --stage1_epochs 300 \
         --stage1_lr 4e-4 \
         --stage2_epochs 0 \
-        --stage3_epochs 0"
+        --stage3_epochs 0 \
+        --cluster"
 
 date
