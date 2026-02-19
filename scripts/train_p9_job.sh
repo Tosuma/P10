@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#SBATCH --job-name=train_p9
-#SBATCH --output=logs/train_p9_job.out
-#SBATCH --error=logs/train_p9_job.err
+#SBATCH --job-name=train_p10
+#SBATCH --output=logs/train_p10_job.out
+#SBATCH --error=logs/train_p10_job.err
 #SBATCH --mem=24G
 #SBATCH --cpus-per-task=15
-#SBATCH --gres=gpu:4
+#SBATCH --gres=gpu:1
 #SBATCH --time=12:00:00
 
 mkdir -p logs
