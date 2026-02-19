@@ -88,7 +88,7 @@ class TransferLearning:
             num_workers = 15 if self.cluster else 1,
             pin_memory = True,
             persistent_workers = True,
-            prefetch = 4 if self.cluster else 2
+            prefetch_factor = 4 if self.cluster else 2
         )
 
     def _load_pretrained(self, checkpoint_path, learning_rate):
