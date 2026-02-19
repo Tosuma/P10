@@ -30,7 +30,7 @@ from torch.utils.tensorboard import SummaryWriter
 import argparse
 from typing import Callable
 
-from .utils import AverageMeter, Loss_MRAE, Loss_PSNR, Loss_RMSE
+from utils import AverageMeter, Loss_MRAE, Loss_PSNR, Loss_RMSE
 from mstpp.mstpp import MST_Plus_Plus
 from data_carrier import load_east_kaz, load_sri_lanka, load_weedy_rice, DataCarrier
 
