@@ -11,7 +11,7 @@ log_dir.mkdir(parents=True, exist_ok=True)
 # Define logger
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s - %(messages)s",
+    format="%(asctime)s - %(message)s",
     handlers=[
         logging.StreamHandler(),
         logging.FileHandler(log_dir/f"train_p9.log", mode="w"),
