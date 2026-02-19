@@ -24,7 +24,7 @@ GPUS=${SLURM_GPUS_ON_NODE:-${SLURM_GPUS_PER_NODE:-1}}
 
 singularity exec --nv \
     /ceph/container/pytorch/pytorch_26.01.sif \
-    /bin/bash -lc "source my_venv/bin/activate && \
+    /bin/bash -lc "source p10_venv/bin/activate && \
         python -u -m torch.distributed.run \
             --standalone \
             --nproc_per_node=${GPUS} \
