@@ -41,7 +41,7 @@ from torch.utils.tensorboard import SummaryWriter
 import argparse
 
 from utils import AverageMeter, Loss_MRAE, Loss_PSNR, Loss_RMSE
-from mstpp.model import MST_Plus_Plus
+from mstpp.mstpp import MST_Plus_Plus
 from data_carrier import load_east_kaz, load_sri_lanka, load_weedy_rice, DataCarrier
 
 
