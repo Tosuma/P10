@@ -687,7 +687,12 @@ class TransferLearning:
         train_dataset, val_dataset = random_split(self.dataset, [train_len, val_len], generator=gen)
 
         # Prepare your dataloaders (DDP uses DistributedSampler)
-        train_dataloader, val_dataloader = self._make_dataloaders(train_dataset, val_dataset, train_bs_global=12, val_bs_global=4)
+        train_dataloader, val_dataloader = self._make_dataloaders(
+            train_dataset,
+            val_dataset,
+            train_bs_global=72, # TRAIN BATCH SIZE
+            val_bs_global=16    # VAL   BATCH SIZE
+        )
 
         results['stage1'] = self.train_from_scratch(
             train_dataloader=train_dataloader,
@@ -713,7 +718,12 @@ class TransferLearning:
         train_dataset, val_dataset = random_split(self.dataset, [train_len, val_len], generator=gen)
 
         # Prepare your dataloaders (DDP uses DistributedSampler)
-        train_dataloader, val_dataloader = self._make_dataloaders(train_dataset, val_dataset, train_bs_global=12, val_bs_global=4)
+        train_dataloader, val_dataloader = self._make_dataloaders(
+            train_dataset,
+            val_dataset,
+            train_bs_global=64, # TRAIN BATCH SIZE
+            val_bs_global=8     # VAL   BATCH SIZE
+        )
 
         results['stage2'] = self.run_stage_2(
             train_dataloader=train_dataloader,
@@ -740,7 +750,12 @@ class TransferLearning:
         train_dataset, val_dataset = random_split(self.dataset, [train_len, val_len], generator=gen)
 
         # Prepare your dataloaders (DDP uses DistributedSampler)
-        train_dataloader, val_dataloader = self._make_dataloaders(train_dataset, val_dataset, train_bs_global=12, val_bs_global=4)
+        train_dataloader, val_dataloader = self._make_dataloaders(
+            train_dataset,
+            val_dataset,
+            train_bs_global=64, # TRAIN BATCH SIZE
+            val_bs_global=8     # VAL   BATCH SIZE
+        )
 
         results['stage3'] = self.run_stage_3(
             train_dataloader=train_dataloader,

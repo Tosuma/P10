@@ -28,7 +28,7 @@ singularity exec --nv \
         python -u -m torch.distributed.run \
             --standalone \
             --nproc_per_node=${GPUS} \
-            src/tl-pipeline_ddp.py \
+            src/tl-pipeline.py \
                 --stage1_data_path data/East-Kaza \
                 --stage1_data_type Kazakhstan \
                 --stage1_epochs 300 \
