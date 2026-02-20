@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=train_p9
-#SBATCH --output=logs/train_p9_job.out
-#SBATCH --error=logs/train_p9_job.err
+#SBATCH --job-name=train_mami
+#SBATCH --output=logs/train_mami_job.out
+#SBATCH --error=logs/train_mami_job.err
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --mem=24G
@@ -26,7 +26,7 @@ singularity exec --nv \
         python -u -m torch.distributed.run \
             --standalone \
             --nproc_per_node=${GPUS} \
-            src/tl-pipeline.py \
+            mami/tl-pipeline.py \
                 --stage1_data_path data/East-Kaza \
                 --stage1_data_type Kazakhstan \
                 --stage1_epochs 300 \

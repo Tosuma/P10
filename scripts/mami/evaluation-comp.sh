@@ -73,7 +73,7 @@ run_eval() {
 
   echo "=== Beginning predictions ==="
   local eval_cmd=(
-    python ./src/inference.py
+    python ./mami/inference.py
     --model "$model"
     --data_path "$truth_path"
     --data_type "$data_type"
@@ -94,7 +94,7 @@ run_eval() {
 
   echo "=== Beginning evaluation ==="
   local vali_cmd=(
-    python ./src/validate.py
+    python ./mami/validate.py
     --pred_path "$prediction_path"
     --truth_path "$truth_path"
     --type "$data_type"
