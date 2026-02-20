@@ -9,7 +9,7 @@ mkdir checkpoints/100
 
 # ---------- 1st run ----------
 # Base run, with transferlearning on WeedyRice
-python src/tl-pipeline.py \
+python mami/tl-pipeline.py \
  --stage1_data_path data/East-Kaza \
  --stage1_data_type Kazakhstan \
  --stage1_epochs 300 \
@@ -28,7 +28,7 @@ mv checkpoints/s* checkpoints/100/basemodel-tl-Weed
 
 # ---------- 2nd run ----------
 # Using base model, skipping stage2, transferlearning on sri
-python src/tl-pipeline.py \
+python mami/tl-pipeline.py \
  --stage1_data_path data/East-Kaza \
  --stage1_data_type Kazakhstan \
  --stage1_epochs 0 \
@@ -49,7 +49,7 @@ mv checkpoints/s* checkpoints/100/sri-lanka-stage3-only
 
 # ---------- 3rd run ----------
 # Using base model, transferlearning on aligned-sri-lanka
-python src/tl-pipeline.py \
+python mami/tl-pipeline.py \
  --stage1_data_path data/East-Kaza \
  --stage1_data_type Kazakhstan \
  --stage1_epochs 0 \
@@ -69,7 +69,7 @@ python src/tl-pipeline.py \
 
 # ---------- 4th run ----------
 # Using base model, skipping stage 2, transferlearning on WeedyRice
-python src/tl-pipeline.py \
+python mami/tl-pipeline.py \
  --stage1_data_path data/East-Kaza \
  --stage1_data_type Kazakhstan \
  --stage1_epochs 0 \
@@ -89,7 +89,7 @@ mv checkpoints/s* checkpoints/100/weed-rice-stage3-only
 
 # ---------- 5th run ----------
 # Using stage3 model, transferlearning on Sri-lanka
-python src/tl-pipeline.py \
+python mami/tl-pipeline.py \
  --stage1_data_path data/East-Kaza \
  --stage1_data_type Kazakhstan \
  --stage1_epochs 0 \
@@ -109,7 +109,7 @@ mv checkpoints/s* checkpoints/100/sri-lanka-stage2-trained-on-stage3
 
 # ---------- 6th run ----------
 # Using stage3 model, transferlearning on WeedyRice
-python src/tl-pipeline.py \
+python mami/tl-pipeline.py \
  --stage1_data_path data/East-Kaza \
  --stage1_data_type Kazakhstan \
  --stage1_epochs 0 \
@@ -140,7 +140,7 @@ mkdir checkpoints/300
 
 # ---------- 1st run ----------
 # Using base model, with transferlearning on WeedyRice
-python src/tl-pipeline.py \
+python mami/tl-pipeline.py \
  --stage1_data_path data/East-Kaza \
  --stage1_data_type Kazakhstan \
  --stage1_epochs 0 \
@@ -160,7 +160,7 @@ mv checkpoints/s* checkpoints/300/tl-weedy-rice
 
 # ---------- 2nd run ----------
 # Using base model, transferlearning on aligned-sri-lanka
-python src/tl-pipeline.py \
+python mami/tl-pipeline.py \
  --stage1_data_path data/East-Kaza \
  --stage1_data_type Kazakhstan \
  --stage1_epochs 0 \
@@ -181,7 +181,7 @@ python src/tl-pipeline.py \
 
 # ---------- 3rd run ----------
 # Using base model, skipping stage2, transferlearning on Sri-Lanka
-python src/tl-pipeline.py \
+python mami/tl-pipeline.py \
  --stage1_data_path data/East-Kaza \
  --stage1_data_type Kazakhstan \
  --stage1_epochs 0 \
@@ -201,7 +201,7 @@ mv checkpoints/s* checkpoints/300/sri-lanka-stage3-only
 
 # ---------- 4th run ----------
 # Using base model, skipping stage 2, transferlearning on WeedyRice
-python src/tl-pipeline.py \
+python mami/tl-pipeline.py \
  --stage1_data_path data/East-Kaza \
  --stage1_data_type Kazakhstan \
  --stage1_epochs 0 \
@@ -221,7 +221,7 @@ mv checkpoints/s* checkpoints/300/weed-rice-stage3-only
 
 # ---------- 5th run ----------
 # Using stage3 model, transferlearning on Sri-lanka
-python src/tl-pipeline.py \
+python mami/tl-pipeline.py \
  --stage1_data_path data/East-Kaza \
  --stage1_data_type Kazakhstan \
  --stage1_epochs 0 \
@@ -241,7 +241,7 @@ mv checkpoints/s* checkpoints/300/sri-lanka-stage2-trained-on-stage3
 
 # ---------- 6th run ----------
 # Using stage3 model, transferlearning on WeedyRice
-python src/tl-pipeline.py \
+python mami/tl-pipeline.py \
  --stage1_data_path data/East-Kaza \
  --stage1_data_type Kazakhstan \
  --stage1_epochs 0 \
@@ -267,7 +267,7 @@ sh evaluation300.sh
 #############################################
 
 # Base run on Sri Lanka
-python src/tl-pipeline.py \
+python mami/tl-pipeline.py \
  --stage1_data_path data/sri-lanka-aligned \
  --stage1_data_type Sri-Lanka \
  --stage1_epochs 300 \
@@ -285,7 +285,7 @@ mkdir checkpoints/basemodel-sri-lanka
 mv checkpoints/s* checkpoints/basemodel-sri-lanka
 
 # Base run on Weedy-Rice
-python src/tl-pipeline.py \
+python mami/tl-pipeline.py \
  --stage1_data_path data/WeedyRice \
  --stage1_data_type Weedy-Rice \
  --stage1_epochs 300 \
