@@ -61,3 +61,50 @@ class Loss_PSNR(nn.Module):
         psnr = 10. * torch.log((data_range ** 2) / err) / np.log(10.)
         
         return torch.mean(psnr)
+    
+class VegetationIndexLoss(nn.Module):
+    """
+    Generic vegetation-index loss:
+        VI = (A - B) / (A + B + eps)
+
+    Computes L1 distance between predicted and target VI maps.
+
+    Examples:
+      NDVI: A=NIR, B=RED
+      NDRE: A=NIR, B=RED-EDGE
+    """
+    def __init__(self, a_idx: int, b_idx: int, eps: float = 1e-6):
+        super().__init__()
+        self.a_idx = int(a_idx)
+        self.b_idx = int(b_idx)
+        self.eps = float(eps)
+
+    def _index(self, x: torch.Tensor) -> torch.Tensor:
+        if x.ndim != 4:
+            raise ValueError(f"Expected tensor [B, C, H, W], got shape {tuple(x.shape)}")
+        c = x.shape[1]
+        if not (0 <= self.a_idx < c and 0 <= self.b_idx < c):
+            raise ValueError(
+                f"Band index out of range for tensor with C={c}: a_idx={self.a_idx}, b_idx={self.b_idx}"
+            )
+
+        a = x[:, self.a_idx:self.a_idx + 1, ...]
+        b = x[:, self.b_idx:self.b_idx + 1, ...]
+
+        vi = (a - b) / (a + b + self.eps)
+        return vi
+
+    def forward(self, pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
+        pred_vi = self._index(pred)
+        tgt_vi = self._index(target)
+        return torch.mean(torch.abs(pred_vi - tgt_vi))
+
+
+class Loss_NDVI(VegetationIndexLoss):
+    def __init__(self, nir_idx: int, red_idx: int, eps: float = 1e-6):
+        super().__init__(a_idx=nir_idx, b_idx=red_idx, eps=eps)
+
+
+class Loss_NDRE(VegetationIndexLoss):
+    def __init__(self, nir_idx: int, rededge_idx: int, eps: float = 1e-6):
+        super().__init__(a_idx=nir_idx, b_idx=rededge_idx, eps=eps)
