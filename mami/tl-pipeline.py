@@ -443,8 +443,8 @@ class TransferLearning:
                 loss_total, loss_mrae, loss_ndvi, loss_ndre = self._compute_composite_loss(outputs, targets)
 
             if scaler.is_enabled():
-                scaler.scale(loss_total).backward()
                 scaler.step(self.optimizer)
+                scaler.scale(loss_total).backward()
                 scaler.update()
             else:
                 loss_total.backward()
