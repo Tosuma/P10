@@ -31,6 +31,9 @@ singularity exec --nv \
                 --stage1_data_type Kazakhstan \
                 --stage1_epochs 300 \
                 --stage1_lr 4e-4 \
+		--loss_w_mrae 1.0 \
+		--loss_w_ndvi 0.1 \
+		--loss_w_ndre 0.1 \
                 --stage2_epochs 0 \
                 --stage3_epochs 0 \
                 --cluster"

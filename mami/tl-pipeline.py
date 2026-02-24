@@ -443,9 +443,13 @@ class TransferLearning:
                 loss_total, loss_mrae, loss_ndvi, loss_ndre = self._compute_composite_loss(outputs, targets)
 
             if scaler.is_enabled():
-                scaler.step(self.optimizer)
                 scaler.scale(loss_total).backward()
+
+                prev_scale = scaler.get_scale()
+                scaler.step(self.optimizer)
                 scaler.update()
+                
+                skip_scheduler = scaler.get_scale() < prev_scale
             else:
                 loss_total.backward()
                 self.optimizer.step()
@@ -458,12 +462,12 @@ class TransferLearning:
             ndre_sum += float(loss_ndre.item()) * bs
             n_samples += bs
 
-            if self.scheduler is not None:
+            if self.scheduler is not None and not skip_scheduler:
                 self.scheduler.step()
 
             if self.is_main_process and (batch_idx % 10 == 0):
                 logger.info(
-                    f"  Batch {batch_idx + 1}/{len(dataloader)} | "
+                    f"Batch {batch_idx + 1}/{len(dataloader)} | "
                     f"Total: {loss_total.item():.6f} | "
                     f"MRAE: {loss_mrae.item():.6f} | "
                     f"NDVI: {loss_ndvi.item():.6f} | "

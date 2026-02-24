@@ -91,7 +91,18 @@ class VegetationIndexLoss(nn.Module):
         a = x[:, self.a_idx:self.a_idx + 1, ...]
         b = x[:, self.b_idx:self.b_idx + 1, ...]
 
-        vi = (a - b) / (a + b + self.eps)
+        a = a.float()
+        b = b.float()
+
+        denom = a + b
+
+        denom = torch.where(
+            denom >= 0,
+            torch.clamp(denom, min=1e-4),
+            torch.clamp(denom, max=-1e-4)
+        )
+
+        vi = (a - b) / denom
         return vi
 
     def forward(self, pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
