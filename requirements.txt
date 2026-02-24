@@ -12,3 +12,4 @@ tqdm
 spectral
 pandas
 tensorboard
+openpyxl
