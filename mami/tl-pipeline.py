@@ -32,6 +32,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 import torch
+import torch.nn as nn
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data import DataLoader, random_split
@@ -40,7 +41,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 import argparse
 
-from utils import AverageMeter, Loss_MRAE, Loss_PSNR, Loss_RMSE
+from utils import AverageMeter, Loss_MRAE, Loss_PSNR, Loss_RMSE, Loss_NDVI, Loss_NDRE
 from mstpp.mstpp import MST_Plus_Plus
 from data_carrier import load_east_kaz, load_sri_lanka, load_weedy_rice, DataCarrier
 
@@ -107,6 +108,17 @@ class TransferLearning:
         self.stage_3_epochs = args.stage3_epochs
         self.stage_3_lr = args.stage3_lr
 
+        # Composite loss weights
+        self.loss_w_mrae: float = float(args.loss_w_mrae)
+        self.loss_w_ndvi: float = float(args.loss_w_ndvi)
+        self.loss_w_ndre: float = float(args.loss_w_ndre)
+
+        # Band indices for VI losses (CHANGE if your channel order differs)
+        # Default assumes ms channels: [G, R, RE, NIR]
+        self.band_idx_red: int = int(args.band_idx_red)
+        self.band_idx_rededge: int = int(args.band_idx_rededge)
+        self.band_idx_nir: int = int(args.band_idx_nir)
+
         # Model details
         self.model = None
         self.dataset: DataCarrier = None
@@ -117,6 +129,8 @@ class TransferLearning:
         self.criterion_mrae: Loss_MRAE = None
         self.criterion_rmse: Loss_RMSE = None
         self.criterion_psnr: Loss_PSNR = None
+        self.criterion_ndvi: Loss_NDVI = None
+        self.criterion_ndre: Loss_NDRE = None
 
         # Logging
         self.logWriter = SummaryWriter(log_dir="logs/transfer_learning/") if self.is_main_process else None
@@ -219,6 +233,7 @@ class TransferLearning:
             )
 
         return train_loader, val_loader
+
     def _load_pretrained(self, checkpoint_path, learning_rate):
         # Build base model (unwrapped) to keep checkpoint keys simple
         self.model = MST_Plus_Plus(in_channels=3, out_channels=4, n_feat=4, stage=3)
@@ -356,11 +371,47 @@ class TransferLearning:
         self.criterion_rmse = Loss_RMSE()
         self.criterion_psnr = Loss_PSNR()
 
-        # These losses are modules; move to CUDA if needed
-        if self.device.type == "cuda":
-            self.criterion_mrae = self.criterion_mrae.to(self.device)
-            self.criterion_rmse = self.criterion_rmse.to(self.device)
-            self.criterion_psnr = self.criterion_psnr.to(self.device)
+        self.criterion_ndvi = Loss_NDVI(
+            nir_idx=self.band_idx_nir,
+            red_idx=self.band_idx_red
+        )
+        self.criterion_ndre = Loss_NDRE(
+            nir_idx=self.band_idx_nir,
+            rededge_idx=self.band_idx_rededge
+        )
+
+        # These losses are modules; move to selected device
+        self.criterion_mrae = self.criterion_mrae.to(self.device)
+        self.criterion_rmse = self.criterion_rmse.to(self.device)
+        self.criterion_psnr = self.criterion_psnr.to(self.device)
+        self.criterion_ndvi = self.criterion_ndvi.to(self.device)
+        self.criterion_ndre = self.criterion_ndre.to(self.device)
+
+        if self.is_main_process:
+            logger.info(
+                "[Loss] Composite training loss = "
+                f"{self.loss_w_mrae}*MRAE + {self.loss_w_ndvi}*NDVI + {self.loss_w_ndre}*NDRE | "
+                f"Band indices: RED={self.band_idx_red}, RED_EDGE={self.band_idx_rededge}, NIR={self.band_idx_nir}"
+            )
+
+    def _compute_composite_loss(self, outputs: torch.Tensor, targets: torch.Tensor):
+        """
+        Returns:
+            total_loss, loss_mrae, loss_ndvi, loss_ndre
+        """
+        loss_mrae = self.criterion_mrae(outputs, targets)
+
+        zero = outputs.new_zeros(())
+        loss_ndvi = self.criterion_ndvi(outputs, targets) if self.loss_w_ndvi != 0.0 else zero
+        loss_ndre = self.criterion_ndre(outputs, targets) if self.loss_w_ndre != 0.0 else zero
+
+        total_loss = (
+            self.loss_w_mrae * loss_mrae +
+            self.loss_w_ndvi * loss_ndvi +
+            self.loss_w_ndre * loss_ndre
+        )
+
+        return total_loss, loss_mrae, loss_ndvi, loss_ndre
 
     def stage_reset(self):
         self.scheduler = None
@@ -370,7 +421,11 @@ class TransferLearning:
         self.model.train(mode=True)
 
         scaler = torch.amp.GradScaler(enabled=(self.device.type == "cuda"))
-        loss_sum = 0.0
+
+        total_sum = 0.0
+        mrae_sum = 0.0
+        ndvi_sum = 0.0
+        ndre_sum = 0.0
         n_samples = 0
 
         for batch_idx, batch in enumerate(dataloader):
@@ -385,41 +440,63 @@ class TransferLearning:
 
             with self._autocast():
                 outputs = self.model(inputs)
-                loss = self.criterion_mrae(outputs, targets)
+                loss_total, loss_mrae, loss_ndvi, loss_ndre = self._compute_composite_loss(outputs, targets)
 
             if scaler.is_enabled():
-                scaler.scale(loss).backward()
+                scaler.scale(loss_total).backward()
                 scaler.step(self.optimizer)
                 scaler.update()
             else:
-                loss.backward()
+                loss_total.backward()
                 self.optimizer.step()
 
             bs = int(inputs.shape[0])
-            loss_sum += float(loss.item()) * bs
+
+            total_sum += float(loss_total.item()) * bs
+            mrae_sum += float(loss_mrae.item()) * bs
+            ndvi_sum += float(loss_ndvi.item()) * bs
+            ndre_sum += float(loss_ndre.item()) * bs
             n_samples += bs
 
             if self.scheduler is not None:
                 self.scheduler.step()
 
             if self.is_main_process and (batch_idx % 10 == 0):
-                logger.info(f"  Batch {batch_idx + 1}/{len(dataloader)}, Loss: {loss.item():.6f}")
+                logger.info(
+                    f"  Batch {batch_idx + 1}/{len(dataloader)} | "
+                    f"Total: {loss_total.item():.6f} | "
+                    f"MRAE: {loss_mrae.item():.6f} | "
+                    f"NDVI: {loss_ndvi.item():.6f} | "
+                    f"NDRE: {loss_ndre.item():.6f}"
+                )
 
         # Reduce across ranks so logs reflect the global average loss
         if self.ddp:
-            t = torch.tensor([loss_sum, float(n_samples)], device=self.device)
+            t = torch.tensor([total_sum, mrae_sum, ndvi_sum, ndre_sum, float(n_samples)], device=self.device)
             dist.all_reduce(t, op=dist.ReduceOp.SUM)
-            loss_sum = float(t[0].item())
-            n_samples = int(t[1].item())
+            total_sum = float(t[0].item())
+            mrae_sum = float(t[1].item())
+            ndvi_sum = float(t[2].item())
+            ndre_sum = float(t[3].item())
+            n_samples = int(t[4].item())
 
-        return loss_sum / max(1, n_samples)
+        denom = max(1, n_samples)
+        return (
+            total_sum / denom,  # train_total
+            mrae_sum / denom,   # train_mrae
+            ndvi_sum / denom,   # train_ndvi
+            ndre_sum / denom    # train_ndre
+        )
 
     def validate_epoch(self, dataloader):
         self.model.eval()
 
+        total_sum = 0.0
         mrae_sum = 0.0
         rmse_sum = 0.0
         psnr_sum = 0.0
+        ndvi_sum = 0.0
+        ndre_sum = 0.0
         n_samples = 0
 
         with torch.no_grad():
@@ -429,30 +506,57 @@ class TransferLearning:
                     targets = batch["ms"].to(self.device, non_blocking=True)
 
                     outputs = self.model(inputs)
+
                     loss_mrae = self.criterion_mrae(outputs, targets)
                     loss_rmse = self.criterion_rmse(outputs, targets)
                     loss_psnr = self.criterion_psnr(outputs, targets)
 
+                    zero = outputs.new_zeros(())
+                    loss_ndvi = self.criterion_ndvi(outputs, targets) if self.loss_w_ndvi != 0.0 else zero
+                    loss_ndre = self.criterion_ndre(outputs, targets) if self.loss_w_ndre != 0.0 else zero
+
+                    loss_total = (
+                        self.loss_w_mrae * loss_mrae +
+                        self.loss_w_ndvi * loss_ndvi +
+                        self.loss_w_ndre * loss_ndre
+                    )
+
                     bs = int(inputs.shape[0])
+                    total_sum += float(loss_total.item()) * bs
                     mrae_sum += float(loss_mrae.item()) * bs
                     rmse_sum += float(loss_rmse.item()) * bs
                     psnr_sum += float(loss_psnr.item()) * bs
+                    ndvi_sum += float(loss_ndvi.item()) * bs
+                    ndre_sum += float(loss_ndre.item()) * bs
                     n_samples += bs
 
         # Reduce across ranks
         if self.ddp:
-            t = torch.tensor([mrae_sum, rmse_sum, psnr_sum, float(n_samples)], device=self.device)
+            t = torch.tensor(
+                [total_sum, mrae_sum, rmse_sum, psnr_sum, ndvi_sum, ndre_sum, float(n_samples)],
+                device=self.device
+            )
             dist.all_reduce(t, op=dist.ReduceOp.SUM)
-            mrae_sum = float(t[0].item())
-            rmse_sum = float(t[1].item())
-            psnr_sum = float(t[2].item())
-            n_samples = int(t[3].item())
+            total_sum = float(t[0].item())
+            mrae_sum = float(t[1].item())
+            rmse_sum = float(t[2].item())
+            psnr_sum = float(t[3].item())
+            ndvi_sum = float(t[4].item())
+            ndre_sum = float(t[5].item())
+            n_samples = int(t[6].item())
 
         denom = max(1, n_samples)
-        return (mrae_sum / denom), (rmse_sum / denom), (psnr_sum / denom)
+        return (
+            total_sum / denom,  # val_total
+            mrae_sum / denom,
+            rmse_sum / denom,
+            psnr_sum / denom,
+            ndvi_sum / denom,
+            ndre_sum / denom,
+        )
 
     def load_dataset(self, root_dir: Path, loader: Callable[[Path], tuple[list[Path], list[Path]]], non_resize_picture=False):
-        self.dataset = DataCarrier(root_dir, loader, resize=(not non_resize_picture)) # non_resize_picture is default False
+        self.dataset = DataCarrier(root_dir, loader, resize=(not non_resize_picture))  # non_resize_picture is default False
         logger.info(f"[Loaded] Dataset loaded with {len(self.dataset)} samples.")
 
     def train_from_scratch(self, train_dataloader, epochs, val_dataloader=None, save_dir="checkpoints", save_every=10):
@@ -476,38 +580,54 @@ class TransferLearning:
             if self.is_main_process:
                 logger.info(f"[Stage 1] Epoch {epoch + 1}/{epochs}")
 
-            train_loss = self.train_epoch(train_dataloader)
+            train_loss, train_mrae, train_ndvi, train_ndre = self.train_epoch(train_dataloader)
 
             if self.is_main_process:
-                logger.info(f"[Stage 1] Epoch {epoch + 1} - Train Loss: {train_loss:.6f}")
+                logger.info(
+                    f"[Stage 1] Epoch {epoch + 1} - "
+                    f"Train Total: {train_loss:.6f}, MRAE: {train_mrae:.6f}, "
+                    f"NDVI: {train_ndvi:.6f}, NDRE: {train_ndre:.6f}"
+                )
                 if self.scheduler is not None:
                     logger.info(f"[Stage 1] Scheduler LR: {self.scheduler.get_last_lr()}")
 
             # Validation
             if val_dataloader is not None:
-                mrae_loss, rmse_loss, psnr_loss = self.validate_epoch(val_dataloader)
+                val_total, mrae_loss, rmse_loss, psnr_loss, ndvi_loss, ndre_loss = self.validate_epoch(val_dataloader)
 
                 if self.is_main_process:
                     logger.info(
-                        f"[Stage 1] Epoch {epoch + 1} - MRAE: {mrae_loss:.6f}, RMSE: {rmse_loss:.6f}, PSNR: {psnr_loss:.6f}"
+                        f"[Stage 1] Epoch {epoch + 1} - "
+                        f"Val Total: {val_total:.6f}, MRAE: {mrae_loss:.6f}, RMSE: {rmse_loss:.6f}, "
+                        f"PSNR: {psnr_loss:.6f}, NDVI: {ndvi_loss:.6f}, NDRE: {ndre_loss:.6f}"
                     )
 
                 if self.logWriter is not None:
-                    self.logWriter.add_scalar("Stage1/Train_Loss", train_loss, epoch)
+                    self.logWriter.add_scalar("Stage1/Train_Total_Loss", train_loss, epoch)
+                    self.logWriter.add_scalar("Stage1/Train_MRAE_Loss", train_mrae, epoch)
+                    self.logWriter.add_scalar("Stage1/Train_NDVI_Loss", train_ndvi, epoch)
+                    self.logWriter.add_scalar("Stage1/Train_NDRE_Loss", train_ndre, epoch)
+
+                    self.logWriter.add_scalar("Stage1/Val_Total_Loss", val_total, epoch)
                     self.logWriter.add_scalar("Stage1/MRAE_Loss", mrae_loss, epoch)
                     self.logWriter.add_scalar("Stage1/RMSE_Loss", rmse_loss, epoch)
                     self.logWriter.add_scalar("Stage1/PSNR_Loss", psnr_loss, epoch)
+                    self.logWriter.add_scalar("Stage1/Val_NDVI_Loss", ndvi_loss, epoch)
+                    self.logWriter.add_scalar("Stage1/Val_NDRE_Loss", ndre_loss, epoch)
 
-                if self.is_main_process and (mrae_loss < best_val_loss):
-                    best_val_loss = mrae_loss
+                if self.is_main_process and (val_total < best_val_loss):
+                    best_val_loss = val_total
                     best_model_path = self.save_model(save_dir, "stage1_best")
-                    logger.info(f"[Stage 1] New best model saved! Val MRAE: {mrae_loss:.6f}")
+                    logger.info(f"[Stage 1] New best model saved! Val composite loss: {val_total:.6f}")
 
             else:
                 if self.is_main_process:
                     logger.info("[Stage 1] There is no validate dataloader")
                 if self.logWriter is not None:
-                    self.logWriter.add_scalar("Stage1/Train_Loss", train_loss, epoch)
+                    self.logWriter.add_scalar("Stage1/Train_Total_Loss", train_loss, epoch)
+                    self.logWriter.add_scalar("Stage1/Train_MRAE_Loss", train_mrae, epoch)
+                    self.logWriter.add_scalar("Stage1/Train_NDVI_Loss", train_ndvi, epoch)
+                    self.logWriter.add_scalar("Stage1/Train_NDRE_Loss", train_ndre, epoch)
 
             # Save checkpoint periodically (rank 0 only)
             if self.is_main_process and ((epoch + 1) % save_every == 0):
@@ -517,7 +637,7 @@ class TransferLearning:
 
         if self.is_main_process:
             if val_dataloader is not None:
-                logger.info(f"[Stage 1] Training completed. Best MRAE: {best_val_loss:.6f}")
+                logger.info(f"[Stage 1] Training completed. Best composite val loss: {best_val_loss:.6f}")
                 logger.info(f"[Stage 1] Best model: {best_model_path}")
             else:
                 logger.info("[Stage 1] Training completed. (No validate dataloader)")
@@ -545,35 +665,51 @@ class TransferLearning:
             if self.is_main_process:
                 logger.info(f"[Stage 2] Epoch {epoch + 1}/{epochs}")
 
-            train_loss = self.train_epoch(train_dataloader)
+            train_loss, train_mrae, train_ndvi, train_ndre = self.train_epoch(train_dataloader)
 
             if self.is_main_process:
-                logger.info(f"[Stage 2] Epoch {epoch + 1} - Train Loss: {train_loss:.6f}")
+                logger.info(
+                    f"[Stage 2] Epoch {epoch + 1} - "
+                    f"Train Total: {train_loss:.6f}, MRAE: {train_mrae:.6f}, "
+                    f"NDVI: {train_ndvi:.6f}, NDRE: {train_ndre:.6f}"
+                )
 
             if val_dataloader is not None:
-                mrae_loss, rmse_loss, psnr_loss = self.validate_epoch(val_dataloader)
+                val_total, mrae_loss, rmse_loss, psnr_loss, ndvi_loss, ndre_loss = self.validate_epoch(val_dataloader)
 
                 if self.is_main_process:
                     logger.info(
-                        f"[Stage 2] Epoch {epoch + 1} - MRAE: {mrae_loss:.6f}, RMSE: {rmse_loss:.6f}, PSNR: {psnr_loss:.6f}"
+                        f"[Stage 2] Epoch {epoch + 1} - "
+                        f"Val Total: {val_total:.6f}, MRAE: {mrae_loss:.6f}, RMSE: {rmse_loss:.6f}, "
+                        f"PSNR: {psnr_loss:.6f}, NDVI: {ndvi_loss:.6f}, NDRE: {ndre_loss:.6f}"
                     )
 
                 if self.logWriter is not None:
-                    self.logWriter.add_scalar("Stage2/Train_Loss", train_loss, epoch)
+                    self.logWriter.add_scalar("Stage2/Train_Total_Loss", train_loss, epoch)
+                    self.logWriter.add_scalar("Stage2/Train_MRAE_Loss", train_mrae, epoch)
+                    self.logWriter.add_scalar("Stage2/Train_NDVI_Loss", train_ndvi, epoch)
+                    self.logWriter.add_scalar("Stage2/Train_NDRE_Loss", train_ndre, epoch)
+
+                    self.logWriter.add_scalar("Stage2/Val_Total_Loss", val_total, epoch)
                     self.logWriter.add_scalar("Stage2/MRAE_Loss", mrae_loss, epoch)
                     self.logWriter.add_scalar("Stage2/RMSE_Loss", rmse_loss, epoch)
                     self.logWriter.add_scalar("Stage2/PSNR_Loss", psnr_loss, epoch)
+                    self.logWriter.add_scalar("Stage2/Val_NDVI_Loss", ndvi_loss, epoch)
+                    self.logWriter.add_scalar("Stage2/Val_NDRE_Loss", ndre_loss, epoch)
 
-                if self.is_main_process and (mrae_loss < best_val_loss):
-                    best_val_loss = mrae_loss
+                if self.is_main_process and (val_total < best_val_loss):
+                    best_val_loss = val_total
                     best_model_path = self.save_model(save_dir, "stage2_best")
-                    logger.info(f"[Stage 2] New best model saved! Val MRAE: {mrae_loss:.6f}")
+                    logger.info(f"[Stage 2] New best model saved! Val composite loss: {val_total:.6f}")
 
             else:
                 if self.is_main_process:
                     logger.info("[Stage 2] There is no validate dataloader")
                 if self.logWriter is not None:
-                    self.logWriter.add_scalar("Stage2/Train_Loss", train_loss, epoch)
+                    self.logWriter.add_scalar("Stage2/Train_Total_Loss", train_loss, epoch)
+                    self.logWriter.add_scalar("Stage2/Train_MRAE_Loss", train_mrae, epoch)
+                    self.logWriter.add_scalar("Stage2/Train_NDVI_Loss", train_ndvi, epoch)
+                    self.logWriter.add_scalar("Stage2/Train_NDRE_Loss", train_ndre, epoch)
 
             if self.is_main_process and ((epoch + 1) % save_every == 0):
                 self.save_model(save_dir, "stage2", epoch + 1)
@@ -582,7 +718,7 @@ class TransferLearning:
 
         if self.is_main_process:
             if val_dataloader is not None:
-                logger.info(f"[Stage 2] Training completed. Best MRAE: {best_val_loss:.6f}")
+                logger.info(f"[Stage 2] Training completed. Best composite val loss: {best_val_loss:.6f}")
                 logger.info(f"[Stage 2] Best model: {best_model_path}")
             else:
                 logger.info("[Stage 2] Training completed. (No validate dataloader)")
@@ -610,35 +746,51 @@ class TransferLearning:
             if self.is_main_process:
                 logger.info(f"[Stage 3] Epoch {epoch + 1}/{epochs}")
 
-            train_loss = self.train_epoch(train_dataloader)
+            train_loss, train_mrae, train_ndvi, train_ndre = self.train_epoch(train_dataloader)
 
             if self.is_main_process:
-                logger.info(f"[Stage 3] Epoch {epoch + 1} - Train Loss: {train_loss:.6f}")
+                logger.info(
+                    f"[Stage 3] Epoch {epoch + 1} - "
+                    f"Train Total: {train_loss:.6f}, MRAE: {train_mrae:.6f}, "
+                    f"NDVI: {train_ndvi:.6f}, NDRE: {train_ndre:.6f}"
+                )
 
             if val_dataloader is not None:
-                mrae_loss, rmse_loss, psnr_loss = self.validate_epoch(val_dataloader)
+                val_total, mrae_loss, rmse_loss, psnr_loss, ndvi_loss, ndre_loss = self.validate_epoch(val_dataloader)
 
                 if self.is_main_process:
                     logger.info(
-                        f"[Stage 3] Epoch {epoch + 1} - MRAE: {mrae_loss:.6f}, RMSE: {rmse_loss:.6f}, PSNR: {psnr_loss:.6f}"
+                        f"[Stage 3] Epoch {epoch + 1} - "
+                        f"Val Total: {val_total:.6f}, MRAE: {mrae_loss:.6f}, RMSE: {rmse_loss:.6f}, "
+                        f"PSNR: {psnr_loss:.6f}, NDVI: {ndvi_loss:.6f}, NDRE: {ndre_loss:.6f}"
                     )
 
                 if self.logWriter is not None:
-                    self.logWriter.add_scalar("Stage3/Train_Loss", train_loss, epoch)
+                    self.logWriter.add_scalar("Stage3/Train_Total_Loss", train_loss, epoch)
+                    self.logWriter.add_scalar("Stage3/Train_MRAE_Loss", train_mrae, epoch)
+                    self.logWriter.add_scalar("Stage3/Train_NDVI_Loss", train_ndvi, epoch)
+                    self.logWriter.add_scalar("Stage3/Train_NDRE_Loss", train_ndre, epoch)
+
+                    self.logWriter.add_scalar("Stage3/Val_Total_Loss", val_total, epoch)
                     self.logWriter.add_scalar("Stage3/MRAE_Loss", mrae_loss, epoch)
                     self.logWriter.add_scalar("Stage3/RMSE_Loss", rmse_loss, epoch)
                     self.logWriter.add_scalar("Stage3/PSNR_Loss", psnr_loss, epoch)
+                    self.logWriter.add_scalar("Stage3/Val_NDVI_Loss", ndvi_loss, epoch)
+                    self.logWriter.add_scalar("Stage3/Val_NDRE_Loss", ndre_loss, epoch)
 
-                if self.is_main_process and (mrae_loss < best_val_loss):
-                    best_val_loss = mrae_loss
+                if self.is_main_process and (val_total < best_val_loss):
+                    best_val_loss = val_total
                     best_model_path = self.save_model(save_dir, "stage3_best")
-                    logger.info(f"[Stage 3] New best model saved! Val MRAE: {mrae_loss:.6f}")
+                    logger.info(f"[Stage 3] New best model saved! Val composite loss: {val_total:.6f}")
 
             else:
                 if self.is_main_process:
                     logger.info("[Stage 3] There is no validate dataloader")
                 if self.logWriter is not None:
-                    self.logWriter.add_scalar("Stage3/Train_Loss", train_loss, epoch)
+                    self.logWriter.add_scalar("Stage3/Train_Total_Loss", train_loss, epoch)
+                    self.logWriter.add_scalar("Stage3/Train_MRAE_Loss", train_mrae, epoch)
+                    self.logWriter.add_scalar("Stage3/Train_NDVI_Loss", train_ndvi, epoch)
+                    self.logWriter.add_scalar("Stage3/Train_NDRE_Loss", train_ndre, epoch)
 
             if self.is_main_process and ((epoch + 1) % save_every == 0):
                 self.save_model(save_dir, "stage3", epoch + 1)
@@ -647,7 +799,7 @@ class TransferLearning:
 
         if self.is_main_process:
             if val_dataloader is not None:
-                logger.info(f"[Stage 3] Training completed. Best MRAE: {best_val_loss:.6f}")
+                logger.info(f"[Stage 3] Training completed. Best composite val loss: {best_val_loss:.6f}")
                 logger.info(f"[Stage 3] Best model: {best_model_path}")
             else:
                 logger.info("[Stage 3] Training completed. (No validate dataloader)")
@@ -665,9 +817,9 @@ class TransferLearning:
                           stage3_epochs=100,
                           stage3_lr=1e-7,
                           save_dir="checkpoints"):
-        logger.info("="*70)
+        logger.info("=" * 70)
         logger.info(" STAGED TRANSFER LEARNING PIPELINE")
-        logger.info("="*70)
+        logger.info("=" * 70)
 
         results = {}
 
@@ -690,8 +842,8 @@ class TransferLearning:
         train_dataloader, val_dataloader = self._make_dataloaders(
             train_dataset,
             val_dataset,
-            train_bs_global=72, # TRAIN BATCH SIZE
-            val_bs_global=16    # VAL   BATCH SIZE
+            train_bs_global=72,  # TRAIN BATCH SIZE
+            val_bs_global=16     # VAL   BATCH SIZE
         )
 
         results['stage1'] = self.train_from_scratch(
@@ -721,8 +873,8 @@ class TransferLearning:
         train_dataloader, val_dataloader = self._make_dataloaders(
             train_dataset,
             val_dataset,
-            train_bs_global=64, # TRAIN BATCH SIZE
-            val_bs_global=8     # VAL   BATCH SIZE
+            train_bs_global=64,  # TRAIN BATCH SIZE
+            val_bs_global=8      # VAL   BATCH SIZE
         )
 
         results['stage2'] = self.run_stage_2(
@@ -732,14 +884,13 @@ class TransferLearning:
             save_dir=save_dir
         )
 
-
         # --------------------------------
         # Stage 3: Full fine-tuning
         # --------------------------------
         self.stage_reset()
         loader = self._get_loader_function(self.stage3_data_type)
         self.load_dataset(root_dir=self.stage3_data_path, loader=loader, non_resize_picture=self.stage3_non_resize_picture)
-        
+
         model_path = results["stage2"] if self.stage3_model is None else self.stage3_model
         self._load_pretrained(model_path, learning_rate=stage3_lr)
 
@@ -753,8 +904,8 @@ class TransferLearning:
         train_dataloader, val_dataloader = self._make_dataloaders(
             train_dataset,
             val_dataset,
-            train_bs_global=64, # TRAIN BATCH SIZE
-            val_bs_global=8     # VAL   BATCH SIZE
+            train_bs_global=64,  # TRAIN BATCH SIZE
+            val_bs_global=8      # VAL   BATCH SIZE
         )
 
         results['stage3'] = self.run_stage_3(
@@ -764,9 +915,9 @@ class TransferLearning:
             save_dir=save_dir
         )
 
-        logger.info("="*70)
+        logger.info("=" * 70)
         logger.info(" PIPELINE COMPLETED")
-        logger.info("="*70)
+        logger.info("=" * 70)
         logger.info("Saved models:")
         for stage, path in results.items():
             logger.info(f"  {stage}: {path}")
@@ -787,7 +938,7 @@ if __name__ == "__main__":
     parser.add_argument("--stage1_non_resize", type=bool, help="Use non-resized pictures, default=False", action=argparse.BooleanOptionalAction)
     parser.add_argument("--stage1_epochs", type=int, help="Number of epochs for stage 1 (train from scratch). To skip set epochs to '0'", default=300)
     parser.add_argument("--stage1_lr", type=float, help="Learning rate for stage 1 (train from scratch)", default=4e-4)
-    
+
     parser.add_argument("--stage2_data_path", default="data/")
     parser.add_argument("--stage2_data_type", help="Which dataset", default="Kazakhstan")
     parser.add_argument("--stage2_non_resize", type=bool, help="Use non-resized pictures, default=False", action=argparse.BooleanOptionalAction)
@@ -802,6 +953,17 @@ if __name__ == "__main__":
     parser.add_argument("--stage3_epochs", type=int, help="Number of epochs for stage 3. To skip set epochs to '0'", default=0)
     parser.add_argument("--stage3_lr", type=float, help="Learning rate for stage 3", default=1e-7)
 
+    # Composite loss weights
+    parser.add_argument("--loss_w_mrae", type=float, default=1.0, help="Weight for MRAE loss")
+    parser.add_argument("--loss_w_ndvi", type=float, default=0.1, help="Weight for NDVI loss")
+    parser.add_argument("--loss_w_ndre", type=float, default=0.1, help="Weight for NDRE loss")
+
+    # Band indices in target/predicted ms tensor [B, C, H, W]
+    # Defaults assume channel order [G, R, RE, NIR]
+    parser.add_argument("--band_idx_red", type=int, default=1, help="Red band channel index in ms tensor")
+    parser.add_argument("--band_idx_rededge", type=int, default=2, help="Red-edge band channel index in ms tensor")
+    parser.add_argument("--band_idx_nir", type=int, default=3, help="NIR band channel index in ms tensor")
+
     # Initialize the transfer learning pipeline
     tl = TransferLearning(parser.parse_args())
 
@@ -812,10 +974,10 @@ if __name__ == "__main__":
     results = tl.run_full_pipeline(
         stage1_epochs=tl.stage_1_epochs,
         stage1_lr=tl.stage_1_lr,
-        stage2_epochs=tl.stage_2_epochs, # Train decoder for 50 epochs
-        stage2_lr=tl.stage_2_lr,         # Medium-high learning rate for stage 2
-        stage3_epochs=tl.stage_3_epochs, # Fine-tune all layers for 30 epochs
-        stage3_lr=tl.stage_3_lr,         # Low learning rate for stage 3
+        stage2_epochs=tl.stage_2_epochs,  # Train decoder for 50 epochs
+        stage2_lr=tl.stage_2_lr,          # Medium-high learning rate for stage 2
+        stage3_epochs=tl.stage_3_epochs,  # Fine-tune all layers for 30 epochs
+        stage3_lr=tl.stage_3_lr,          # Low learning rate for stage 3
         save_dir="checkpoints"
     )
 
