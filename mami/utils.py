@@ -25,12 +25,14 @@ class AverageMeter(object):
         self.avg = self.sum / self.count
 
 class Loss_MRAE(nn.Module):
-    def __init__(self):
+    def __init__(self, eps: float = 1e-6):
         super(Loss_MRAE, self).__init__()
+        self.eps: float = float(eps)
     
     def forward(self, outputs, label) -> Tensor:
         assert outputs.shape == label.shape
-        error = torch.abs(outputs - label) / label
+        
+        error = torch.abs(outputs - label) / (label + self.eps)
         return torch.mean(error.reshape(-1))
 
 class Loss_RMSE(nn.Module):
