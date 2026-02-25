@@ -71,7 +71,7 @@ run_eval() {
   fi
 
 
-  echo "=== Beginning predictions ==="
+#   echo "=== Beginning predictions ==="
   local eval_cmd=(
     python ./mami/inference.py
     --model "$model"
@@ -90,7 +90,7 @@ run_eval() {
     eval_cmd+=(--jpg "$jpg_image")
   fi
 
-  "${eval_cmd[@]}"
+#   "${eval_cmd[@]}"
 
   echo "=== Beginning evaluation ==="
   local vali_cmd=(
@@ -114,19 +114,19 @@ weedy_path="./data/WeedyRice/"
 
 echo "---------- 1st run ----------"
 # Base model stage 1 (trained on Kazakhstan) test on Sri Lanka
-# run_eval \
-#   --model "./checkpoints/basemodel-kaz-ndre-ndvi/stage1_best_final.pth" \
-#   --pred "results/basemodel-ndre-ndvi-stage1---Sri-Lanka/data/" \
-#   --truth "$sri_path" \
-#   --type "Sri-Lanka" \
-#   --out "results/basemodel-ndre-ndvi-stage1---Sri-Lanka/results.json" \
-#   --save-images
-
-# Base model stage 1 (trained on Kazakhstan) test on Weedy Rice
 run_eval \
   --model "./checkpoints/basemodel-kaz-ndre-ndvi/stage1_best_final.pth" \
-  --pred "results/basemodel-ndre-ndvi-stage1---Weedy-Rice/data/" \
-  --truth "$weedy_path" \
-  --type "Weedy-Rice" \
-  --out "results/basemodel-ndre-ndvi-stage1---Weedy-Rice/results.json" \
+  --pred "results/basemodel-ndre-ndvi-stage1---Sri-Lanka/data/" \
+  --truth "$sri_path" \
+  --type "Sri-Lanka" \
+  --out "results/basemodel-ndre-ndvi-stage1---Sri-Lanka/results.json" \
   --save-images
+
+# Base model stage 1 (trained on Kazakhstan) test on Weedy Rice
+# run_eval \
+#   --model "./checkpoints/basemodel-kaz-ndre-ndvi/stage1_best_final.pth" \
+#   --pred "results/basemodel-ndre-ndvi-stage1---Weedy-Rice/data/" \
+#   --truth "$weedy_path" \
+#   --type "Weedy-Rice" \
+#   --out "results/basemodel-ndre-ndvi-stage1---Weedy-Rice/results.json" \
+#   --save-images
