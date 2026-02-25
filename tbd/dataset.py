@@ -10,7 +10,7 @@ Directory structure expected (WeedyRice-RGBMS-DB):
     data/
     ├── RGB/              # RGB images (*.JPG)
     ├── Multispectral/    # Per-band TIFs (*_G.TIF, *_R.TIF, *_RE.TIF, *_NIR.TIF)
-    ├── Synthetic/        # Synthetic per-band TIFs (same naming as Multispectral)
+    ├── Synthetic/        # Per-band JPGs (validation_result_<id>_<band>_.JPG, bands 1-4)
     └── Masks/            # Binary segmentation masks (*.png, 0=background, 255=weed)
 """
 
@@ -22,6 +22,7 @@ from torch.utils.data import Dataset
 import albumentations as A
 
 BAND_SUFFIXES = ["_G", "_R", "_RE", "_NIR"]
+SYNTHETIC_BANDS = [1, 2, 3, 4]  # Band indices in synthetic filenames
 
 
 class WeedyRiceDataset(Dataset):
@@ -58,8 +59,14 @@ class WeedyRiceDataset(Dataset):
         self.num_classes = num_classes
 
         # Collect unique image stems
-        if input_type in ("multispectral", "synthetic"):
+        # For synthetic: files use different naming, so we map by sorted index
+        self._synthetic_map = {}  # mask_stem -> synthetic_id
+        if input_type == "multispectral":
             self.image_stems = self._collect_ms_stems(image_dir)
+        elif input_type == "synthetic":
+            self.image_stems, self._synthetic_map = self._collect_synthetic_stems(
+                image_dir, mask_dir
+            )
         else:
             self.image_stems = self._collect_rgb_stems(image_dir)
 
@@ -93,14 +100,65 @@ class WeedyRiceDataset(Dataset):
                     break
         return sorted(stems)
 
+    @staticmethod
+    def _collect_synthetic_stems(image_dir: str, mask_dir: str) -> tuple:
+        """
+        Collect synthetic image IDs and map them to mask stems by sorted index.
+
+        Synthetic files: validation_result_<id>_<band>_.JPG (bands 1-4)
+        Masks: DJI_DateTime_....png
+
+        Returns:
+            (mask_stems, synthetic_map) where synthetic_map = {mask_stem: synthetic_id}
+        """
+        import re
+        # Collect unique synthetic IDs
+        synthetic_ids = set()
+        for f in os.listdir(image_dir):
+            m = re.match(r"validation_result_(\d+)_\d+_\.JPG", f)
+            if m:
+                synthetic_ids.add(int(m.group(1)))
+        synthetic_ids = sorted(synthetic_ids)
+
+        # Collect mask stems (sorted alphabetically — same order used for splits)
+        mask_stems = sorted([
+            os.path.splitext(f)[0]
+            for f in os.listdir(mask_dir)
+            if f.lower().endswith((".png", ".tif", ".tiff"))
+        ])
+
+        assert len(synthetic_ids) == len(mask_stems), (
+            f"Synthetic image count ({len(synthetic_ids)}) != mask count ({len(mask_stems)})"
+        )
+
+        synthetic_map = {stem: sid for stem, sid in zip(mask_stems, synthetic_ids)}
+        return mask_stems, synthetic_map
+
     def _load_image(self, stem: str) -> np.ndarray:
         """
         Load image by stem. Returns HxWxC numpy array (float32).
 
-        For multispectral/synthetic: reads 4 separate band TIFs and stacks them.
+        For multispectral: reads 4 separate band TIFs and stacks them.
+        For synthetic: reads 4 separate band JPGs (validation_result_<id>_<band>_.JPG).
         For RGB: reads the JPG directly.
         """
-        if self.input_type in ("multispectral", "synthetic"):
+        if self.input_type == "synthetic":
+            sid = self._synthetic_map[stem]
+            bands = []
+            for band_idx in SYNTHETIC_BANDS:
+                path = os.path.join(self.image_dir, f"validation_result_{sid}_{band_idx}_.JPG")
+                if not os.path.exists(path):
+                    raise FileNotFoundError(
+                        f"Synthetic band file not found: {path}"
+                    )
+                band = cv2.imread(path, cv2.IMREAD_UNCHANGED)
+                if band is None:
+                    raise FileNotFoundError(f"Could not load band: {path}")
+                if band.ndim == 3:
+                    band = band[:, :, 0]
+                bands.append(band)
+            return np.stack(bands, axis=-1).astype(np.float32)
+        elif self.input_type == "multispectral":
             bands = []
             for suffix in BAND_SUFFIXES:
                 # Try common TIF extensions
