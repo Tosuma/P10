@@ -52,6 +52,8 @@ class TransferLearning:
         # Args
         self.cluster: bool = bool(args.cluster)
         self.seed: int = int(getattr(args, "seed", 42))
+        self.save_dir: str = Path(str(args.dir_name))
+        self.model_name: str = str(args.model_name)
 
         # DDP state (torchrun sets these env vars)
         self.rank: int = RANK
@@ -825,6 +827,8 @@ class TransferLearning:
         logger.info(" STAGED TRANSFER LEARNING PIPELINE")
         logger.info("=" * 70)
 
+        self.save_dir.mkdir(parents=True, exist_ok=True)
+
         results = {}
 
         # --------------------------------
@@ -937,6 +941,9 @@ if __name__ == "__main__":
 
     parser.add_argument("--seed", type=int, default=42, help="Random seed (used for deterministic train/val split across DDP ranks)")
 
+    parser.add_argument("--model_name", type=str, required=True, help="The name of the model produced. Do NOT include the file extension to the name")
+    parser.add_argument("--dir_name", type=str, required=True, help="The name of the directory for storing the model")
+
     parser.add_argument("--stage1_data_path", default="data/East-Kaza")
     parser.add_argument("--stage1_data_type", help="Which dataset", default="Kazakhstan")
     parser.add_argument("--stage1_non_resize", type=bool, help="Use non-resized pictures, default=False", action=argparse.BooleanOptionalAction)
@@ -982,7 +989,7 @@ if __name__ == "__main__":
         stage2_lr=tl.stage_2_lr,          # Medium-high learning rate for stage 2
         stage3_epochs=tl.stage_3_epochs,  # Fine-tune all layers for 30 epochs
         stage3_lr=tl.stage_3_lr,          # Low learning rate for stage 3
-        save_dir="checkpoints"
+        save_dir=tl.save_dir
     )
 
     # Clean up DDP (if enabled) and close TensorBoard writer
