@@ -36,6 +36,8 @@ singularity exec --nv \
 		--loss_w_ndre 0.1 \
                 --stage2_epochs 0 \
                 --stage3_epochs 0 \
-                --cluster"
+                --cluster \
+		--dir_name basemodel-kaz-ndvi \
+		--model_name basemodel-kaz-ndvi"
 
 date
