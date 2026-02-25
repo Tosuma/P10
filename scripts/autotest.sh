@@ -8,10 +8,10 @@ run_worker() {
 
 		echo "Submitted Job with ID: $job_id"
 
-		#while squeue --me | grep -q "$job_id"; do
-		echo "Job $job_id still running... sleeping 60 seconds"
-		sleep 2
-		
+		while squeue --me | grep -q "$job_id"; do
+            echo "Job $job_id still running... sleeping 60 seconds"
+            sleep 2
+        done	
 
 		echo "Worker: $worker_id Job $job_id finished"
 	done
