@@ -106,6 +106,23 @@ def build_summary_row(
 
     for field, values in metrics.items():
         if values:
+            if field == "NDVI_PRED" or field == "NDRE_PRED":
+                avg = sum(values) / len(values)
+                med = median(values)
+                
+                tag = field[:5] + "GT"
+                
+                gt_values = metrics[tag]
+                avg_gt = sum(gt_values) / len(gt_values)
+                med_gt = median(gt_values)
+
+                avg_diff = abs(avg_gt - avg)
+                med_diff = abs(med_gt - med)
+
+                
+                row[f"NAE_{field}_avg"] = avg_diff / 2
+                row[f"NAE_{field}_median"] = med_diff / 2
+
             row[f"{field}_avg"] = sum(values) / len(values)
             row[f"{field}_median"] = median(values)
         else:
