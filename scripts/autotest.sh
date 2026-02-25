@@ -2,7 +2,7 @@
 
 run_worker() {
 	worker_id=$1
-	for i in {1..10}; do
+	for i in {1..5}; do
 		echo "Starting iteration $i" 
 		job_id=$(sbatch test.sh | grep -o '[0-9]\+')
 
@@ -19,7 +19,6 @@ run_worker() {
 
 run_worker 1 &
 run_worker 2 &
-run_worker 3 &
 
 wait
 
