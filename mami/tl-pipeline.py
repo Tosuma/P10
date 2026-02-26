@@ -52,7 +52,7 @@ class TransferLearning:
         # Args
         self.cluster: bool = bool(args.cluster)
         self.seed: int = int(getattr(args, "seed", 42))
-        self.save_dir: str = Path(str(args.dir_name))
+        self.save_dir: Path = Path("result/" + str(args.dir_name))
         self.model_name: str = str(args.model_name)
 
         # DDP state (torchrun sets these env vars)
@@ -565,7 +565,7 @@ class TransferLearning:
         self.dataset = DataCarrier(root_dir, loader, resize=(not non_resize_picture))  # non_resize_picture is default False
         logger.info(f"[Loaded] Dataset loaded with {len(self.dataset)} samples.")
 
-    def train_from_scratch(self, train_dataloader, epochs, val_dataloader=None, save_dir="checkpoints", save_every=10):
+    def train_from_scratch(self, train_dataloader, epochs, val_dataloader=None, save_dir=Path("checkpoints"), model_name="stage1_best", save_every=10):
         if self.is_main_process:
             logger.info("=" * 60)
             logger.info("STAGE 1: Train from scratch")
@@ -623,7 +623,7 @@ class TransferLearning:
 
                 if self.is_main_process and (val_total < best_val_loss):
                     best_val_loss = val_total
-                    best_model_path = self.save_model(save_dir, "stage1_best")
+                    best_model_path = self.save_model(save_dir, model_name)
                     logger.info(f"[Stage 1] New best model saved! Val composite loss: {val_total:.6f}")
 
             else:
@@ -637,9 +637,9 @@ class TransferLearning:
 
             # Save checkpoint periodically (rank 0 only)
             if self.is_main_process and ((epoch + 1) % save_every == 0):
-                self.save_model(save_dir, "stage1", epoch + 1)
+                self.save_model(save_dir / "all-models", "stage1", epoch + 1)
 
-        final_path = self.save_model(save_dir, "stage1") if self.is_main_process else None
+        final_path = self.save_model(save_dir / "all-models", "stage1") if self.is_main_process else None
 
         if self.is_main_process:
             if val_dataloader is not None:
@@ -653,7 +653,7 @@ class TransferLearning:
         ret = self._broadcast_path(ret)
         return ret
 
-    def run_stage_2(self, train_dataloader, epochs, val_dataloader=None, save_dir="checkpoints", save_every=10):
+    def run_stage_2(self, train_dataloader, epochs, val_dataloader=None, save_dir=Path("checkpoints"), model_name="stage1_best", save_every=10):
         if self.is_main_process:
             logger.info("=" * 60)
             logger.info("STAGE 2: Decoder Training (Frozen Encoder)")
@@ -705,7 +705,7 @@ class TransferLearning:
 
                 if self.is_main_process and (val_total < best_val_loss):
                     best_val_loss = val_total
-                    best_model_path = self.save_model(save_dir, "stage2_best")
+                    best_model_path = self.save_model(save_dir, model_name)
                     logger.info(f"[Stage 2] New best model saved! Val composite loss: {val_total:.6f}")
 
             else:
@@ -718,9 +718,9 @@ class TransferLearning:
                     self.logWriter.add_scalar("Stage2/Train_NDRE_Loss", train_ndre, epoch)
 
             if self.is_main_process and ((epoch + 1) % save_every == 0):
-                self.save_model(save_dir, "stage2", epoch + 1)
+                self.save_model(save_dir / "all-models", "stage2", epoch + 1)
 
-        final_path = self.save_model(save_dir, "stage2") if self.is_main_process else None
+        final_path = self.save_model(save_dir / "all-models", "stage2") if self.is_main_process else None
 
         if self.is_main_process:
             if val_dataloader is not None:
@@ -734,7 +734,7 @@ class TransferLearning:
         ret = self._broadcast_path(ret)
         return ret
 
-    def run_stage_3(self, train_dataloader, epochs, val_dataloader=None, save_dir="checkpoints", save_every=10):
+    def run_stage_3(self, train_dataloader, epochs, val_dataloader=None, save_dir=Path("checkpoints"), model_name="stage1_best", save_every=10):
         if self.is_main_process:
             logger.info("=" * 60)
             logger.info("STAGE 3: Full Model Fine-tuning (All Layers Unfrozen)")
@@ -786,7 +786,7 @@ class TransferLearning:
 
                 if self.is_main_process and (val_total < best_val_loss):
                     best_val_loss = val_total
-                    best_model_path = self.save_model(save_dir, "stage3_best")
+                    best_model_path = self.save_model(save_dir, model_name)
                     logger.info(f"[Stage 3] New best model saved! Val composite loss: {val_total:.6f}")
 
             else:
@@ -799,9 +799,9 @@ class TransferLearning:
                     self.logWriter.add_scalar("Stage3/Train_NDRE_Loss", train_ndre, epoch)
 
             if self.is_main_process and ((epoch + 1) % save_every == 0):
-                self.save_model(save_dir, "stage3", epoch + 1)
+                self.save_model(save_dir / "all-models", "stage3", epoch + 1)
 
-        final_path = self.save_model(save_dir, "stage3") if self.is_main_process else None
+        final_path = self.save_model(save_dir / "all-models", "stage3") if self.is_main_process else None
 
         if self.is_main_process:
             if val_dataloader is not None:
@@ -822,12 +822,10 @@ class TransferLearning:
                           stage2_lr=1e-5,
                           stage3_epochs=100,
                           stage3_lr=1e-7,
-                          save_dir="checkpoints"):
+                          save_dir=Path("checkpoints")):
         logger.info("=" * 70)
         logger.info(" STAGED TRANSFER LEARNING PIPELINE")
         logger.info("=" * 70)
-
-        self.save_dir.mkdir(parents=True, exist_ok=True)
 
         results = {}
 
