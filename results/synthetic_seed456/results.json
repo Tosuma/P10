@@ -1,0 +1,28 @@
+{
+  "input_type": "synthetic",
+  "seed": 456,
+  "best_val_miou": 0.7548102204732954,
+  "test_loss": 0.29423773047086355,
+  "test_miou": 0.7732992153320819,
+  "test_per_class_iou": {
+    "0": 0.8231522438475148,
+    "1": 0.7234461868166489
+  },
+  "epochs_trained": 24,
+  "model_params": 14331490,
+  "config": {
+    "data_root": "./data/WeedyRice-full-data/",
+    "input_type": "synthetic",
+    "image_size": 256,
+    "num_classes": 2,
+    "ms_channels": 4,
+    "epochs": 100,
+    "batch_size": 8,
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "patience": 15,
+    "seed": 456,
+    "output_dir": "./results"
+  },
+  "timestamp": "2026-02-25T16:56:09.292465"
+}
