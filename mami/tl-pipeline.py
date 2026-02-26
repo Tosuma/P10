@@ -122,7 +122,7 @@ class TransferLearning:
         self.band_idx_nir: int = int(args.band_idx_nir)
 
         # Model details
-        self.model = None
+        self.model: nn.Module = None
         self.dataset: DataCarrier = None
         self.optimizer: torch.optim.Adam = None
         self.scheduler: torch.optim.lr_scheduler.CosineAnnealingLR = None
