@@ -166,6 +166,7 @@ class TransferLearning:
                 device_ids=[self.local_rank],
                 output_device=self.local_rank,
                 broadcast_buffers=False,
+                find_unused_parameters=True
             )
             if self.is_main_process:
                 logger.info(f"[DDP] Wrapped model in DistributedDataParallel on local_rank={self.local_rank}")
