@@ -28,8 +28,8 @@ weedy_type="Weedy-Rice"
 kaz_path="data/East-Kaza"
 kaz_type="Kazakhstan"
 
-MODEL_PATH="checkpoints/basemodel-kaz-ndvi-new/stage1_best_final.pth"
-SAVE_DIR="results/300/basemodel-new-ndvi---sri-lanka/"
+MODEL_PATH="checkpoints/basemodel-kaz-ndvi-new2/stage1_best_final.pth"
+SAVE_DIR="results/300/basemodel-new-ndvi2---sri-lanka/"
 
 singularity exec --nv \
     /ceph/container/pytorch/pytorch_26.01.sif \
@@ -37,7 +37,7 @@ singularity exec --nv \
         python -u -m torch.distributed.run \
             --standalone \
             --nproc_per_node=${GPUS} \
-            mami/inference.py \
+            mami/inference-parallel.py \
                 --data_path ${sri_path} \
                 --data_type ${sri_type} \
                 --model ${MODEL_PATH} \

@@ -52,7 +52,7 @@ class TransferLearning:
         # Args
         self.cluster: bool = bool(args.cluster)
         self.seed: int = int(getattr(args, "seed", 42))
-        self.save_dir: Path = Path("result/" + str(args.dir_name))
+        self.save_dir: Path = Path("checkpoints/" + str(args.dir_name))
         self.model_name: str = str(args.model_name)
 
         # DDP state (torchrun sets these env vars)
@@ -866,7 +866,8 @@ class TransferLearning:
             train_dataloader=train_dataloader,
             epochs=stage1_epochs,
             val_dataloader=val_dataloader,
-            save_dir=save_dir
+            save_dir=save_dir,
+            model_name=self.model_name
         )
 
         # --------------------------------
@@ -897,7 +898,8 @@ class TransferLearning:
             train_dataloader=train_dataloader,
             epochs=stage2_epochs,
             val_dataloader=val_dataloader,
-            save_dir=save_dir
+            save_dir=save_dir,
+            model_name=self.model_name
         )
 
         # --------------------------------
@@ -928,7 +930,8 @@ class TransferLearning:
             train_dataloader=train_dataloader,
             epochs=stage3_epochs,
             val_dataloader=val_dataloader,
-            save_dir=save_dir
+            save_dir=save_dir,
+            model_name=self.model_name
         )
 
         logger.info("=" * 70)
