@@ -357,8 +357,15 @@ class TransferLearning:
             logger.info(f"[Unfreeze] All layers: {trainable_params} parameters trainable")
 
     def setup_optimizer(self, learning_rate):
-        self.optimizer = torch.optim.Adam(params=self.model.parameters(), lr=learning_rate, betas=(0.9, 0.999))
-        logger.info(f"[Optimizer] Adam optimizer set with lr={learning_rate}")
+        trainable_params = [p for p in self.model.parameters() if p.requires_grad]
+        self.optimizer = torch.optim.Adam(
+            params=trainable_params,
+            lr=learning_rate,
+            betas=(0.9, 0.999)
+        )
+        logger.info(
+            f"[Optimizer] Adam with {len(trainable_params)} trainable parameter tensors | lr={learning_rate}"
+        )
 
     def setup_scheduler(self, total_steps, eta_min):
         self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
