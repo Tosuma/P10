@@ -669,6 +669,8 @@ class TransferLearning:
         self.model.train(mode=True)
         self.freeze_all_except_decoder()
 
+        self.setup_optimizer(self.stage_2_lr)
+
         best_val_loss = float("inf")
         best_model_path = None
 
