@@ -1,17 +1,51 @@
-torch
-einops
-opencv-python-headless
-matplotlib
-numpy
-torchvision
-scipy
-h5py
-hdf5storage
-tqdm
-spectral
-pandas
-tensorboard
-segmentation-models-pytorch>=0.3.3
-albumentations>=1.3
-scikit-learn
-matplotlib
+# ── Core deep learning ─────────────────────────────────────────────────────────
+torch==2.3.1
+torchvision==0.18.1
+torchaudio==2.3.1
+
+# ── Vision / model utilities ───────────────────────────────────────────────────
+timm==1.0.9                   # ViT building blocks (PatchEmbed, Attention, etc.)
+einops==0.8.0                 # Tensor rearrangement for MAE masking
+
+# ── Remote-sensing / raster I/O ────────────────────────────────────────────────
+rasterio==1.3.10              # GeoTIFF read/write with CRS/transform preservation
+geopandas==0.14.4             # Spatial metadata manipulation
+pyproj==3.6.1                 # CRS transformations (rasterio dep)
+shapely==2.0.5
+
+# ── Normalizing flows ──────────────────────────────────────────────────────────
+# FrEIA provides the coupling layers used in FastFlow-style models.
+FrEIA==0.2                    # Framework for Easily Invertible Architectures
+
+# ── Data science ───────────────────────────────────────────────────────────────
+numpy==1.26.4
+scipy==1.13.1
+scikit-learn==1.5.1
+pandas==2.2.2
+
+# ── Dimensionality reduction / visualization ───────────────────────────────────
+umap-learn==0.5.6
+matplotlib==3.9.1
+seaborn==0.13.2
+Pillow==10.4.0
+
+# ── Logging ────────────────────────────────────────────────────────────────────
+wandb==0.17.5
+tensorboard==2.17.0
+
+# ── Config management ──────────────────────────────────────────────────────────
+hydra-core==1.3.2
+omegaconf==2.3.0
+
+# ── Image I/O / augmentation ───────────────────────────────────────────────────
+opencv-python-headless==4.10.0.84
+albumentations==1.4.11
+
+# ── Utilities ──────────────────────────────────────────────────────────────────
+tqdm==4.66.4
+h5py==3.11.0
+hdf5storage==0.1.19
+spectral==0.23.1
+
+# ── Existing project deps (kept for backward compat) ──────────────────────────
+segmentation-models-pytorch==0.3.4

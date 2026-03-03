@@ -25,8 +25,7 @@ def build_unet(
         encoder_name: Encoder backbone. Keep 'resnet18' for this experiment.
         encoder_weights: Pretrained weights. Set to None because:
             1. ImageNet weights expect 3 channels — incompatible with multispectral
-            2. Using pretrained weights for RGB but not multispectral would
-               introduce a confound — unfair comparison
+            2. Using pretrained weights for RGB but not multispectral would introduce an unfair comparison
             3. Training from scratch ensures the ONLY variable is the input data
 
     Returns:

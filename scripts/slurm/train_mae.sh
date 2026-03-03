@@ -1,0 +1,53 @@
+#!/bin/bash
+# ─────────────────────────────────────────────────────────────────────────────
+# SLURM job: Stage 1 MAE Pretraining (multi-GPU DDP)
+#
+# Usage:
+#   sbatch scripts/slurm/train_mae.sh
+#
+# Adjust --gres, --mem, --time, and --account to your HPC allocation.
+# ─────────────────────────────────────────────────────────────────────────────
+
+#SBATCH --job-name=mae_pretrain
+#SBATCH --output=logs/mae_pretrain_%j.out
+#SBATCH --error=logs/mae_pretrain_%j.err
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=4          # 4 GPUs per node
+#SBATCH --gres=gpu:4
+#SBATCH --cpus-per-task=8            # CPU workers per GPU process
+#SBATCH --mem=128G
+#SBATCH --time=48:00:00
+#SBATCH --partition=gpu
+
+# ── Environment ───────────────────────────────────────────────────────────────
+module load cuda/12.1
+module load python/3.11
+
+# Activate your virtual environment
+source "$HOME/venvs/p10/bin/activate"
+
+# Navigate to project root
+cd "$SLURM_SUBMIT_DIR"
+
+# Create log directories
+mkdir -p logs outputs/stage1_mae
+
+# ── DDP via torchrun ─────────────────────────────────────────────────────────
+# torchrun handles process spawning and MASTER_ADDR/PORT setup automatically.
+# --nproc_per_node must match --ntasks-per-node above.
+
+torchrun \
+    --standalone \
+    --nnodes=1 \
+    --nproc_per_node=4 \
+    train_mae.py \
+        data.rgb_dir="$DATA_ROOT/RGB" \
+        data.ms_dir="$DATA_ROOT/Multispectral" \
+        data.batch_size=64 \
+        data.num_workers=8 \
+        mae.epochs=200 \
+        mae.use_checkpoint=true \
+        mae.use_wandb=true
+
+# Note: DATA_ROOT should be set in your environment or substituted here.
+# Example: export DATA_ROOT=/scratch/$USER/drone_data

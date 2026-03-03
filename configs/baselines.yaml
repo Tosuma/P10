@@ -1,0 +1,34 @@
+# Baselines configuration
+
+defaults:
+  - data: data
+
+output_dir: "outputs/baselines"
+
+# ── Baseline 1: NDVI Threshold ────────────────────────────────────────────────
+ndvi:
+  threshold: 0.35
+  nir_channel: 6      # Index in the full channel stack [R,G,B,G_ms,R_ms,RE,NIR,...]
+  red_channel: 4
+
+# ── Baseline 2: PCA + k-means ─────────────────────────────────────────────────
+pca_kmeans:
+  n_clusters: 8
+  pca_variance: 0.95
+  scale: true
+  random_state: 42
+
+# ── Baseline 3: Convolutional Autoencoder ─────────────────────────────────────
+cae:
+  base_channels: 32
+  latent_dim: 128
+  epochs: 100
+  lr: 1e-3
+  output_dir: "outputs/baselines/cae"
+
+# ── Baseline 4: PatchCore ─────────────────────────────────────────────────────
+patchcore:
+  layers: ["layer2", "layer3"]
+  input_size: 224     # Resize patches to 224 for ImageNet pretrained ResNet50
+  coreset_ratio: 0.1  # Keep 10% of training features in memory bank
+  memory_bank_path: "outputs/baselines/patchcore_memory_bank.pkl"
