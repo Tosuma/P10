@@ -13,11 +13,8 @@
 #SBATCH --error=logs/mae_pretrain_%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=4          # 4 GPUs per node
-#SBATCH --gres=gpu:4
-#SBATCH --cpus-per-task=8            # CPU workers per GPU process
 #SBATCH --mem=128G
-#SBATCH --time=48:00:00
-#SBATCH --partition=gpu
+#SBATCH --time=12:00:00
 
 # ── Environment ───────────────────────────────────────────────────────────────
 module load cuda/12.1
