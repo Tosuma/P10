@@ -22,9 +22,12 @@ module load python/3.11
 source "$HOME/venvs/p10/bin/activate"
 cd "$SLURM_SUBMIT_DIR"
 
+export PYTHONPATH="$SLURM_SUBMIT_DIR:${PYTHONPATH:-}"
+
 mkdir -p logs outputs/stage2_flow
 
-python train_flow.py \
+python tbd/mae/train_flow.py \
+    --config-path "$SLURM_SUBMIT_DIR/configs" \
     data.rgb_dir="$DATA_ROOT/RGB" \
     data.ms_dir="$DATA_ROOT/Multispectral" \
     data.batch_size=128 \

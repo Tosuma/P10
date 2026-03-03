@@ -26,8 +26,11 @@ module load python/3.11
 # Activate your virtual environment
 source "$HOME/venvs/p10/bin/activate"
 
-# Navigate to project root
+# Navigate to project root (scripts must be submitted from project root via sbatch)
 cd "$SLURM_SUBMIT_DIR"
+
+# Add project root to PYTHONPATH so `from src.*` imports resolve
+export PYTHONPATH="$SLURM_SUBMIT_DIR:${PYTHONPATH:-}"
 
 # Create log directories
 mkdir -p logs outputs/stage1_mae
@@ -35,12 +38,16 @@ mkdir -p logs outputs/stage1_mae
 # ── DDP via torchrun ─────────────────────────────────────────────────────────
 # torchrun handles process spawning and MASTER_ADDR/PORT setup automatically.
 # --nproc_per_node must match --ntasks-per-node above.
+#
+# --config-path uses an absolute path so Hydra finds configs/ at the project
+# root regardless of where the script file lives (tbd/mae/train_mae.py).
 
 torchrun \
     --standalone \
     --nnodes=1 \
     --nproc_per_node=4 \
-    train_mae.py \
+    tbd/mae/train_mae.py \
+        --config-path "$SLURM_SUBMIT_DIR/configs" \
         data.rgb_dir="$DATA_ROOT/RGB" \
         data.ms_dir="$DATA_ROOT/Multispectral" \
         data.batch_size=64 \
