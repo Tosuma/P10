@@ -3,12 +3,11 @@
 #SBATCH --output=logs/mae_pretrain_%j.out
 #SBATCH --error=logs/mae_pretrain_%j.err
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=4
-#SBATCH --gres=gpu:4
-#SBATCH --cpus-per-task=8
+#SBATCH --ntasks=1
 #SBATCH --mem=24G
+#SBATCH --cpus-per-task=15
+#SBATCH --gres=gpu:4
 #SBATCH --time=12:00:00
-#SBATCH --partition=gpu
 
 mkdir -p logs outputs/stage1_mae
 
