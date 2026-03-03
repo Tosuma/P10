@@ -17,7 +17,7 @@ export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 
 singularity exec --nv \
-    /ceph/container/pytorch/pytorch_26_02.sif \
+    /ceph/container/pytorch/pytorch_26.02.sif \
     /bin/bash -lc "source my_venv/bin/activate && \
         PYTHONPATH=$SLURM_SUBMIT_DIR python -u \
             tbd/mae/train_flow.py \

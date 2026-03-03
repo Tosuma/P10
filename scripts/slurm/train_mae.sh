@@ -19,7 +19,7 @@ export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 GPUS=${SLURM_GPUS_ON_NODE:-${SLURM_GPUS_PER_NODE:-1}}
 
 singularity exec --nv \
-    /ceph/container/pytorch/pytorch_26_02.sif \
+    /ceph/container/pytorch/pytorch_26.02.sif \
     /bin/bash -lc "source my_venv/bin/activate && \
         PYTHONPATH=$SLURM_SUBMIT_DIR python -u -m torch.distributed.run \
             --standalone \
