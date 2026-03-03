@@ -9,11 +9,10 @@
 #SBATCH --gres=gpu:4
 #SBATCH --time=12:00:00
 
-mkdir -p logs outputs/stage1_mae
 
 # ── Environment ───────────────────────────────────────────────────────────────
 # Load CUDA drivers from host (needed even with containers for GPU access)
-module load cuda/12.1
+# module load cuda/12.1
 
 # Navigate to project root
 cd "$SLURM_SUBMIT_DIR"
