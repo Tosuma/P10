@@ -18,10 +18,16 @@ export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 
 GPUS=${SLURM_GPUS_ON_NODE:-${SLURM_GPUS_PER_NODE:-1}}
 
+# Use the container's Python/torch (2.6.x) to avoid version conflicts.
+# The venv's site-packages are added to PYTHONPATH so that extra dependencies
+# (hydra, timm, einops, wandb, etc.) are found without activating the venv
+# and pulling in the venv's older torch (2.3.1), which would segfault against
+# the container's NCCL/CUDA libraries.
+VENV_SITE="$SLURM_SUBMIT_DIR/my_venv/lib/python3.12/site-packages"
+
 singularity exec --nv \
     /ceph/container/pytorch/pytorch_26.02.sif \
-    /bin/bash -lc "source my_venv/bin/activate && \
-        PYTHONPATH=$SLURM_SUBMIT_DIR python -u -m torch.distributed.run \
+    /bin/bash -lc "PYTHONPATH=$SLURM_SUBMIT_DIR:$VENV_SITE python -u -m torch.distributed.run \
             --standalone \
             --nproc_per_node=${GPUS} \
             tbd/mae/train_mae.py \

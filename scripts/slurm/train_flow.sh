@@ -16,10 +16,11 @@ date
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 
+VENV_SITE="$SLURM_SUBMIT_DIR/my_venv/lib/python3.12/site-packages"
+
 singularity exec --nv \
     /ceph/container/pytorch/pytorch_26.02.sif \
-    /bin/bash -lc "source my_venv/bin/activate && \
-        PYTHONPATH=$SLURM_SUBMIT_DIR python -u \
+    /bin/bash -lc "PYTHONPATH=$SLURM_SUBMIT_DIR:$VENV_SITE python -u \
             tbd/mae/train_flow.py \
                 --config-path $SLURM_SUBMIT_DIR/configs \
                 data.rgb_dir=$DATA_ROOT/RGB \
