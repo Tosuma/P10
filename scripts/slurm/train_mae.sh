@@ -9,41 +9,29 @@
 #SBATCH --gres=gpu:4
 #SBATCH --time=12:00:00
 
+mkdir -p logs outputs/stage1_mae
+hostname
+date
 
-# ── Environment ───────────────────────────────────────────────────────────────
-# Load CUDA drivers from host (needed even with containers for GPU access)
-# module load cuda/12.1
+export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
+export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 
-# Navigate to project root
-cd "$SLURM_SUBMIT_DIR"
-
-# Add project root to PYTHONPATH — passed through into the container automatically
-export PYTHONPATH="$SLURM_SUBMIT_DIR:${PYTHONPATH:-}"
-
-CONTAINER="/ceph/container/pytorch/pytorch_26_02.sif"
-
-# ── DDP via torchrun inside Singularity container ────────────────────────────
-# --nv   : passes through NVIDIA GPU drivers from the host
-# --bind : makes the project directory visible inside the container
-#
-# torchrun is called inside the container so it uses the container's Python/torch.
+GPUS=${SLURM_GPUS_ON_NODE:-${SLURM_GPUS_PER_NODE:-1}}
 
 singularity exec --nv \
-    --bind "$SLURM_SUBMIT_DIR" \
-    "$CONTAINER" \
-    torchrun \
-        --standalone \
-        --nnodes=1 \
-        --nproc_per_node=4 \
-        tbd/mae/train_mae.py \
-            --config-path "$SLURM_SUBMIT_DIR/configs" \
-            data.rgb_dir="$DATA_ROOT/RGB" \
-            data.ms_dir="$DATA_ROOT/Multispectral" \
-            data.batch_size=64 \
-            data.num_workers=8 \
-            mae.epochs=200 \
-            mae.use_checkpoint=true \
-            mae.use_wandb=true
+    /ceph/container/pytorch/pytorch_26_02.sif \
+    /bin/bash -lc "source my_venv/bin/activate && \
+        PYTHONPATH=$SLURM_SUBMIT_DIR python -u -m torch.distributed.run \
+            --standalone \
+            --nproc_per_node=${GPUS} \
+            tbd/mae/train_mae.py \
+                --config-path $SLURM_SUBMIT_DIR/configs \
+                data.rgb_dir=$DATA_ROOT/RGB \
+                data.ms_dir=$DATA_ROOT/Multispectral \
+                data.batch_size=64 \
+                data.num_workers=8 \
+                mae.epochs=200 \
+                mae.use_checkpoint=true \
+                mae.use_wandb=true"
 
-# Note: set DATA_ROOT before submitting, e.g.:
-#   export DATA_ROOT=/ceph/data/drone && sbatch scripts/slurm/train_mae.sh
+date

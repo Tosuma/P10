@@ -1,40 +1,33 @@
 #!/bin/bash
-# ─────────────────────────────────────────────────────────────────────────────
-# SLURM job: Stage 2 FastFlow Training (single GPU)
-#
-# Stage 2 is much lighter than Stage 1 (frozen encoder, small flow model).
-# A single GPU is sufficient.
-# ─────────────────────────────────────────────────────────────────────────────
-
 #SBATCH --job-name=flow_train
 #SBATCH --output=logs/flow_train_%j.out
 #SBATCH --error=logs/flow_train_%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
+#SBATCH --mem=24G
+#SBATCH --cpus-per-task=15
 #SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=8
-#SBATCH --mem=32G
 #SBATCH --time=12:00:00
-#SBATCH --partition=gpu
-
-module load cuda/12.1
-cd "$SLURM_SUBMIT_DIR"
-
-export PYTHONPATH="$SLURM_SUBMIT_DIR:${PYTHONPATH:-}"
 
 mkdir -p logs outputs/stage2_flow
+hostname
+date
 
-CONTAINER="/ceph/container/pytorch/pytorch_26_02.sif"
+export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
+export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 
 singularity exec --nv \
-    --bind "$SLURM_SUBMIT_DIR" \
-    "$CONTAINER" \
-    python tbd/mae/train_flow.py \
-        --config-path "$SLURM_SUBMIT_DIR/configs" \
-        data.rgb_dir="$DATA_ROOT/RGB" \
-        data.ms_dir="$DATA_ROOT/Multispectral" \
-        data.batch_size=128 \
-        data.num_workers=8 \
-        flow.mae_checkpoint="outputs/stage1_mae/mae_best.pth" \
-        flow.epochs=100 \
-        flow.use_wandb=true
+    /ceph/container/pytorch/pytorch_26_02.sif \
+    /bin/bash -lc "source my_venv/bin/activate && \
+        PYTHONPATH=$SLURM_SUBMIT_DIR python -u \
+            tbd/mae/train_flow.py \
+                --config-path $SLURM_SUBMIT_DIR/configs \
+                data.rgb_dir=$DATA_ROOT/RGB \
+                data.ms_dir=$DATA_ROOT/Multispectral \
+                data.batch_size=128 \
+                data.num_workers=8 \
+                flow.mae_checkpoint=outputs/stage1_mae/mae_best.pth \
+                flow.epochs=100 \
+                flow.use_wandb=true"
+
+date
