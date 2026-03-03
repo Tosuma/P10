@@ -1,20 +1,13 @@
 #!/bin/bash
-# ─────────────────────────────────────────────────────────────────────────────
-# SLURM job: Stage 1 MAE Pretraining (multi-GPU DDP)
-#
-# Usage:
-#   sbatch scripts/slurm/train_mae.sh
-#
-# Adjust --gres, --mem, --time, and --account to your HPC allocation.
-# ─────────────────────────────────────────────────────────────────────────────
-
 #SBATCH --job-name=mae_pretrain
 #SBATCH --output=logs/mae_pretrain_%j.out
 #SBATCH --error=logs/mae_pretrain_%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=4          # 4 GPUs per node
-#SBATCH --mem=128G
+#SBATCH --mem=24G
 #SBATCH --time=12:00:00
+
+mkdir -p logs outputs/stage1_mae
 
 # ── Environment ───────────────────────────────────────────────────────────────
 module load cuda/12.1
@@ -30,7 +23,6 @@ cd "$SLURM_SUBMIT_DIR"
 export PYTHONPATH="$SLURM_SUBMIT_DIR:${PYTHONPATH:-}"
 
 # Create log directories
-mkdir -p logs outputs/stage1_mae
 
 # ── DDP via torchrun ─────────────────────────────────────────────────────────
 # torchrun handles process spawning and MASTER_ADDR/PORT setup automatically.
