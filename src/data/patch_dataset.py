@@ -25,6 +25,7 @@ Spectral bands and vegetation indices are augmented geometrically only.
 
 from __future__ import annotations
 
+import json
 import os
 import random
 from pathlib import Path
@@ -164,6 +165,11 @@ class AgriculturalPatchDataset(Dataset):
         # Cache: stem → (H, W, C) float32 array
         self._image_cache: dict[str, np.ndarray] = {}
 
+        # Shape cache: stem → (H, W) — persisted to disk to avoid repeated
+        # rasterio opens on slow network filesystems (Ceph, NFS).
+        self._shape_cache_path = Path(ms_dir) / ".shape_cache.json"
+        self._shape_cache: dict[str, tuple[int, int]] = self._load_shape_cache()
+
         # Pre-compute patch index list for val/infer (deterministic)
         if mode in ("val", "infer"):
             self._patch_index = self._build_grid_index()
@@ -172,6 +178,25 @@ class AgriculturalPatchDataset(Dataset):
             self._train_length = len(records) * patches_per_image
 
     # ── Private helpers ───────────────────────────────────────────────────────
+
+    def _load_shape_cache(self) -> dict[str, tuple[int, int]]:
+        """Load persisted (stem → (H, W)) mapping from disk, or return empty dict."""
+        if self._shape_cache_path.exists():
+            try:
+                raw = json.loads(self._shape_cache_path.read_text())
+                return {k: tuple(v) for k, v in raw.items()}
+            except Exception:
+                pass
+        return {}
+
+    def _save_shape_cache(self) -> None:
+        """Persist the shape cache to disk for future runs."""
+        try:
+            self._shape_cache_path.write_text(
+                json.dumps({k: list(v) for k, v in self._shape_cache.items()}, indent=2)
+            )
+        except Exception:
+            pass  # Non-fatal: slow network write or read-only filesystem
 
     def _load_full_image(self, record: DroneImageRecord) -> np.ndarray:
         """Load, normalize, and optionally append vegetation indices."""
@@ -206,23 +231,39 @@ class AgriculturalPatchDataset(Dataset):
         """
         Return (H, W) by reading rasterio file metadata only — no pixel loading.
 
+        Checks an in-memory shape cache first to avoid repeated rasterio opens
+        on slow network filesystems (Ceph/NFS).  The cache is persisted to disk
+        via _save_shape_cache() so subsequent runs skip rasterio entirely.
+
         When include_rgb=True, the final image is aligned to the RGB grid, so
         RGB dimensions are the authoritative source.  Otherwise we fall back to
         the first MS band file.
         """
+        if record.stem in self._shape_cache:
+            return self._shape_cache[record.stem]
+
         if self.include_rgb and record.rgb_path is not None:
             with rasterio.open(str(record.rgb_path)) as src:
-                return src.height, src.width
-        # MS-only: use first available band file
-        for suffix in self.ms_suffixes:
-            for ext in (".TIF", ".tif", ".tiff", ".TIFF"):
-                candidate = record.ms_dir / f"{record.stem}{suffix}{ext}"
-                if candidate.exists():
-                    with rasterio.open(str(candidate)) as src:
-                        return src.height, src.width
-        raise FileNotFoundError(
-            f"Cannot determine image shape for stem='{record.stem}'"
-        )
+                shape = src.height, src.width
+        else:
+            # MS-only: use first available band file
+            shape = None
+            for suffix in self.ms_suffixes:
+                for ext in (".TIF", ".tif", ".tiff", ".TIFF"):
+                    candidate = record.ms_dir / f"{record.stem}{suffix}{ext}"
+                    if candidate.exists():
+                        with rasterio.open(str(candidate)) as src:
+                            shape = src.height, src.width
+                        break
+                if shape is not None:
+                    break
+            if shape is None:
+                raise FileNotFoundError(
+                    f"Cannot determine image shape for stem='{record.stem}'"
+                )
+
+        self._shape_cache[record.stem] = shape
+        return shape
 
     def _build_grid_index(self) -> list[tuple[int, int, int]]:
         """
@@ -235,11 +276,14 @@ class AgriculturalPatchDataset(Dataset):
         index: list[tuple[int, int, int]] = []
         p = self.patch_size
         s = self.stride
+        cache_was_complete = all(r.stem in self._shape_cache for r in self.records)
         for r_idx, record in enumerate(self.records):
             H, W = self._get_image_shape(record)
             for y in range(0, H - p + 1, s):
                 for x in range(0, W - p + 1, s):
                     index.append((r_idx, y, x))
+        if not cache_was_complete:
+            self._save_shape_cache()
         return index
 
     def _extract_patch(

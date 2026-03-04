@@ -33,6 +33,6 @@ singularity exec --nv \
                 data.cache_images=false \
                 flow.mae_checkpoint=$SLURM_SUBMIT_DIR/outputs/stage1_mae/mae_best.pth \
                 flow.epochs=100 \
-                flow.use_wandb=false"
+                flow.use_wandb=true"
 
 date
