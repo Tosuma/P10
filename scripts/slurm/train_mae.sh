@@ -12,6 +12,14 @@
 hostname
 date
 
+# DATA_ROOT must be set before submitting, e.g.:
+#   sbatch --export=ALL,DATA_ROOT=/ceph/data/mydata scripts/slurm/train_mae.sh
+if [[ -z "${DATA_ROOT}" ]]; then
+    echo "ERROR: DATA_ROOT is not set. Export it before submitting:"
+    echo "  sbatch --export=ALL,DATA_ROOT=/path/to/data scripts/slurm/train_mae.sh"
+    exit 1
+fi
+
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 
