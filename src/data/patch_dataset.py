@@ -167,7 +167,9 @@ class AgriculturalPatchDataset(Dataset):
 
         # Shape cache: stem → (H, W) — persisted to disk to avoid repeated
         # rasterio opens on slow network filesystems (Ceph, NFS).
-        self._shape_cache_path = Path(ms_dir) / ".shape_cache.json"
+        self._shape_cache_path = (
+            Path(records[0].ms_dir) / ".shape_cache.json" if records else None
+        )
         self._shape_cache: dict[str, tuple[int, int]] = self._load_shape_cache()
 
         # Pre-compute patch index list for val/infer (deterministic)
@@ -181,7 +183,7 @@ class AgriculturalPatchDataset(Dataset):
 
     def _load_shape_cache(self) -> dict[str, tuple[int, int]]:
         """Load persisted (stem → (H, W)) mapping from disk, or return empty dict."""
-        if self._shape_cache_path.exists():
+        if self._shape_cache_path is not None and self._shape_cache_path.exists():
             try:
                 raw = json.loads(self._shape_cache_path.read_text())
                 return {k: tuple(v) for k, v in raw.items()}
@@ -191,6 +193,8 @@ class AgriculturalPatchDataset(Dataset):
 
     def _save_shape_cache(self) -> None:
         """Persist the shape cache to disk for future runs."""
+        if self._shape_cache_path is None:
+            return
         try:
             self._shape_cache_path.write_text(
                 json.dumps({k: list(v) for k, v in self._shape_cache.items()}, indent=2)
