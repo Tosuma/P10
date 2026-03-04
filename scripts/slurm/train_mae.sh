@@ -12,13 +12,17 @@
 hostname
 date
 
-DATA_ROOT="${DATA_ROOT:-/ceph/home/student.aau.dk/ba35so/P10/data/WeedyRice-RGBMS-DB}"
+DATA_ROOT="${DATA_ROOT:-/ceph/home/student.aau.dk/ba35so/P10/data/WeedyRice-RGBMS-DB/}"
 
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 
-GPUS=$(nvidia-smi --list-gpus | wc -l)
-echo "Detected $GPUS GPU(s)"
+if [[ -n "$CUDA_VISIBLE_DEVICES" ]]; then
+    GPUS=$(echo "$CUDA_VISIBLE_DEVICES" | tr ',' '\n' | wc -l)
+else
+    GPUS=$(nvidia-smi --list-gpus | wc -l)
+fi
+echo "Using $GPUS GPU(s) (CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-all})"
 
 # Use the container's Python/torch (2.6.x) to avoid version conflicts.
 # The venv's site-packages are added to PYTHONPATH so that extra dependencies
