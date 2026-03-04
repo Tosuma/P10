@@ -36,9 +36,11 @@ singularity exec --nv \
                 --config-path $SLURM_SUBMIT_DIR/configs \
                 data.rgb_dir=$DATA_ROOT/RGB \
                 data.ms_dir=$DATA_ROOT/Multispectral \
-                data.batch_size=64 \
+                data.batch_size=256 \
                 data.num_workers=8 \
                 mae.epochs=200 \
+                mae.arch=vit_base_patch16 \
+                mae.base_lr=6e-4 \
                 mae.use_checkpoint=true \
                 mae.use_wandb=true"
 
