@@ -23,14 +23,14 @@ VENV_SITE="$SLURM_SUBMIT_DIR/my_venv/lib/python3.12/site-packages"
 
 singularity exec --nv \
     /ceph/container/pytorch/pytorch_26.02.sif \
-    /bin/bash -lc "HYDRA_FULL_ERROR=1 WANDB_API_KEY=$WANDB_API_KEY PYTHONPATH=$SLURM_SUBMIT_DIR:$VENV_SITE python -u \
+    /bin/bash -lc "HYDRA_FULL_ERROR=1 WANDB_API_KEY=$WANDB_API_KEY WANDB_MODE=offline PYTHONPATH=$SLURM_SUBMIT_DIR:$VENV_SITE python -u \
             tbd/mae/train_flow.py \
                 --config-path $SLURM_SUBMIT_DIR/configs \
                 data.rgb_dir=$DATA_ROOT/RGB \
                 data.ms_dir=$DATA_ROOT/Multispectral \
                 data.batch_size=256 \
                 data.num_workers=8 \
-                data.cache_images=true \
+                data.cache_images=false \
                 flow.mae_checkpoint=$SLURM_SUBMIT_DIR/outputs/stage1_mae/mae_best.pth \
                 flow.epochs=100 \
                 flow.use_wandb=true"
