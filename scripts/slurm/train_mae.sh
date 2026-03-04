@@ -12,6 +12,8 @@
 hostname
 date
 
+mkdir -p logs
+
 DATA_ROOT="${DATA_ROOT:-/ceph/home/student.aau.dk/ba35so/P10/data/WeedyRice-RGBMS-DB/}"
 
 # Each DDP process must use 1 OMP thread — with 4 processes, setting this to
@@ -24,7 +26,7 @@ echo "Using $GPUS GPU(s)"
 
 VENV_SITE="$SLURM_SUBMIT_DIR/my_venv/lib/python3.12/site-packages"
 
-singularity exec --nv --no-home \
+singularity exec --nv \
     /ceph/container/pytorch/pytorch_26.02.sif \
     /bin/bash -lc "HYDRA_FULL_ERROR=1 PYTHONPATH=$SLURM_SUBMIT_DIR:$VENV_SITE python -u -m torch.distributed.run \
             --standalone \

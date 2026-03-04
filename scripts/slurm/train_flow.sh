@@ -21,7 +21,7 @@ export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 
 VENV_SITE="$SLURM_SUBMIT_DIR/my_venv/lib/python3.12/site-packages"
 
-singularity exec --nv --no-home \
+singularity exec --nv \
     /ceph/container/pytorch/pytorch_26.02.sif \
     /bin/bash -lc "HYDRA_FULL_ERROR=1 PYTHONPATH=$SLURM_SUBMIT_DIR:$VENV_SITE python -u \
             tbd/mae/train_flow.py \
