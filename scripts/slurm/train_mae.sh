@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=mae_pretrain
-#SBATCH --output=logs/mae_pretrain.out
-#SBATCH --error=logs/mae_pretrain.err
+#SBATCH --output=logs/mae_pretrain%j.out
+#SBATCH --error=logs/mae_pretrain%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --mem=60G

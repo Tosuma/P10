@@ -9,7 +9,6 @@
 #SBATCH --gres=gpu:1
 #SBATCH --time=12:00:00
 
-mkdir -p logs outputs/stage2_flow
 hostname
 date
 
