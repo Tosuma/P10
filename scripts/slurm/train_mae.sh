@@ -26,7 +26,7 @@ VENV_SITE="$SLURM_SUBMIT_DIR/my_venv/lib/python3.12/site-packages"
 
 singularity exec --nv \
     /ceph/container/pytorch/pytorch_26.02.sif \
-    /bin/bash -lc "HYDRA_FULL_ERROR=1 WANDB_API_KEY=$WANDB_API_KEY WANDB_MODE=offline PYTHONPATH=$SLURM_SUBMIT_DIR:$VENV_SITE python -u -m torch.distributed.run \
+    /bin/bash -lc "HYDRA_FULL_ERROR=1 PYTHONPATH=$SLURM_SUBMIT_DIR:$VENV_SITE python -u -m torch.distributed.run \
             --standalone \
             --nproc_per_node=${GPUS} \
             tbd/mae/train_mae.py \
@@ -40,6 +40,6 @@ singularity exec --nv \
                 mae.arch=vit_small_patch16 \
                 mae.base_lr=6e-4 \
                 mae.use_checkpoint=true \
-                mae.use_wandb=true"
+                mae.use_wandb=false"
 
 date

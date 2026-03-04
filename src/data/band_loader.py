@@ -35,7 +35,12 @@ from pathlib import Path
 from typing import Optional, Sequence
 
 import numpy as np
+import warnings
+
 import rasterio
+from rasterio.errors import NotGeoreferencedWarning
+
+warnings.filterwarnings("ignore", category=NotGeoreferencedWarning)
 from rasterio.enums import Resampling
 from rasterio.warp import calculate_default_transform, reproject
 
