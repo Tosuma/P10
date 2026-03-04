@@ -14,8 +14,10 @@ date
 
 DATA_ROOT="${DATA_ROOT:-/ceph/home/student.aau.dk/ba35so/P10/data/WeedyRice-RGBMS-DB/}"
 
-export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
-export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
+# Each DDP process must use 1 OMP thread — with 4 processes, setting this to
+# SLURM_CPUS_PER_TASK (15) would spawn 60 OMP threads competing for 15 CPUs.
+export OMP_NUM_THREADS=1
+export MKL_NUM_THREADS=1
 
 GPUS=4  # matches #SBATCH --gres=gpu:4
 echo "Using $GPUS GPU(s)"
@@ -37,7 +39,7 @@ singularity exec --nv \
                 data.rgb_dir=$DATA_ROOT/RGB \
                 data.ms_dir=$DATA_ROOT/Multispectral \
                 data.batch_size=512 \
-                data.num_workers=8 \
+                data.num_workers=3 \
                 mae.epochs=200 \
                 mae.arch=vit_small_patch16 \
                 mae.base_lr=6e-4 \

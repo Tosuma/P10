@@ -185,7 +185,10 @@ class MAETrainer:
             self.optimizer.zero_grad(set_to_none=True)
 
             with autocast("cuda"):
-                loss, _, _ = (self.model.module if self.world_size > 1 else self.model)(images)
+                # Call self.model (the DDP wrapper), NOT self.model.module.
+                # Calling .module directly bypasses DDP's backward hooks so
+                # gradients are never all-reduced across GPUs.
+                loss, _, _ = self.model(images)
 
             self.scaler.scale(loss).backward()
             self.scaler.unscale_(self.optimizer)
