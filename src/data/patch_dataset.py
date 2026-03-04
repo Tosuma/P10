@@ -287,7 +287,10 @@ class AgriculturalPatchDataset(Dataset):
                 for x in range(0, W - p + 1, s):
                     index.append((r_idx, y, x))
         if not cache_was_complete:
-            self._save_shape_cache()
+            # Only write from rank 0 to avoid concurrent writes from DDP processes
+            rank = int(os.environ.get("LOCAL_RANK", 0))
+            if rank == 0:
+                self._save_shape_cache()
         return index
 
     def _extract_patch(
