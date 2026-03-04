@@ -1,7 +1,8 @@
 # Stage 2: FastFlow anomaly model configuration
 
 defaults:
-  - data: data
+  - data
+  - _self_
 
 # Path to best Stage 1 checkpoint (set before running)
 mae_checkpoint: "outputs/stage1_mae/mae_best.pth"

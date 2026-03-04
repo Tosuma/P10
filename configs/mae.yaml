@@ -1,7 +1,8 @@
 # Stage 1: MAE Pretraining configuration
 
 defaults:
-  - data: data
+  - data
+  - _self_
 
 # Model
 arch: "vit_small_patch16"   # Options: vit_tiny_patch16, vit_small_patch16, vit_base_patch16
