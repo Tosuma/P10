@@ -12,13 +12,7 @@
 hostname
 date
 
-# DATA_ROOT must be set before submitting, e.g.:
-#   sbatch --export=ALL,DATA_ROOT=/ceph/data/mydata scripts/slurm/train_mae.sh
-if [[ -z "${DATA_ROOT}" ]]; then
-    echo "ERROR: DATA_ROOT is not set. Export it before submitting:"
-    echo "  sbatch --export=ALL,DATA_ROOT=/path/to/data scripts/slurm/train_mae.sh"
-    exit 1
-fi
+DATA_ROOT="${DATA_ROOT:-/ceph/home/student.aau.dk/ba35so/P10/data/WeedyRice-RGBMS-DB}"
 
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
@@ -34,7 +28,7 @@ VENV_SITE="$SLURM_SUBMIT_DIR/my_venv/lib/python3.12/site-packages"
 
 singularity exec --nv \
     /ceph/container/pytorch/pytorch_26.02.sif \
-    /bin/bash -lc "HYDRA_FULL_ERROR=1 PYTHONPATH=$SLURM_SUBMIT_DIR:$VENV_SITE python -u -m torch.distributed.run \
+    /bin/bash -lc "HYDRA_FULL_ERROR=1 WANDB_API_KEY=$WANDB_API_KEY PYTHONPATH=$SLURM_SUBMIT_DIR:$VENV_SITE python -u -m torch.distributed.run \
             --standalone \
             --nproc_per_node=${GPUS} \
             tbd/mae/train_mae.py \
