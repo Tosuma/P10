@@ -4,37 +4,41 @@ defaults:
   - data: data
   - _self_
 
-# Path to best Stage 1 checkpoint (set before running)
-mae_checkpoint: "outputs/stage1_mae/mae_best.pth"
+mae:
+  # Must match Stage 1 architecture exactly
+  arch: "vit_small_patch16"
+  patch_size: 16
+  masking_ratio: 0.75
+  decoder_embed_dim: 512
+  decoder_depth: 4
+  decoder_num_heads: 8
+  sa_reduction_ratio: 4
+  use_checkpoint: false       # Not needed for frozen encoder inference
 
-# MAE model config (must match Stage 1)
-arch: "vit_small_patch16"
-patch_size: 16
-masking_ratio: 0.75
-decoder_embed_dim: 512
-decoder_depth: 4
-use_checkpoint: false       # Not needed for frozen encoder inference
+flow:
+  # Path to best Stage 1 checkpoint
+  mae_checkpoint: "outputs/stage1_mae/mae_best.pth"
 
-# Derived from arch: vit_small=384, vit_base=768
-feature_dim: 384
+  # Derived from arch: vit_small=384, vit_base=768
+  feature_dim: 384
 
-# Flow model
-num_coupling_blocks: 8
-subnet_hidden_dim: 512
+  # Flow model
+  num_coupling_blocks: 8
+  subnet_hidden_dim: 512
 
-# Training
-epochs: 100
-lr: 2e-4
-weight_decay: 1e-5
+  # Training
+  epochs: 100
+  lr: 2e-4
+  weight_decay: 1e-5
 
-# Logging
-use_wandb: true
-wandb_project: "plant-stress-flow"
+  # Logging
+  use_wandb: true
+  wandb_project: "plant-stress-flow"
 
-# Output
-output_dir: "outputs/stage2_flow"
+  # Output
+  output_dir: "outputs/stage2_flow"
 
-# Inference
-anomaly_z_threshold: 2.5   # Z-score threshold for binary anomaly classification
-heatmap_output_dir: "outputs/heatmaps"
-export_geotiff: true
+  # Inference
+  anomaly_z_threshold: 2.5   # Z-score threshold for binary anomaly classification
+  heatmap_output_dir: "outputs/heatmaps"
+  export_geotiff: true

@@ -35,7 +35,7 @@ from typing import Optional
 import numpy as np
 import torch
 import torch.nn as nn
-from torch.cuda.amp import GradScaler, autocast
+from torch.amp import GradScaler, autocast
 from torch.utils.data import DataLoader
 
 from src.models.mae import MaskedAutoencoder
@@ -108,7 +108,7 @@ class FlowTrainer:
         self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
             self.optimizer, T_max=epochs, eta_min=1e-6
         )
-        self.scaler = GradScaler()
+        self.scaler = GradScaler("cuda")
 
         # Statistics for score calibration
         self.score_mean: float = 0.0
@@ -156,7 +156,7 @@ class FlowTrainer:
             feats = self._extract_features(images)
 
             self.optimizer.zero_grad(set_to_none=True)
-            with autocast():
+            with autocast("cuda"):
                 nll = self.flow.nll_score(feats).mean()
 
             self.scaler.scale(nll).backward()
@@ -174,7 +174,7 @@ class FlowTrainer:
         for batch in loader:
             images = batch["image"].to(self.device, non_blocking=True)
             feats = self._extract_features(images)
-            with autocast():
+            with autocast("cuda"):
                 nll = self.flow.nll_score(feats)
             all_nll.append(nll.cpu().float().numpy())
         all_nll_np = np.concatenate(all_nll)

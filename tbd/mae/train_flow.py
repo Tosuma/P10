@@ -50,6 +50,8 @@ def main(cfg: DictConfig) -> None:
         masking_ratio=cfg.mae.masking_ratio,
         decoder_embed_dim=cfg.mae.decoder_embed_dim,
         decoder_depth=cfg.mae.decoder_depth,
+        decoder_num_heads=cfg.mae.decoder_num_heads,
+        sa_reduction_ratio=cfg.mae.sa_reduction_ratio,
         use_checkpoint=False,  # Not needed for frozen inference
     )
 
