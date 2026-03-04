@@ -36,7 +36,7 @@ singularity exec --nv \
                 data.rgb_dir=$DATA_ROOT/RGB \
                 data.ms_dir=$DATA_ROOT/Multispectral \
                 data.batch_size=1024 \
-                data.num_workers=7 \
+                data.num_workers=15 \
                 data.cache_images=false \
                 mae.epochs=200 \
                 mae.arch=vit_small_patch16 \
