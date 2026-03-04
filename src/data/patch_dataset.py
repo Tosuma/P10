@@ -32,6 +32,7 @@ from typing import Callable, Optional
 
 import cv2
 import numpy as np
+import rasterio
 import torch
 from torch.utils.data import Dataset
 
@@ -201,19 +202,41 @@ class AgriculturalPatchDataset(Dataset):
 
         return image
 
+    def _get_image_shape(self, record: DroneImageRecord) -> tuple[int, int]:
+        """
+        Return (H, W) by reading rasterio file metadata only — no pixel loading.
+
+        When include_rgb=True, the final image is aligned to the RGB grid, so
+        RGB dimensions are the authoritative source.  Otherwise we fall back to
+        the first MS band file.
+        """
+        if self.include_rgb and record.rgb_path is not None:
+            with rasterio.open(str(record.rgb_path)) as src:
+                return src.height, src.width
+        # MS-only: use first available band file
+        for suffix in self.ms_suffixes:
+            for ext in (".TIF", ".tif", ".tiff", ".TIFF"):
+                candidate = record.ms_dir / f"{record.stem}{suffix}{ext}"
+                if candidate.exists():
+                    with rasterio.open(str(candidate)) as src:
+                        return src.height, src.width
+        raise FileNotFoundError(
+            f"Cannot determine image shape for stem='{record.stem}'"
+        )
+
     def _build_grid_index(self) -> list[tuple[int, int, int]]:
         """
         Build a list of (record_idx, top_left_y, top_left_x) for dense tiling.
 
-        We load each image once to determine its spatial dimensions, then
-        enumerate all valid patch positions.
+        Uses rasterio metadata to get image dimensions without loading pixels —
+        previously this called _load_full_image() for every val image at startup,
+        causing multi-minute hangs when reading large TIFs from Ceph.
         """
         index: list[tuple[int, int, int]] = []
         p = self.patch_size
         s = self.stride
         for r_idx, record in enumerate(self.records):
-            img = self._load_full_image(record)
-            H, W = img.shape[:2]
+            H, W = self._get_image_shape(record)
             for y in range(0, H - p + 1, s):
                 for x in range(0, W - p + 1, s):
                     index.append((r_idx, y, x))

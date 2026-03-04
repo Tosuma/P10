@@ -229,10 +229,12 @@ class MAETrainer:
                 wandb.log({**metrics, "epoch": epoch})
             except Exception:
                 pass
-        logger.info(
+        msg = (
             f"Epoch {epoch:04d} | "
             + " | ".join(f"{k}={v:.5f}" for k, v in metrics.items())
         )
+        logger.info(msg)
+        print(msg, flush=True)  # ensure visibility in SLURM output regardless of Hydra log routing
 
     def _save_checkpoint(self, epoch: int, val_loss: float, is_best: bool) -> None:
         if not self.is_main:
