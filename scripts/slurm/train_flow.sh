@@ -9,18 +9,11 @@
 #SBATCH --gres=gpu:1
 #SBATCH --time=12:00:00
 
+mkdir -p logs outputs/stage2_flow
 hostname
 date
 
-CEPH_DATA="${DATA_ROOT:-/ceph/home/student.aau.dk/ba35so/P10/data/WeedyRice-RGBMS-DB/}"
-
-# ── Stage data from Ceph to local /tmp ────────────────────────────────────────
-LOCAL_DATA="/tmp/mae_flow_data_${SLURM_JOB_ID}"
-echo "Staging data from Ceph to ${LOCAL_DATA} ..."
-mkdir -p "${LOCAL_DATA}/RGB" "${LOCAL_DATA}/Multispectral"
-rsync -a --no-progress "${CEPH_DATA}/RGB/" "${LOCAL_DATA}/RGB/"
-rsync -a --no-progress "${CEPH_DATA}/Multispectral/" "${LOCAL_DATA}/Multispectral/"
-echo "Data staging complete: $(du -sh ${LOCAL_DATA} | cut -f1)"
+DATA_ROOT="${DATA_ROOT:-/ceph/home/student.aau.dk/ba35so/P10/data/WeedyRice-RGBMS-DB/}"
 
 # Stage 2 is single-GPU, so OMP threads can use full CPU budget
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
@@ -33,16 +26,13 @@ singularity exec --nv \
     /bin/bash -lc "HYDRA_FULL_ERROR=1 WANDB_API_KEY=$WANDB_API_KEY PYTHONPATH=$SLURM_SUBMIT_DIR:$VENV_SITE python -u \
             tbd/mae/train_flow.py \
                 --config-path $SLURM_SUBMIT_DIR/configs \
-                data.rgb_dir=${LOCAL_DATA}/RGB \
-                data.ms_dir=${LOCAL_DATA}/Multispectral \
+                data.rgb_dir=$DATA_ROOT/RGB \
+                data.ms_dir=$DATA_ROOT/Multispectral \
                 data.batch_size=256 \
                 data.num_workers=8 \
                 data.cache_images=true \
                 flow.mae_checkpoint=$SLURM_SUBMIT_DIR/outputs/stage1_mae/mae_best.pth \
                 flow.epochs=100 \
                 flow.use_wandb=true"
-
-# Clean up local staging area
-rm -rf "${LOCAL_DATA}"
 
 date
