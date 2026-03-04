@@ -1,7 +1,7 @@
 # Stage 1: MAE Pretraining configuration
 
 defaults:
-  - data
+  - data: data
   - _self_
 
 # Model

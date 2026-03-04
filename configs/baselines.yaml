@@ -1,7 +1,7 @@
 # Baselines configuration
 
 defaults:
-  - data
+  - data: data
   - _self_
 
 output_dir: "outputs/baselines"
