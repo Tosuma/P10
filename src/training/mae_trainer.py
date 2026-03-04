@@ -22,7 +22,7 @@ from typing import Optional
 import torch
 import torch.nn as nn
 import torch.distributed as dist
-from torch.cuda.amp import GradScaler, autocast
+from torch.amp import GradScaler, autocast
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR
@@ -150,7 +150,7 @@ class MAETrainer:
         )
 
         # ── Mixed precision ────────────────────────────────────────────────
-        self.scaler = GradScaler()
+        self.scaler = GradScaler("cuda")
 
         # ── Logging ───────────────────────────────────────────────────────
         self.writer: Optional[SummaryWriter] = None
@@ -184,7 +184,7 @@ class MAETrainer:
 
             self.optimizer.zero_grad(set_to_none=True)
 
-            with autocast():
+            with autocast("cuda"):
                 loss, _, _ = (self.model.module if self.world_size > 1 else self.model)(images)
 
             self.scaler.scale(loss).backward()
@@ -207,7 +207,7 @@ class MAETrainer:
 
         for batch in self.val_loader:
             images = batch["image"].to(self.device, non_blocking=True)
-            with autocast():
+            with autocast("cuda"):
                 loss, _, _ = raw_model(images)
             total_loss += loss.item()
             n_batches += 1
