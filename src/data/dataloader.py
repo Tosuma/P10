@@ -76,6 +76,7 @@ def build_dataloaders(
         num_workers=num_workers,
         pin_memory=True,
         persistent_workers=(num_workers > 0),
+        prefetch_factor=4 if num_workers > 0 else None,
         drop_last=True,     # Avoids incomplete batches breaking DDP sync
     )
 
@@ -86,6 +87,7 @@ def build_dataloaders(
         num_workers=num_workers,
         pin_memory=True,
         persistent_workers=(num_workers > 0),
+        prefetch_factor=4 if num_workers > 0 else None,
         drop_last=False,
     )
 
