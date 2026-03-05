@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=train_mami
-#SBATCH --output=logs/train_mami_job.out
-#SBATCH --error=logs/train_mami_job.err
+#SBATCH --output=logs/train_mami_job_%j.out
+#SBATCH --error=logs/train_mami_job_%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --mem=24G
