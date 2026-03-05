@@ -213,12 +213,28 @@ class WeedyRicePatchDataset(Dataset):
         self.do_augment = augment and split == "train"
         self.return_mask = return_mask
 
-        # Use packed .npz files (single file open per sample) when available.
-        # Fall back to per-modality files if Packed/ does not exist.
+        # --- Data source priority (fastest → slowest) --------------------
+        # 1. memmap: single file open per worker, zero per sample (best)
+        # 2. Packed npz: one file open per sample (good)
+        # 3. Per-modality files: five file opens per sample (slow on ceph)
+        memmap_dir = self.patch_dir / "memmap"
+        self._memmap: np.memmap | None = None
+        self._memmap_index: dict[str, int] = {}
+
         self._packed_dir: Path | None = None
-        packed_dir = self.patch_dir / "Packed"
-        if packed_dir.exists() and any(packed_dir.iterdir()):
-            self._packed_dir = packed_dir
+
+        if (memmap_dir / "data.npy").exists() and (memmap_dir / "stems.json").exists():
+            import json
+            all_mm_stems = json.loads((memmap_dir / "stems.json").read_text())
+            self._memmap_index = {s: i for i, s in enumerate(all_mm_stems)}
+            shape = (len(all_mm_stems), 10, 128, 128)
+            self._memmap = np.memmap(
+                memmap_dir / "data.npy", dtype="float32", mode="r", shape=shape
+            )
+        else:
+            packed_dir = self.patch_dir / "Packed"
+            if packed_dir.exists() and any(packed_dir.iterdir()):
+                self._packed_dir = packed_dir
 
         rgb_dir = self.patch_dir / "RGB"
         if not rgb_dir.exists():
@@ -251,15 +267,25 @@ class WeedyRicePatchDataset(Dataset):
         stem = self.stems[idx]
         img_stem = _image_stem_from_patch(stem)
 
-        # --- Load channels (1 file open if packed, 5 if not) -------------
-        if self._packed_dir is not None:
-            data = np.load(self._packed_dir / f"{stem}.npz")
+        # --- Load channels -----------------------------------------------
+        if self._memmap is not None:
+            # Zero file opens per sample — just a seek into the memmap
+            image = self._memmap[self._memmap_index[stem]].copy()  # (10, H, W)
+        elif self._packed_dir is not None:
+            # One file open per sample
+            data    = np.load(self._packed_dir / f"{stem}.npz")
             rgb_bgr = data["rgb"]
             ms      = _norm_ms(data["ms"], self.ms_scale)
             ndvi    = _norm_ndvi(data["ndvi"])
             ndre    = _norm_ndvi(data["ndre"])
             savi    = _norm_savi(data["savi"])
+            rgb     = _norm_rgb(rgb_bgr)
+            image   = np.concatenate(
+                [rgb.transpose(2, 0, 1), ms.transpose(2, 0, 1),
+                 ndvi[np.newaxis], ndre[np.newaxis], savi[np.newaxis]], axis=0
+            ).astype(np.float32)
         else:
+            # Five file opens per sample (fallback)
             rgb_path = self.patch_dir / "RGB" / f"{stem}.jpg"
             rgb_bgr  = cv2.imread(str(rgb_path))
             if rgb_bgr is None:
@@ -268,21 +294,11 @@ class WeedyRicePatchDataset(Dataset):
             ndvi = _norm_ndvi(np.load(self.patch_dir / "NDVI" / f"{stem}.npy"))
             ndre = _norm_ndvi(np.load(self.patch_dir / "NDRE" / f"{stem}.npy"))
             savi = _norm_savi(np.load(self.patch_dir / "SAVI" / f"{stem}.npy"))
-
-        rgb = _norm_rgb(rgb_bgr)  # (H, W, 3) float32, RGB order, [0,1]
-
-        # --- Stack into (C, H, W) ----------------------------------------
-        # Channel order: R, G, B, G_ms, R_ms, RE, NIR, NDVI, NDRE, SAVI
-        image = np.concatenate(
-            [
-                rgb.transpose(2, 0, 1),              # (3, H, W)
-                ms.transpose(2, 0, 1),               # (4, H, W)
-                ndvi[np.newaxis],                    # (1, H, W)
-                ndre[np.newaxis],                    # (1, H, W)
-                savi[np.newaxis],                    # (1, H, W)
-            ],
-            axis=0,
-        ).astype(np.float32)                         # (10, H, W)
+            rgb  = _norm_rgb(rgb_bgr)
+            image = np.concatenate(
+                [rgb.transpose(2, 0, 1), ms.transpose(2, 0, 1),
+                 ndvi[np.newaxis], ndre[np.newaxis], savi[np.newaxis]], axis=0
+            ).astype(np.float32)
 
         # --- Augmentation ------------------------------------------------
         if self.do_augment:

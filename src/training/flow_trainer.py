@@ -25,7 +25,7 @@ from typing import Optional
 
 import torch
 import torch.nn as nn
-from torch.cuda.amp import autocast
+from torch.amp import autocast
 from torch.utils.data import DataLoader, TensorDataset
 
 from src.models.flow_model import FlowModel
@@ -152,7 +152,7 @@ class FlowTrainer:
         all_feats = []
         for batch in loader:
             imgs = batch["image"].to(self.device, non_blocking=True)
-            with autocast():
+            with autocast("cuda"):
                 feats = self.mae.encode(imgs)        # (B, N_tok, D)
             B, N, D = feats.shape
             all_feats.append(feats.reshape(B * N, D).cpu())
@@ -182,7 +182,7 @@ class FlowTrainer:
             for batch in self.train_loader:
                 imgs = batch["image"].to(self.device, non_blocking=True)
                 with torch.no_grad():
-                    with autocast():
+                    with autocast("cuda"):
                         feats = self.mae.encode(imgs)     # (B, N, D)
                 B, N, D = feats.shape
                 flat = feats.reshape(B * N, D).float()
@@ -214,7 +214,7 @@ class FlowTrainer:
         else:
             for batch in self.val_loader:
                 imgs = batch["image"].to(self.device, non_blocking=True)
-                with autocast():
+                with autocast("cuda"):
                     feats = self.mae.encode(imgs)
                 B, N, D = feats.shape
                 flat = feats.reshape(B * N, D).float()
@@ -248,7 +248,7 @@ class FlowTrainer:
         for batch in loader:
             imgs  = batch["image"].to(self.device, non_blocking=True)
             stems = batch["stem"]
-            with autocast():
+            with autocast("cuda"):
                 feats  = self.mae.encode(imgs)               # (B, N, D)
             scores = self.flow.score_patches(feats.float())  # (B, N)
             all_scores.append(scores.cpu())

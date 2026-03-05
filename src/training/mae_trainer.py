@@ -22,7 +22,7 @@ import torch
 import torch.distributed as dist
 import torch.nn as nn
 from omegaconf import OmegaConf
-from torch.cuda.amp import GradScaler, autocast
+from torch.amp import GradScaler, autocast
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data import DataLoader
 
@@ -73,7 +73,7 @@ class MAETrainer:
         self.peak_lr = cfg.training.base_lr * eff_batch / 256.0
 
         self.optimizer = self._build_optimizer()
-        self.scaler    = GradScaler()
+        self.scaler    = GradScaler("cuda")
 
         # WandB
         self.use_wandb = cfg.logging.get("use_wandb", False) and self.is_primary
@@ -170,7 +170,7 @@ class MAETrainer:
 
             self.optimizer.zero_grad(set_to_none=True)
 
-            with autocast():
+            with autocast("cuda"):
                 loss, _, _ = self.model(imgs)
 
             self.scaler.scale(loss).backward()
@@ -196,7 +196,7 @@ class MAETrainer:
         total_loss = 0.0
         n_steps    = 0
 
-        with autocast():
+        with autocast("cuda"):
             for batch in self.val_loader:
                 imgs = batch["image"].to(self.device, non_blocking=True)
                 loss, _, _ = self.model(imgs)
