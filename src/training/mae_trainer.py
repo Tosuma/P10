@@ -156,7 +156,7 @@ class MAETrainer:
 
     def _train_epoch(self, epoch: int) -> dict[str, float]:
         self.model.train()
-        total_loss = 0.0
+        total_loss = torch.zeros(1, device=self.device)  # accumulate on GPU — no sync per step
         n_steps    = 0
         current_lr = self.peak_lr
         log_every  = self.cfg.logging.get("log_every", 50)
@@ -182,13 +182,14 @@ class MAETrainer:
             self.scaler.step(self.optimizer)
             self.scaler.update()
 
-            total_loss += loss.item()
+            total_loss += loss.detach()  # no GPU→CPU sync
             n_steps    += 1
 
+            # .item() only at log intervals — occasional sync is fine
             if self.is_primary and step % log_every == 0:
                 print(f"  step {step}/{steps_per_epoch}  loss={loss.item():.4f}  lr={current_lr:.2e}")
 
-        return {"loss": total_loss / max(n_steps, 1), "lr": current_lr}
+        return {"loss": (total_loss / max(n_steps, 1)).item(), "lr": current_lr}
 
     @torch.no_grad()
     def _val_epoch(self, epoch: int) -> dict[str, float]:
