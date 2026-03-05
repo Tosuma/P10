@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=train_mami
-#SBATCH --output=logs/train_mami_job_%j.out
-#SBATCH --error=logs/train_mami_job_%j.err
+#SBATCH --output=logs/vi/train_mami_%j.out
+#SBATCH --error=logs/vi/train_mami_%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --mem=24G
@@ -68,9 +68,9 @@ singularity exec --nv \
                 --stage1_data_type Kazakhstan \
                 --stage1_epochs 300 \
                 --stage1_lr ${lr} \
-                --loss_mrae_w ${mrae} \
-                --loss_ndvi_w ${ndvi} \
-                --loss_ndre_w ${ndre} \
+                --stage1_loss_mrae_w ${mrae} \
+                --stage1_loss_ndvi_w ${ndvi} \
+                --stage1_loss_ndre_w ${ndre} \
                 --dir_name ${dir_name} \
                 --model_name ${model_name} \
                 --cluster"
