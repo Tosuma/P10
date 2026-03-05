@@ -1058,7 +1058,7 @@ def build_mami_config(args: argparse.Namespace) -> MamiConfig:
         args.model_name,
         None,
         args.dir_name,
-        args.stage1_data_path,
+        Path(args.stage1_data_path),
         args.stage1_data_type,
         72,                     # BATCH SIZE TRAIN
         16,                     # BATCH SIZE VAL
@@ -1082,7 +1082,7 @@ def build_mami_config(args: argparse.Namespace) -> MamiConfig:
         args.model_name,
         Path(args.stage2_model) if args.stage2_model is not None else None,
         args.dir_name,
-        args.stage2_data_path,
+        Path(args.stage2_data_path),
         args.stage2_data_type,
         72,                     # BATCH SIZE TRAIN
         16,                     # BATCH SIZE VAL
@@ -1106,7 +1106,7 @@ def build_mami_config(args: argparse.Namespace) -> MamiConfig:
         args.model_name,
         Path(args.stage3_model) if args.stage3_model is not None else None,
         args.dir_name,
-        args.stage3_data_path,
+        Path(args.stage3_data_path),
         args.stage3_data_type,
         72,                     # BATCH SIZE TRAIN
         16,                     # BATCH SIZE VAL

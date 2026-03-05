@@ -25,7 +25,7 @@ for ndre in $(seq -f "%.1f" 0.0 0.1 1.0); do
             | grep -o '[0-9]\+')
         
         while squeue --me | grep -q "$job_id"; do
-            echo "Job $job_id still running... sleeping 5 minutes"
+            # echo "Job $job_id still running... sleeping 5 minutes"
             sleep 300
         done
     done
