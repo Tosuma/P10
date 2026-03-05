@@ -210,7 +210,7 @@ class MAEModel(nn.Module):
         B, N_vis, dec_E = tokens_vis.shape
         N = mask.shape[1]
         full = self.mask_token.expand(B, N, -1).clone()                    # (B, N, dec_E)
-        full[~mask] = tokens_vis.reshape(-1, dec_E)
+        full[~mask] = tokens_vis.reshape(-1, dec_E).to(full.dtype)
 
         full = full + self.decoder_pos_embed                               # (B, N, dec_E)
 
