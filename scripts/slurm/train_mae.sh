@@ -4,7 +4,7 @@
 #SBATCH --error=logs/mae_pretrain_%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=15          # 4 GPUs × 15 CPUs/GPU
+#SBATCH --cpus-per-task=60          # 4 GPUs × 15 CPUs/GPU
 #SBATCH --mem=24G
 #SBATCH --gres=gpu:4
 #SBATCH --time=12:00:00
@@ -48,7 +48,7 @@ singularity exec --nv \
             $SLURM_SUBMIT_DIR/train_mae.py \
                 data.patch_dir=$DATA_ROOT \
                 data.num_workers=15 \
-                data.batch_size=1024 \
+                data.batch_size=1536 \
                 mae.arch=vit_small_patch16 \
                 mae.use_checkpoint=false \
                 logging.use_wandb=true"
