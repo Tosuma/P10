@@ -1,0 +1,34 @@
+# Stage 2: Normalizing Flow training configuration
+# Run AFTER Stage 1 MAE pretraining completes.
+# Launch with: python train_flow.py
+
+data:
+  patch_dir: data/WeedyRice-patches
+  patch_size: 128
+  in_chans: 10
+  ms_scale: 65535.0
+  val_fraction: 0.2
+  seed: 42
+  batch_size: 512                      # larger batches are fine — flow model is small
+  num_workers: 8
+  pin_memory: true
+  augment: false                       # no augmentation for flow training
+
+mae_checkpoint: checkpoints/mae/best.pth   # pretrained MAE encoder
+
+flow:
+  feature_dim: 384                     # must match mae.embed_dim
+  n_coupling_blocks: 8
+  clamp: 2.0                           # GLOW activation clamp (FrEIA only)
+  cache_features: true                 # pre-compute encoder features once; much faster
+
+training:
+  flow_epochs: 100
+  flow_lr: 1.0e-3
+  scheduler: cosine                    # cosine | none
+
+logging:
+  use_wandb: true
+  project: P10-Flow
+  run_name: null
+  output_dir: checkpoints/flow

@@ -1,0 +1,36 @@
+# Baselines configuration
+# Run with: python run_baselines.py
+
+data:
+  patch_dir: data/WeedyRice-patches
+  patch_size: 128
+  in_chans: 10
+  ms_scale: 65535.0
+  val_fraction: 0.2
+  seed: 42
+  batch_size: 128
+  num_workers: 4
+  pin_memory: true
+  augment: false
+
+output_dir: results/baselines
+
+ndvi_threshold:
+  threshold: auto                      # "auto" uses Otsu; or set a float e.g. 0.3
+
+pca_kmeans:
+  n_components: 16
+  n_clusters: 8
+  seed: 42
+
+conv_ae:
+  lr: 1.0e-3
+  epochs: 50
+  patience: 10                         # early stopping patience
+  output_dir: checkpoints/conv_ae
+
+patchcore:
+  backbone: resnet50
+  layer_names: [layer2, layer3]
+  coreset_sampling_ratio: 0.1
+  num_neighbours: 1

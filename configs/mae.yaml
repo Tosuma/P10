@@ -1,0 +1,45 @@
+# Stage 1: MAE Pre-training configuration
+# Launch with: torchrun --standalone --nproc_per_node=4 train_mae.py
+# Override any key on the command line: train_mae.py mae.mask_ratio=0.8
+
+data:
+  patch_dir: data/WeedyRice-patches   # set DATA_ROOT env var to override on HPC
+  patch_size: 128
+  in_chans: 10                         # R G B G_ms R_ms RE NIR NDVI NDRE SAVI
+  ms_scale: 65535.0                    # raw DJI Mavic 3 DNs are 16-bit
+  val_fraction: 0.2
+  seed: 42
+  batch_size: 256                      # per GPU; total = 256 × 4 GPUs = 1024
+  num_workers: 15                      # 15 CPUs per GPU on AAU HPC
+  pin_memory: true
+  augment: true
+
+mae:
+  arch: vit_small_patch16              # vit_small_patch16 | vit_base_patch16
+  patch_size: 16
+  embed_dim: 384                       # 768 for vit_base
+  depth: 12
+  num_heads: 6                         # 12 for vit_base
+  mlp_ratio: 4.0
+  mask_ratio: 0.75                     # He et al. 2022 — high masking forces semantic learning
+  decoder_embed_dim: 256
+  decoder_depth: 4
+  decoder_num_heads: 8
+  use_checkpoint: true                 # gradient checkpointing — halves activation memory
+  norm_pix_loss: false                 # preserve inter-channel spectral ratios (see mae.py)
+
+training:
+  epochs: 200
+  base_lr: 1.5e-4                      # per-sample; trainer scales by total_batch/256
+  weight_decay: 0.05
+  warmup_epochs: 40
+  min_lr: 1.0e-6
+  clip_grad: 1.0
+
+logging:
+  use_wandb: true
+  project: P10-MAE
+  run_name: null                       # auto-generated if null
+  output_dir: checkpoints/mae
+  save_every: 20                       # save checkpoint every N epochs
+  log_every: 50                        # print every N steps within an epoch

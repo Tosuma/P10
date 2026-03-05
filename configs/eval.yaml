@@ -1,0 +1,26 @@
+# Evaluation and visualisation configuration
+# Run with: python evaluate.py
+
+data:
+  patch_dir: data/WeedyRice-patches
+  patch_size: 128
+  in_chans: 10
+  ms_scale: 65535.0
+  val_fraction: 0.2
+  seed: 42
+  batch_size: 128
+  num_workers: 4
+  pin_memory: true
+  augment: false
+
+mae_checkpoint: checkpoints/mae/best.pth
+flow_checkpoint: checkpoints/flow/best.pth
+
+output_dir: results/evaluation
+
+eval:
+  n_umap_samples: 10000               # subsample for UMAP fit
+  heatmap_alpha: 0.6                  # overlay transparency (0=none, 1=full heatmap)
+  save_geotiff: true                  # export anomaly maps as GeoTIFF
+  colormap: jet                       # matplotlib/cv2 colormap name
+  n_recon_samples: 8                  # patches to show in reconstruction grid
