@@ -15,6 +15,23 @@ mkdir -p logs
 # Override data location on HPC
 DATA_ROOT="${DATA_ROOT:-/ceph/home/student.aau.dk/ba35so/P10/data/WeedyRice-patches}"
 
+# Copy Packed/ + RGB/ to node-local /tmp for near-zero metadata latency.
+#   Packed/ : ~66 GB (single .npz per patch — 1 file open per sample)
+#   RGB/    : ~2  GB (JPEG stems — used only to collect patch filenames)
+#   Total   : ~68 GB — check free space before copying.
+LOCAL_DATA="/tmp/mae_data_${SLURM_JOB_ID}"
+FREE_KB=$(df /tmp | tail -1 | awk '{print $4}')
+if [ -d "$DATA_ROOT/Packed" ] && [ "$FREE_KB" -gt 70000000 ]; then
+    echo "Copying RGB/ and Packed/ to local /tmp (${FREE_KB} KB free) ..."
+    mkdir -p "$LOCAL_DATA"
+    cp -r "$DATA_ROOT/RGB"    "$LOCAL_DATA/RGB"
+    cp -r "$DATA_ROOT/Packed" "$LOCAL_DATA/Packed"
+    DATA_ROOT="$LOCAL_DATA"
+    echo "Local copy done — training will read from $LOCAL_DATA"
+else
+    echo "Skipping local copy (Packed/ missing or <70 GB free in /tmp: ${FREE_KB} KB)."
+fi
+
 # Each DDP process gets 1 OMP thread to avoid thread contention
 export OMP_NUM_THREADS=1
 export MKL_NUM_THREADS=1

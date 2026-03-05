@@ -213,6 +213,13 @@ class WeedyRicePatchDataset(Dataset):
         self.do_augment = augment and split == "train"
         self.return_mask = return_mask
 
+        # Use packed .npz files (single file open per sample) when available.
+        # Fall back to per-modality files if Packed/ does not exist.
+        self._packed_dir: Path | None = None
+        packed_dir = self.patch_dir / "Packed"
+        if packed_dir.exists() and any(packed_dir.iterdir()):
+            self._packed_dir = packed_dir
+
         rgb_dir = self.patch_dir / "RGB"
         if not rgb_dir.exists():
             raise FileNotFoundError(f"RGB sub-directory not found: {rgb_dir}")
@@ -244,21 +251,25 @@ class WeedyRicePatchDataset(Dataset):
         stem = self.stems[idx]
         img_stem = _image_stem_from_patch(stem)
 
-        # --- Load RGB (uint8 BGR) ----------------------------------------
-        rgb_path = self.patch_dir / "RGB" / f"{stem}.jpg"
-        rgb_bgr = cv2.imread(str(rgb_path))
-        if rgb_bgr is None:
-            raise FileNotFoundError(f"Cannot read: {rgb_path}")
+        # --- Load channels (1 file open if packed, 5 if not) -------------
+        if self._packed_dir is not None:
+            data = np.load(self._packed_dir / f"{stem}.npz")
+            rgb_bgr = data["rgb"]
+            ms      = _norm_ms(data["ms"], self.ms_scale)
+            ndvi    = _norm_ndvi(data["ndvi"])
+            ndre    = _norm_ndvi(data["ndre"])
+            savi    = _norm_savi(data["savi"])
+        else:
+            rgb_path = self.patch_dir / "RGB" / f"{stem}.jpg"
+            rgb_bgr  = cv2.imread(str(rgb_path))
+            if rgb_bgr is None:
+                raise FileNotFoundError(f"Cannot read: {rgb_path}")
+            ms   = _norm_ms(np.load(self.patch_dir / "Multispectral" / f"{stem}.npy"), self.ms_scale)
+            ndvi = _norm_ndvi(np.load(self.patch_dir / "NDVI" / f"{stem}.npy"))
+            ndre = _norm_ndvi(np.load(self.patch_dir / "NDRE" / f"{stem}.npy"))
+            savi = _norm_savi(np.load(self.patch_dir / "SAVI" / f"{stem}.npy"))
+
         rgb = _norm_rgb(rgb_bgr)  # (H, W, 3) float32, RGB order, [0,1]
-
-        # --- Load Multispectral (float32, G/R/RE/NIR) --------------------
-        ms_path = self.patch_dir / "Multispectral" / f"{stem}.npy"
-        ms = _norm_ms(np.load(ms_path), self.ms_scale)  # (H, W, 4)
-
-        # --- Load Vegetation Indices -------------------------------------
-        ndvi = _norm_ndvi(np.load(self.patch_dir / "NDVI" / f"{stem}.npy"))  # (H, W)
-        ndre = _norm_ndvi(np.load(self.patch_dir / "NDRE" / f"{stem}.npy"))  # (H, W)
-        savi = _norm_savi(np.load(self.patch_dir / "SAVI" / f"{stem}.npy"))  # (H, W)
 
         # --- Stack into (C, H, W) ----------------------------------------
         # Channel order: R, G, B, G_ms, R_ms, RE, NIR, NDVI, NDRE, SAVI
