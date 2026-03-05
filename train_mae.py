@@ -79,8 +79,6 @@ def main(cfg: DictConfig) -> None:
         norm_pix_loss=cfg.mae.get("norm_pix_loss", False),
     ).to(device)
 
-    model = torch.compile(model, mode="reduce-overhead")
-
     if dist.is_initialized():
         model = torch.nn.parallel.DistributedDataParallel(
             model, device_ids=[local_rank], find_unused_parameters=False
