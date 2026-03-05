@@ -48,7 +48,7 @@ singularity exec --nv \
             $SLURM_SUBMIT_DIR/train_mae.py \
                 data.patch_dir=$DATA_ROOT \
                 data.num_workers=15 \
-                data.batch_size=1536 \
+                data.batch_size=2048 \
                 mae.arch=vit_small_patch16 \
                 mae.use_checkpoint=false \
                 logging.use_wandb=true"
