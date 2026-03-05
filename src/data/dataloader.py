@@ -75,6 +75,7 @@ def build_dataloaders(
         num_workers=cfg.data.num_workers,
         pin_memory=cfg.data.get("pin_memory", True),
         persistent_workers=cfg.data.num_workers > 0,
+        prefetch_factor=4 if cfg.data.num_workers > 0 else None,
     )
 
     train_loader = DataLoader(

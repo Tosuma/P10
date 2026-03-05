@@ -33,7 +33,7 @@ singularity exec --nv \
                 data.num_workers=15 \
                 data.batch_size=1024 \
                 mae.arch=vit_small_patch16 \
-                mae.use_checkpoint=true \
+                mae.use_checkpoint=false \
                 logging.use_wandb=true"
 
 date
