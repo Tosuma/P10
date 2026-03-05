@@ -4,8 +4,8 @@
 #SBATCH --error=logs/mae_pretrain%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --mem=60G
-#SBATCH --cpus-per-task=32
+#SBATCH --mem=24G
+#SBATCH --cpus-per-task=15
 #SBATCH --gres=gpu:4
 #SBATCH --time=12:00:00
 
