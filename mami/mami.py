@@ -599,8 +599,8 @@ class Stage:
                     loss_psnr: Tensor = self.criterion_psnr(outputs, targets)
 
                     zero: Tensor = outputs.new_zeros(())
-                    loss_ndvi: Tensor = self.criterion_ndvi(outputs, targets) if self.loss_ndvi_w != 0.0 else zero
-                    loss_ndre: Tensor = self.criterion_ndre(outputs, targets) if self.loss_ndre_w != 0.0 else zero
+                    loss_ndvi: Tensor = self.criterion_ndvi(outputs, targets)
+                    loss_ndre: Tensor = self.criterion_ndre(outputs, targets)
 
                     loss_total: Tensor = (
                         self.loss_mrae_w * loss_mrae +
