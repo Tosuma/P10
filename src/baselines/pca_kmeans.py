@@ -28,6 +28,7 @@ from pathlib import Path
 from typing import Optional
 
 import numpy as np
+import torch
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
@@ -59,47 +60,36 @@ class PCAKMeans:
 
     # ------------------------------------------------------------------
 
-    def _extract_signatures(
-        self, patch_dir: Path, stems: list[str]
+    def _extract_signatures_from_loader(
+        self, loader: torch.utils.data.DataLoader
     ) -> np.ndarray:
         """
-        Extract 10-dim per-channel-mean spectral signature for each patch.
+        Extract per-channel-mean spectral signature from a DataLoader.
 
-        Loads RGB, Multispectral, NDVI, NDRE, SAVI and concatenates per-channel
-        means.  Returns (N, 10) float32 array.
+        Uses the packed .npz cache and multi-worker loading — much faster than
+        reading individual files per patch.  Returns (N, C) float32 array.
         """
-        import cv2
         sigs = []
-        rgb_dir = patch_dir / "RGB"
-        ms_dir  = patch_dir / "Multispectral"
-        vi_dirs = {vi: patch_dir / vi for vi in ("NDVI", "NDRE", "SAVI")}
-
-        for stem in stems:
-            rgb_bgr = cv2.imread(str(rgb_dir / f"{stem}.jpg"))
-            if rgb_bgr is None:
-                continue
-            rgb = (rgb_bgr[:, :, ::-1].astype(np.float32) / 255.0).mean(axis=(0, 1))  # (3,)
-            ms  = np.load(ms_dir / f"{stem}.npy").mean(axis=(0, 1))                    # (4,)
-            vi  = np.array([
-                np.load(vi_dirs["NDVI"] / f"{stem}.npy").mean(),
-                np.load(vi_dirs["NDRE"] / f"{stem}.npy").mean(),
-                np.load(vi_dirs["SAVI"] / f"{stem}.npy").mean(),
-            ])                                                                           # (3,)
-            sigs.append(np.concatenate([rgb, ms, vi]))                                  # (10,)
-
-        return np.stack(sigs, axis=0).astype(np.float32)
+        with torch.no_grad():
+            for batch in loader:
+                imgs = batch["image"]          # (B, C, H, W)
+                sigs.append(imgs.mean(dim=(2, 3)).cpu().numpy())   # (B, C)
+        return np.concatenate(sigs, axis=0).astype(np.float32)
 
     # ------------------------------------------------------------------
 
-    def fit(self, patch_dir: Path, train_stems: list[str]) -> "PCAKMeans":
+    def fit(self, train_loader: torch.utils.data.DataLoader) -> "PCAKMeans":
         """
         Fit scaler, PCA, and k-means on the training split.
 
+        Args:
+            train_loader: DataLoader over the training split (no augmentation).
         Returns:
             self (for chaining)
         """
-        print(f"[PCAKMeans] Extracting signatures from {len(train_stems):,} train patches …")
-        X = self._extract_signatures(Path(patch_dir), train_stems)
+        print("[PCAKMeans] Extracting signatures from training patches …")
+        X = self._extract_signatures_from_loader(train_loader)
+        print(f"  {X.shape[0]:,} patches, {X.shape[1]} channels")
         X_scaled = self.scaler.fit_transform(X)
         X_pca    = self.pca.fit_transform(X_scaled)
         print(f"  PCA: {self.n_components} components, "
@@ -110,36 +100,35 @@ class PCAKMeans:
         return self
 
     def score(
-        self, patch_dir: Path, stems: list[str]
+        self, val_loader: torch.utils.data.DataLoader
     ) -> tuple[np.ndarray, list[str]]:
         """
-        Compute anomaly scores (distance to nearest centroid) for given stems.
+        Compute anomaly scores (distance to nearest centroid) for given loader.
 
         Returns:
             scores: (N,) float32
-            stems:  filtered list (patches that could be loaded)
+            stems:  list of patch stems in loader order
         """
         assert self._fitted, "Call fit() before score()"
-        X = self._extract_signatures(Path(patch_dir), stems)
+        X = self._extract_signatures_from_loader(val_loader)
+        stems = [s for batch in val_loader for s in batch["stem"]]
         X_s = self.scaler.transform(X)
         X_p = self.pca.transform(X_s)
-        # Euclidean distance to nearest centroid
         dists = np.linalg.norm(
             X_p[:, np.newaxis, :] - self.kmeans.cluster_centers_[np.newaxis, :, :],
             axis=-1,
         )  # (N, k)
-        return dists.min(axis=1).astype(np.float32), stems[: len(X)]
+        return dists.min(axis=1).astype(np.float32), stems
 
     def run(
         self,
-        patch_dir: Path,
         output_dir: Path,
-        train_stems: list[str],
-        val_stems: list[str],
+        train_loader: torch.utils.data.DataLoader,
+        val_loader: torch.utils.data.DataLoader,
     ) -> dict[str, float]:
         """Full pipeline: fit on train, score val, save results."""
-        self.fit(patch_dir, train_stems)
-        scores, valid_stems = self.score(patch_dir, val_stems)
+        self.fit(train_loader)
+        scores, valid_stems = self.score(val_loader)
 
         output_dir = Path(output_dir) / "pca_kmeans"
         output_dir.mkdir(parents=True, exist_ok=True)
