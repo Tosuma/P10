@@ -16,6 +16,9 @@ data:
 
 mae_checkpoint: checkpoints/mae/best.pth   # pretrained MAE encoder
 
+mae:
+  arch: vit_small_patch16                  # must match Stage 1 training
+
 flow:
   feature_dim: 384                     # must match mae.embed_dim
   n_coupling_blocks: 8

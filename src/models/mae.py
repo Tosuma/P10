@@ -188,6 +188,11 @@ class MAEModel(nn.Module):
             mask: (B, N) bool — True where masked (where loss is computed)
         """
         # 1. Spectral attention: reweight bands
+        # Keep raw input as reconstruction target — the model must learn to
+        # reconstruct the original pixel values, not its own rescaled input.
+        # Without this, SpectralAttention can trivially collapse all weights to
+        # ~0, making both target and prediction ≈ 0 and loss ≈ 0.
+        raw_imgs = imgs
         imgs = self.spectral_attn(imgs)
 
         # 2. Patch embed + add PE
@@ -221,7 +226,7 @@ class MAEModel(nn.Module):
         pred_all = self.decoder_pred(full)                                 # (B, N, patch_dim)
 
         # 8. Loss: MSE on masked patches only
-        target = self._patchify(imgs)                                      # (B, N, patch_dim)
+        target = self._patchify(raw_imgs)                                  # (B, N, patch_dim)
 
         if self.norm_pix_loss:
             # Per-patch normalisation (not used by default — see module docstring)
