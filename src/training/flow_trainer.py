@@ -105,11 +105,13 @@ class FlowTrainer:
         train_feats = val_feats = None
         if cache:
             print("Pre-computing training features …")
-            train_feats = self._extract_features(self.train_loader)   # (N, D)
-            print(f"  cached {train_feats.shape[0]:,} token features (train)")
+            train_feats = self._extract_features(self.train_loader).to(self.device)
+            print(f"  cached {train_feats.shape[0]:,} patch features on GPU "
+                  f"({train_feats.numel() * 4 / 1e6:.0f} MB)")
             print("Pre-computing validation features …")
-            val_feats   = self._extract_features(self.val_loader)
-            print(f"  cached {val_feats.shape[0]:,} token features (val)")
+            val_feats = self._extract_features(self.val_loader).to(self.device)
+            print(f"  cached {val_feats.shape[0]:,} patch features on GPU "
+                  f"({val_feats.numel() * 4 / 1e6:.0f} MB)")
 
         best_val = float("inf")
         for epoch in range(epochs):
@@ -144,18 +146,23 @@ class FlowTrainer:
     @torch.no_grad()
     def _extract_features(self, loader: DataLoader) -> torch.Tensor:
         """
-        Run MAE encoder on every batch, flatten all tokens, return on CPU.
+        Run MAE encoder on every batch, mean-pool tokens per patch, return on CPU.
+
+        Mean-pooling (one 384-dim vector per patch) reduces cache size 64×
+        vs. storing every token (~330 MB vs ~21 GB), allowing the full cache
+        to be moved to GPU once and eliminating per-step CPU→GPU transfers.
+        Token-level scoring at inference uses score_patches() directly and is
+        unaffected by this choice.
 
         Returns:
-            (N_total_tokens, embed_dim) float32 on CPU.
+            (N_patches, embed_dim) float32 on CPU.
         """
         all_feats = []
         for batch in loader:
             imgs = batch["image"].to(self.device, non_blocking=True)
             with autocast("cuda"):
                 feats = self.mae.encode(imgs)        # (B, N_tok, D)
-            B, N, D = feats.shape
-            all_feats.append(feats.reshape(B * N, D).cpu())
+            all_feats.append(feats.mean(dim=1).cpu())   # (B, D) — pool over tokens
         return torch.cat(all_feats, dim=0)
 
     def _train_epoch(
@@ -167,10 +174,10 @@ class FlowTrainer:
         bs = self.cfg.data.get("batch_size", 512)
 
         if cached_feats is not None:
-            # Train from cached feature tensor
-            idx = torch.randperm(cached_feats.shape[0])
+            # Train from cached feature tensor (already on GPU)
+            idx = torch.randperm(cached_feats.shape[0], device=self.device)
             for start in range(0, cached_feats.shape[0], bs):
-                chunk = cached_feats[idx[start: start + bs]].to(self.device)
+                chunk = cached_feats[idx[start: start + bs]]   # no .to() — already on GPU
                 self.optimizer.zero_grad(set_to_none=True)
                 loss = self.flow.flow_loss(chunk)
                 loss.backward()
@@ -207,7 +214,7 @@ class FlowTrainer:
 
         if cached_feats is not None:
             for start in range(0, cached_feats.shape[0], bs):
-                chunk = cached_feats[start: start + bs].to(self.device)
+                chunk = cached_feats[start: start + bs]   # already on GPU
                 nll = self.flow.anomaly_score(chunk).mean()
                 total_nll += nll.item()
                 n_steps   += 1
