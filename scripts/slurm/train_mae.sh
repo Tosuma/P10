@@ -32,6 +32,12 @@ else
     echo "Skipping local copy (Packed/ missing or <70 GB free in /tmp: ${FREE_KB} KB)."
 fi
 
+# Run identity — each job gets a unique dir by default (SLURM_JOB_ID).
+# Override at submit time to use a meaningful name instead:
+#   RUN_NAME=mae_v2 OUTPUT_DIR=checkpoints/mae_v2 sbatch scripts/slurm/train_mae.sh
+RUN_NAME="${RUN_NAME:-mae_${SLURM_JOB_ID}}"
+OUTPUT_DIR="${OUTPUT_DIR:-checkpoints/mae_${SLURM_JOB_ID}}"
+
 # Each DDP process gets 1 OMP thread to avoid thread contention
 export OMP_NUM_THREADS=1
 export MKL_NUM_THREADS=1
@@ -51,6 +57,8 @@ singularity exec --nv \
                 data.batch_size=1536 \
                 mae.arch=vit_small_patch16 \
                 mae.use_checkpoint=false \
-                logging.use_wandb=true"
+                logging.use_wandb=true \
+                logging.run_name=$RUN_NAME \
+                logging.output_dir=$OUTPUT_DIR"
 
 date
