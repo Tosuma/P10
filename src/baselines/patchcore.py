@@ -117,31 +117,30 @@ class PatchCore:
 
     def _greedy_coreset(self, features: torch.Tensor, ratio: float) -> torch.Tensor:
         """
-        Greedy coreset subsampling: iteratively select the feature that is
-        furthest from the already-selected set.  Reduces memory bank size
-        while retaining coverage of the training distribution.
+        Greedy coreset subsampling on GPU: iteratively select the feature that
+        is furthest from the already-selected set.
 
         Args:
-            features: (N, D) float32
+            features: (N, D) float32 — moved to GPU internally
             ratio:    Fraction to keep
         Returns:
-            (int(N*ratio), D) coreset tensor
+            (int(N*ratio), D) coreset tensor on CPU
         """
         n_keep = max(1, int(features.shape[0] * ratio))
         if n_keep >= features.shape[0]:
             return features
 
-        # Initialise with a random point
-        selected = [torch.randint(features.shape[0], (1,)).item()]
-        dists    = torch.full((features.shape[0],), float("inf"))
+        feats_gpu = features.to(self.device)   # run distance ops on GPU
+        selected  = [torch.randint(features.shape[0], (1,)).item()]
+        dists     = torch.full((features.shape[0],), float("inf"), device=self.device)
 
         for _ in range(n_keep - 1):
-            last  = features[selected[-1]].unsqueeze(0)          # (1, D)
-            d     = torch.norm(features - last, dim=-1)           # (N,)
+            last  = feats_gpu[selected[-1]].unsqueeze(0)          # (1, D)
+            d     = torch.norm(feats_gpu - last, dim=-1)           # (N,)
             dists = torch.minimum(dists, d)
             selected.append(int(dists.argmax().item()))
 
-        return features[torch.tensor(selected)]
+        return feats_gpu[torch.tensor(selected, device=self.device)].cpu()
 
     def fit(self, loader: DataLoader) -> "PatchCore":
         """

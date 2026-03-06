@@ -75,7 +75,7 @@ def main(cfg: DictConfig) -> None:
     pca_cfg = cfg.pca_kmeans
     pca_km  = PCAKMeans(n_components=pca_cfg.n_components,
                         n_clusters=pca_cfg.n_clusters, seed=pca_cfg.seed)
-    stats = pca_km.run(patch_dir, output_dir, train_stems, val_stems)
+    stats = pca_km.run(output_dir, train_loader, val_loader)
     all_results["pca_kmeans"] = stats
     print(f"  {stats}")
 
