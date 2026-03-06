@@ -56,6 +56,7 @@ def main(cfg: DictConfig) -> None:
     train_stems = train_ds.stems
     val_stems   = val_ds.stems
 
+    train_loader, val_loader = build_dataloaders(cfg)
     all_results: dict[str, dict] = {}
 
     # ── 1. NDVI Threshold ─────────────────────────────────────────────
@@ -81,7 +82,7 @@ def main(cfg: DictConfig) -> None:
 
     # ── 3. Conv Autoencoder ───────────────────────────────────────────
     print("\n=== Baseline 3: Conv Autoencoder ===")
-    train_loader, val_loader = build_dataloaders(cfg)
+
     ae_cfg   = cfg.conv_ae
     ae_model = ConvAutoencoder(in_chans=cfg.data.in_chans)
     ae_trainer = ConvAETrainer(
