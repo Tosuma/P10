@@ -598,7 +598,6 @@ class Stage:
                     loss_rmse: Tensor = self.criterion_rmse(outputs, targets)
                     loss_psnr: Tensor = self.criterion_psnr(outputs, targets)
 
-                    zero: Tensor = outputs.new_zeros(())
                     loss_ndvi: Tensor = self.criterion_ndvi(outputs, targets)
                     loss_ndre: Tensor = self.criterion_ndre(outputs, targets)
 
