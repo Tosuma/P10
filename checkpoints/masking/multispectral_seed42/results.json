@@ -1,0 +1,28 @@
+{
+  "input_type": "multispectral",
+  "seed": 42,
+  "best_val_miou": 0.7341996727447151,
+  "test_loss": 0.30023514418988617,
+  "test_miou": 0.7479694289965668,
+  "test_per_class_iou": {
+    "0": 0.8182448296283967,
+    "1": 0.6776940283647368
+  },
+  "epochs_trained": 80,
+  "model_params": 14331490,
+  "config": {
+    "data_root": "data/WeedyRice-full-data/",
+    "input_type": "multispectral",
+    "image_size": 256,
+    "num_classes": 2,
+    "ms_channels": 4,
+    "epochs": 300,
+    "batch_size": 12,
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "patience": 15,
+    "seed": 42,
+    "output_dir": "./results"
+  },
+  "timestamp": "2026-02-24T13:57:40.411520"
+}
