@@ -11,5 +11,4 @@ hdf5storage
 tqdm
 spectral
 pandas
-tensorboard
 openpyxl
