@@ -7,16 +7,16 @@ MODEL_BASE_NAME="vi-kaz"
 BASE_DIR="vi"
 
 RETRY_TEXT="Could not lookup the current user"
-MAX_RETRIES=20
+MAX_RETRIES=10
 
-for ndre in $(seq -f "%.1f" 0.1 0.1 0.2); do
+for ndre in $(seq -f "%.1f" 0.2 0.1 0.3); do
     for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
         DIR_NAME="${BASE_DIR}/re_${ndre}_vi_${ndvi}"
         MODEL_NAME="${MODEL_BASE_NAME}-re_${ndre}-vi_${ndvi}"
 
         attempt=1
 
-        if [[ ("$ndre" == "0.1" && ("$ndvi" == "0.0" || "$ndvi" == "0.1" || "$ndvi" == "0.2" || "$ndvi" == "0.3" ||  "$ndvi" == "0.4" ||  "$ndvi" == "0.5" ||  "$ndvi" == "0.6" ||  "$ndvi" == "0.7" || "$ndvi" == "0.8" || "$ndvi" == "0.9")) || ("$ndre" == "0.2" && ("$ndvi" == "0.6" || "$ndvi" == "0.7" || "$ndvi" == "0.8" || "$ndvi" == "0.9" || "$ndvi" == "1.0")) ]]; then
+        if [[ ("$ndre" == "0.2" && ("$ndvi" == "0.0" || "$ndvi" == "0.1" || "$ndvi" == "0.2" || "$ndvi" == "0.3" || "$ndvi" == "0.4" || "$ndvi" == "0.5")) ]]; then
             echo "$(date '+%Y-%m-%d %H:%M:%S') :: skipped ndre=${ndre}, ndvi=${ndvi}"
             continue
         fi
@@ -58,7 +58,7 @@ for ndre in $(seq -f "%.1f" 0.1 0.1 0.2); do
 
                 attempt=$((attempt + 1))
                 echo "$(date '+%Y-%m-%d %H:%M:%S') :: Retrying ndre=${ndre}, ndvi=${ndvi}"
-                sleep 60
+                sleep 10
                 continue
             fi
 
