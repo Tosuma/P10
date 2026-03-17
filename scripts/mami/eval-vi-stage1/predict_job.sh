@@ -3,8 +3,8 @@
 # Copyright (c) 2025 <Hugin J. Zachariasen, Magnus H. Jensen, Martin C. B. Nielsen, Tobias S. Madsen>.
 
 #SBATCH --job-name=eval_mami
-#SBATCH --output=logs/vi/eval_mami_%j.out
-#SBATCH --error=logs/vi/eval_mami_%j.err
+#SBATCH --output=logs/vi/pred_mami_%j.out
+#SBATCH --error=logs/vi/pred_mami_%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --mem=24G
@@ -86,18 +86,16 @@ run_eval() {
   fi
 
 
-  echo "=== Beginning evaluation ==="
+  echo "=== Beginning predictions ==="
+
   singularity exec --nv \
     /ceph/container/pytorch/pytorch_26.02.sif \
     /bin/bash -lc "source p10_venv/bin/activate && \
-        python ./mami/evaluation.py \
-            --pred_path ${prediction_path} \
-            --truth_path ${truth_path} \
-            --type ${data_type} \
-            --result_path ${result_path} \
-            --summary_dir ${summary_dir}"
-
-  echo -e "\n--------------------------------------------------------------------------\n"
+        python ./mami/inference.py \
+            --model ${model} \
+            --data_path ${truth_path} \
+            --data_type ${data_type}
+            --save_path ${prediction_path}"
 }
 
 model_name=""
