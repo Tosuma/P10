@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=train_mami
-#SBATCH --output=logs/train_mami_job.out
-#SBATCH --error=logs/train_mami_job.err
+#SBATCH --output=logs/train_mami_job_%j.out
+#SBATCH --error=logs/train_mami_job_%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --mem=24G
@@ -29,10 +29,18 @@ singularity exec --nv \
             mami/tl-pipeline.py \
                 --stage1_data_path data/East-Kaza \
                 --stage1_data_type Kazakhstan \
-                --stage1_epochs 300 \
+                --stage1_epochs 0 \
                 --stage1_lr 4e-4 \
-                --stage2_epochs 0 \
-                --stage3_epochs 0 \
-                --cluster"
+                --stage2_epochs 300 \
+                --stage2_data_path data/WeedyRice \
+                --stage2_data_type Weedy-Rice \
+                --stage2_lr 1e-
+                --stage3_epochs 300 \
+                --loss_w_mrae 1.0 \
+                --loss_w_ndvi 0.1 \
+                --loss_w_ndre 0.1 \
+                --cluster \
+                --dir_name basemodel-kaz-ndvi \
+                --model_name basemodel-kaz-ndvi"
 
 date
