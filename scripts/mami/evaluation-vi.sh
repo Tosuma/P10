@@ -13,14 +13,15 @@
 #  --save-images   : Bool flag to save images
 #  --single-image  : Bool flag to run single image
 #  --jpg           : Name of the JPG file - not full path
+
 run_eval() {
+  local model=""
   local prediction_path=""
   local truth_path=""
   local data_type=""
-  local model=""
   local result_path=""
   local print_results=false
-  local save_images=false
+  local save_images=true
   local single_image=false
   local jpg_image=""
 
@@ -112,6 +113,29 @@ run_eval() {
 sri_path="./data/sri-lanka-aligned/"
 weedy_path="./data/WeedyRice/"
 
+# run_eval
+#  --model         : Model path to test
+#  --pred          : The directory where the predictions are placed (the directory will automatically be created)
+#  --truth         : The root directory where the ground truth files are located (the dataset)
+#  --type          : The type of the dataset
+#  --out           : The results out dir (will automatically be created)
+#  --print-results : Print the results of an evaluation foreach of the predictions
+#  --save-images   : Bool flag to save images
+#  --single-image  : Bool flag to run single image
+#  --jpg           : Name of the JPG file - not full path
+
+
+for ndre in $(seq -f "%.1f" 0.4 0.1 1.0); do
+  for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
+    run_eval \
+      --model "./checkpoints/vi/finals/vi-kaz-re_${ndre}-vi_${ndvi}_stage1_best.pth" \
+      --pred "results/vi/re_${ndre}-vi_${ndvi}---weedy-rice/data/" \
+      --truth "${weedy_path}" \
+      --type "Weedy-Rice" \
+      --out "results/vi/re_${ndre}_vi_${ndvi}---weedy-rice/results.json" \
+      --save-images
+  done
+done
 # echo "---------- 1st run ----------"
 # run_eval \
 #   --model "./checkpoints/vi/sri-stage2/vi-stage2-sri.pth" \
@@ -133,18 +157,18 @@ weedy_path="./data/WeedyRice/"
 # echo "---------- 2nd run ----------"
 # Base model stage 2 (trained on Kazakhstan + Weedy-Rice) test on Sri-Lanka
 # run_eval \
-#   --model "checkpoints/vi/weedy-stage2/vi-stage2-weedy.pth" \
-#   --pred "results/vi/vi-weedy-stage2---sri-lanka/data/" \
+#   --model "checkpoints/vi/ndvi_0.0_ndre_0.0/vi-kaz-vi_0.0-re_0.0_stage1_best.pth" \
+#   --pred "results/vi/vi_0.0-re_0.0---sri-lanka/data/" \
 #   --truth "$sri_path" \
 #   --type "Sri-Lanka" \
-#   --out "results/vi/vi-weedy-stage2---sri-lanka/results.json" \
+#   --out "results/vi/vi_0.0-re_0.0---sri-lanka/results.json" \
 #   --save-images
 
 # Base model stage 3 (trained on Kazakhstan + Weedy-Rice) test on Sri-Lanka
-run_eval \
-  --model "./checkpoints/vi/weedy-stage3/vi-stage3-weedy.pth" \
-  --pred "results/vi/vi-weedy-stage3---sri-lanka/data/" \
-  --truth "$sri_path" \
-  --type "Sri-Lanka" \
-  --out "results/vi/vi-weedy-stage3---sri-lanka/results.json" \
-  --save-images
+# run_eval \
+#  --model "checkpoints/vi/ndvi_0.0_ndre_0.0/vi-kaz-vi_0.0-re_0.0_stage1_best.pth" \
+#  --pred "results/vi/vi_0.0-re_0.0---weedy-rice/data/" \
+#  --truth "$weedy_path" \
+#  --type "Weedy-Rice" \
+#  --out "results/vi/vi_0.0-re_0.0---weedy-rice/results.json" \
+#  --save-images

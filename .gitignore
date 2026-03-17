@@ -214,16 +214,14 @@ __marimo__/
 uv.lock
 CLAUDE.md
 
-data/*.mp4
-data/*.png
-data/*.jpg
-data/*.tif
-data/*.JPG
-data/*.TIF
-data/*/
+data/
 
 results/**/data
 results/**/images
+results/vi/**
+
+checkpoints/
+
 
 **.venv**
 **venv**
