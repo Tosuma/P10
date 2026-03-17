@@ -125,50 +125,14 @@ weedy_path="./data/WeedyRice/"
 #  --jpg           : Name of the JPG file - not full path
 
 
-for ndre in $(seq -f "%.1f" 0.4 0.1 1.0); do
+for ndre in $(seq -f "%.1f" 1.0 0.1 1.0); do
   for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
     run_eval \
       --model "./checkpoints/vi/finals/vi-kaz-re_${ndre}-vi_${ndvi}_stage1_best.pth" \
-      --pred "results/vi/re_${ndre}-vi_${ndvi}---weedy-rice/data/" \
+      --pred "results/vi/re_${ndre}_vi_${ndvi}_stage1---weedy-rice/data/" \
       --truth "${weedy_path}" \
       --type "Weedy-Rice" \
-      --out "results/vi/re_${ndre}_vi_${ndvi}---weedy-rice/results.json" \
+      --out "results/vi/re_${ndre}_vi_${ndvi}_stage1---weedy-rice/results.json" \
       --save-images
   done
 done
-# echo "---------- 1st run ----------"
-# run_eval \
-#   --model "./checkpoints/vi/sri-stage2/vi-stage2-sri.pth" \
-#   --pred "results/vi/vi-sri-stage-2---weedy-rice/data/" \
-#   --truth "$weedy_path" \
-#   --type "Weedy-Rice" \
-#   --out "results/vi/vi-sri-stage-2---weedy-rice/results.json" \
-#   --save-images
-
-# Base model stage 3 (trained on Kazakhstan + Sri-Lanka) test on Weedy-Rice
-# run_eval \
-#   --model "./checkpoints/vi/sri-stage3/vi-stage3-sri_final.pth" \
-#   --pred "results/vi/vi-sri-stage-3---weedy-rice/data/" \
-#   --truth "$weedy_path" \
-#   --type "Weedy-Rice" \
-#   --out "results/vi/vi-sri-stage-3---weedy-rice/results.json" \
-#   --save-images
-
-# echo "---------- 2nd run ----------"
-# Base model stage 2 (trained on Kazakhstan + Weedy-Rice) test on Sri-Lanka
-# run_eval \
-#   --model "checkpoints/vi/ndvi_0.0_ndre_0.0/vi-kaz-vi_0.0-re_0.0_stage1_best.pth" \
-#   --pred "results/vi/vi_0.0-re_0.0---sri-lanka/data/" \
-#   --truth "$sri_path" \
-#   --type "Sri-Lanka" \
-#   --out "results/vi/vi_0.0-re_0.0---sri-lanka/results.json" \
-#   --save-images
-
-# Base model stage 3 (trained on Kazakhstan + Weedy-Rice) test on Sri-Lanka
-# run_eval \
-#  --model "checkpoints/vi/ndvi_0.0_ndre_0.0/vi-kaz-vi_0.0-re_0.0_stage1_best.pth" \
-#  --pred "results/vi/vi_0.0-re_0.0---weedy-rice/data/" \
-#  --truth "$weedy_path" \
-#  --type "Weedy-Rice" \
-#  --out "results/vi/vi_0.0-re_0.0---weedy-rice/results.json" \
-#  --save-images
