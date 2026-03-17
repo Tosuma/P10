@@ -1,0 +1,89 @@
+#!/bin/bash
+mkdir -p logs/vi
+
+LR="1e-5"
+MRAE="1.0"
+MODEL_BASE_NAME="vi-weedy"
+BASE_DIR="vi"
+
+RETRY_TEXT="Could not lookup the current user"
+MAX_RETRIES=20
+
+chosen_models=(
+    "checkpoints/vi/re_0.0_vi_0.0/vi-kaz-re_0.0_vi_0.0_stage1_best.pth", # 0.053832
+    "checkpoints/vi/re_0.0_vi_0.1/vi-kaz-re_0.0_vi_0.1_stage1_best.pth", # 0.056462
+    "checkpoints/vi/re_0.1_vi_0.0/vi-kaz-re_0.1_vi_0.0_stage1_best.pth", # 0.057275
+    "checkpoints/vi/re_0.2_vi_0.0/vi-kaz-re_0.2_vi_0.0_stage1_best.pth", # 0.060610
+    "checkpoints/vi/re_0.0_vi_0.2/vi-kaz-re_0.0_vi_0.2_stage1_best.pth", # 0.063189
+    "checkpoints/vi/re_0.3_vi_0.0/vi-kaz-re_0.3_vi_0.0_stage1_best.pth", # 0.066163
+    "checkpoints/vi/re_0.2_vi_0.2/vi-kaz-re_0.2_vi_0.2_stage1_best.pth", # 0.068028
+    "checkpoints/vi/re_0.0_vi_0.3/vi-kaz-re_0.0_vi_0.3_stage1_best.pth", # 0.069299
+    "checkpoints/vi/re_0.4_vi_0.0/vi-kaz-re_0.4-vi_0.0_stage1_best.pth", # 0.06xxxx
+    "checkpoints/vi/re_0.1_vi_0.3/vi-kaz-re_0.1_vi_0.3_stage1_best.pth", # 0.071530
+)
+
+for train_model in "${models[@]}"; do
+    for ndre in $(seq -f "%.1f" 0.0 0.1 5.0); do
+        for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
+            DIR_NAME="${BASE_DIR}/re_${ndre}_vi_${ndvi}_stage2"
+            MODEL_NAME="${MODEL_BASE_NAME}-re_${ndre}-vi_${ndvi}"
+
+            attempt=1
+
+            if [[ ("$ndre" == "0.1" && ("$ndvi" == "0.0" || "$ndvi" == "0.1" || "$ndvi" == "0.2" || "$ndvi" == "0.3" ||  "$ndvi" == "0.4" ||  "$ndvi" == "0.5" ||  "$ndvi" == "0.6" ||  "$ndvi" == "0.7" || "$ndvi" == "0.8" || "$ndvi" == "0.9")) || ("$ndre" == "0.2" && ("$ndvi" == "0.6" || "$ndvi" == "0.7" || "$ndvi" == "0.8" || "$ndvi" == "0.9" || "$ndvi" == "1.0")) ]]; then
+                echo "$(date '+%Y-%m-%d %H:%M:%S') :: skipped ndre=${ndre}, ndvi=${ndvi}"
+                continue
+            fi
+
+            while true; do
+                job_id=$(
+                    sbatch scripts/mami/train_mami_job.sh \
+                        --train_model "${train_model}" \
+                        --lr "${LR}" \
+                        --loss_mrae_w "${MRAE}" \
+                        --loss_ndre_w "${ndre}" \
+                        --loss_ndvi_w "${ndvi}" \
+                        --dir_name "${DIR_NAME}" \
+                        --model_name "${MODEL_NAME}" \
+                    | grep -o '[0-9]\+'
+                )
+
+                echo "$(date '+%Y-%m-%d %H:%M:%d') :: Starting job ${job_id} ndre: ${ndre}, ndvi: ${ndvi}"
+
+                while squeue --me | grep -q "$job_id"; do
+                    # echo "Job $job_id still running... sleeping 5 minutes"
+                    sleep 10
+                done # sleep
+
+                err_file="logs/vi/train_mami_${job_id}.err"
+                sleep 5
+                
+                first_line=""
+                if [ -f "${err_file}" ]; then
+                    first_line="$(head -n 1 "${err_file}")"
+                fi
+
+                if grep -qF "$RETRY_TEXT" "$err_file"; then
+                    echo "$(date '+%Y-%m-%d %H:%M:%S') :: Job ${job_id} hit retryable error: '${first_line}'"
+
+                    if [ "${attempt}" -ge "${MAX_RETRIES}" ]; then
+                        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries (${MAX_RETRIES}) for ndre=${ndre}, ndvi=${ndvi}. Stopping."
+                        exit 1
+                    fi
+
+                    attempt=$((attempt + 1))
+                    echo "$(date '+%Y-%m-%d %H:%M:%S') :: Retrying ndre=${ndre}, ndvi=${ndvi}"
+                    sleep 60
+                    continue
+                fi
+
+                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished job ${job_id} successfully for ndre=${ndre}, ndvi=${ndvi}"
+
+                mv "logs/vi/train_mami_${job_id}.err" "logs/vi/re_${ndre}_vi_${ndvi}_stage2.err"
+                rm "logs/vi/train_mami_${job_id}.out"
+                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Renamed 'train_mami_${job_id}.err' to 're_${ndre}_vi_${ndvi}_stage2.err'"
+                break # the retry loop
+            done # retry loop
+        done # ndvi loop
+    done # ndre loop
+done # train_model loop
