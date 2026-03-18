@@ -4,25 +4,19 @@ from base_dataset import DataCarrier
 
 class SriLankaDataset(DataCarrier):
     """
-    Loader for Sri Lanka dataset with DJI drone imagery.
+    Data carrier for Sri Lanka dataset.
 
     File naming convention:
     - RGB: DJI_<timestamp>_<id>_D.JPG
     - MS bands: DJI_<timestamp>_<id>_MS_<band>.TIF
       where <band> is one of: G (Green), R (Red), RE (Red Edge), NIR (Near Infrared)
 
-    Args:
-        root_path: Directory containing the Sri Lanka dataset
-
-    Returns:
-        tuple: (rgb_paths, ms_paths) where ms_paths contains 4 bands per RGB image
-
     Example:
-        RGB: data/MS_Sri_Lanka/DJI_20230814123320_0001_D.JPG
-        MS:  data/MS_Sri_Lanka/DJI_20230814123320_0001_MS_G.TIF
-             data/MS_Sri_Lanka/DJI_20230814123320_0001_MS_R.TIF
-             data/MS_Sri_Lanka/DJI_20230814123320_0001_MS_RE.TIF
-             data/MS_Sri_Lanka/DJI_20230814123320_0001_MS_NIR.TIF
+        RGB: data/.../DJI_<yyyymmddhhmmss>_0001_D.JPG
+        MS:  data/.../DJI_<yyyymmddhhmmss>_0001_MS_G.TIF
+             data/.../DJI_<yyyymmddhhmmss>_0001_MS_R.TIF
+             data/.../DJI_<yyyymmddhhmmss>_0001_MS_RE.TIF
+             data/.../DJI_<yyyymmddhhmmss>_0001_MS_NIR.TIF
     """
     def _load_data(self, root_path: Path) -> tuple[list[Path], list[Path]]:
         # Sri Lanka RGB full pictures have filenames like: <id>_D.JPG
@@ -45,18 +39,12 @@ class SriLankaDataset(DataCarrier):
 
 class KazDataset(DataCarrier):
     """
-    Loader for East Kazakhstan dataset.
+    Data carrier for East Kazakhstan dataset.
 
     File naming convention:
     - RGB: <id>0.JPG
     - MS bands: <id>2.TIF, <id>3.TIF, <id>4.TIF, <id>5.TIF
       (bands 2-5 correspond to the 4 multispectral channels)
-
-    Args:
-        root_path: Directory containing the East Kazakhstan dataset
-
-    Returns:
-        tuple: (rgb_paths, ms_paths) where ms_paths contains 4 bands per RGB image
 
     Example:
         RGB: data/East_Kazakhstan/IMG_0001_0.JPG
@@ -79,20 +67,15 @@ class KazDataset(DataCarrier):
 
         return rgb_path_list, ms_path_list
 
+
 class WeedyRiceDataset(DataCarrier):
     """
-    Loader for Weedy Rice dataset.
+    Data carrier for Weedy Rice dataset.
 
     File naming convention:
     - RGB: <id>.JPG
     - MS bands: <id>_<band>.TIF
       where <band> is one of: G (Green), R (Red), RE (Red Edge), NIR (Near Infrared)
-
-    Args:
-        root_path: Directory containing the Weedy Rice dataset
-
-    Returns:
-        tuple: (rgb_paths, ms_paths) where ms_paths contains 4 bands per RGB image
 
     Example:
         RGB: data/Weedy_Rice/IMG_0001.JPG
@@ -117,3 +100,63 @@ class WeedyRiceDataset(DataCarrier):
 
         return rgb_path_list, ms_path_list
 
+
+class AndhraDataset(DataCarrier):
+    """
+    Data carrier for Andhra dataset.
+    (Both fields)
+
+    File naming convention:
+    - RGB: <timestamp>_<id>_D.JPG
+    - MS bands: DJI_<timestamp>_<id>_MS_<band>.TIF
+      where <band> is one of: G (Green), R (Red), RE (Red Edge), NIR (Near Infrared)
+
+    Example:
+        RGB: data/.../<yyyymmddhhmmss>_0001_D.JPG
+        MS:  data/.../<yyyymmddhhmmss>_0001_MS_G.TIF
+             data/.../<yyyymmddhhmmss>_0001_MS_R.TIF
+             data/.../<yyyymmddhhmmss>_0001_MS_RE.TIF
+             data/.../<yyyymmddhhmmss>_0001_MS_NIR.TIF
+    """
+    def _load_data(self, root_path: Path) -> tuple[list[Path], list[Path]]:
+        # Andhra RGB full pictures have filenames like: <id>_D.JPG
+        rgb_path_list = sorted([
+            f for f in root_path.rglob("*_D.JPG")
+            # If Nursery stage should be excluded, comment the following line
+            if "Nursery" in str(f)
+        ])
+
+        # Andhra MS bands have filenames like: <id>_MS_<band>.TIF
+        # Define band naming
+        band_order = ["G", "R", "RE", "NIR"]
+        ms_path_list: list[Path] = []
+        for rgb_path in rgb_path_list:
+            rgb_str = str(rgb_path)
+            for suffix in band_order:
+                ms_str = rgb_str.replace("_D.JPG", f"_MS_{suffix}.TIF")
+                ms_path_list.append(Path(ms_str))
+            if len(ms_path_list) % 4 != 0:
+                raise ValueError(f"Number of MS bands is not divisible by 4. Failed at {root_path.name}")
+
+        return rgb_path_list, ms_path_list
+
+
+class WestBaddyDataset(DataCarrier):
+    """
+Data carrier for West-Baddy dataset.
+(Healty and Unhealthy images)
+
+File naming convention:
+- RGB: <classification>_image<ID>.jpg
+where <classification> is one of: h (healthy), u (unhealthy)
+
+Example:
+    RGB: data/.../<classification>_image<ID>.jpg
+
+"""
+    def _load_data(self, root_path: Path):
+        # West-Baddy RGB full pictures have filenames like: <classification>_image<ID>.jpg
+        unhealthy_path_list = [f for f in root_path.rglob("Unhealthy/*.jpg")]
+        healthy_path_list = [f for f in root_path.rglob("Healthy/h_*.jpg")]
+
+        return healthy_path_list, unhealthy_path_list
