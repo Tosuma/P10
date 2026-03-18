@@ -89,7 +89,7 @@ run_eval() {
   echo "=== Beginning evaluation ==="
   singularity exec --nv \
     /ceph/container/pytorch/pytorch_26.02.sif \
-    /bin/bash -lc "source p10_venv/bin/activate && pip install torchmetrics \
+    /bin/bash -lc "source p10_venv/bin/activate && \
         python ./mami/evaluation.py \
             --pred_path ${prediction_path} \
             --truth_path ${truth_path} \
