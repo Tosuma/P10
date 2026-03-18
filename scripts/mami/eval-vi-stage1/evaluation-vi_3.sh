@@ -34,7 +34,7 @@ for ndre in $(seq -f "%.1f" 0.4 0.1 0.5); do
             | grep -o '[0-9]\+'
         )
 
-        echo "$(date '+%Y-%m-%d %H:%M:%d') :: Starting job ${job_id} ndre: ${ndre}, ndvi: ${ndvi}"
+        echo "$(date '+%Y-%m-%d %H:%M:%d') :: Starting inference job ${job_id} ndre: ${ndre}, ndvi: ${ndvi}"
 
         while squeue --me | grep -q "$job_id"; do
             # echo "Job $job_id still running... sleeping 5 minutes"
@@ -63,7 +63,7 @@ for ndre in $(seq -f "%.1f" 0.4 0.1 0.5); do
             continue
         fi
 
-        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished job ${job_id} successfully for ndre=${ndre}, ndvi=${ndvi}"
+        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished inference job ${job_id} successfully for ndre=${ndre}, ndvi=${ndvi}"
 
         # move prediction logs
         mv "logs/inference/pred_mami_${job_id}.err" "logs/inference/pred_re_${ndre}_vi_${ndvi}_stage1.err"
@@ -85,7 +85,7 @@ for ndre in $(seq -f "%.1f" 0.4 0.1 0.5); do
             | grep -o '[0-9]\+'
         )
 
-        echo "$(date '+%Y-%m-%d %H:%M:%d') :: Starting job ${job_id} ndre: ${ndre}, ndvi: ${ndvi}"
+        echo "$(date '+%Y-%m-%d %H:%M:%d') :: Starting evaluation job ${job_id} ndre: ${ndre}, ndvi: ${ndvi}"
 
         while squeue --me | grep -q "$job_id"; do
             # echo "Job $job_id still running... sleeping 5 minutes"
@@ -114,7 +114,7 @@ for ndre in $(seq -f "%.1f" 0.4 0.1 0.5); do
             continue
         fi
 
-        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished job ${job_id} successfully for ndre=${ndre}, ndvi=${ndvi}"
+        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished evaluation job ${job_id} successfully for ndre=${ndre}, ndvi=${ndvi}"
 
         # move evaluation logs
         mv "logs/eval/eval_mami_${job_id}.err" "logs/eval/eval_re_${ndre}_vi_${ndvi}_stage1.err"
