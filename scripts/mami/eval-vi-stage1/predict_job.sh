@@ -88,6 +88,10 @@ run_eval() {
 
   echo "=== Beginning predictions ==="
 
+  echo "Using mode: ${model}"
+  echo "With data: ${data_type} from ${truth_path}"
+  echo "Saving data to: ${prediction_path}"
+
   singularity exec --nv \
     /ceph/container/pytorch/pytorch_26.02.sif \
     /bin/bash -lc "source p10_venv/bin/activate && \
@@ -128,7 +132,7 @@ done
 
 run_eval \
     --model "${model_name}" \
-    --pred "${dir_name}/data/" \
+    --pred "${dir_name}/data" \
     --truth "${truth}" \
     --type "${type}" \
     --out "${dir_name}/results.json" \
