@@ -10,9 +10,20 @@ import argparse
 from pathlib import Path
 from data_carrier.datasets import KazDataset, SriLankaDataset, WeedyRiceDataset
 import cv2
+import logging
 
-# device = "cuda" if torch.cuda.is_available() else "cpu"
-device = "cpu" # Recommended when running full pictures to avoid OOM errors
+log_dir = Path("logs")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(message)s",
+    handlers=[
+        logging.StreamHandler(),
+    ],
+)
+logger = logging.getLogger(__name__)
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+# device = "cpu" # Recommended when running full pictures to avoid OOM errors
 
 def run(root_dir="data/",
         data_type="Sri-Lanka",
@@ -23,6 +34,7 @@ def run(root_dir="data/",
         model_path="model_final.pkl",
         save_images=False):
     model = MST_Plus_Plus(in_channels=3, out_channels=4, n_feat=4, stage=3).to(device)
+    
     output_dir= Path(save_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -51,14 +63,14 @@ def run(root_dir="data/",
     missing = set(model_sd.keys()) - set(filtered.keys())
     extra = set(state_dict.keys()) - set(filtered.keys())
 
-    print(f"Loading checkpoint: kept {len(filtered)} params, missing {len(missing)} params, skipped {len(extra)} params")
+    logger.info(f"Loading checkpoint: kept {len(filtered)} params, missing {len(missing)} params, skipped {len(extra)} params")
 
     model.load_state_dict(filtered, strict=False)
     model.eval()
 
 
     if single:
-        print("Running single image")
+        logger.info("Running single image")
         # Single picture does not care for full or patch
         match data_type:
             case "Sri-Lanka":
@@ -88,6 +100,7 @@ def run(root_dir="data/",
     else:
         limit = int(amount)
 
+    logger.info("Beginning inference of images")
     for i, sample in enumerate(dataset):
         if limit is not None and index >= limit:
             break
@@ -98,9 +111,9 @@ def run(root_dir="data/",
         step = (len(dataset) if limit is None else limit) // 10
         if step > 0 and i % step == 0:
             if limit is None:
-                print(f"Processing [{i+1}/{len(dataset)}]")
+                logger.info(f"Processing {i + 1} / {len(dataset)}")
             else: 
-                print(f"Processing [{i+1}/{limit}]")
+                logger.info(f"Processing {i + 1} / {len(dataset)}")
 
 
         rgb_vis = rgb.permute(0, 2, 3, 1).cpu().numpy().squeeze(0)
@@ -141,7 +154,7 @@ def run(root_dir="data/",
             plt.savefig("validation_result.png", dpi=150, bbox_inches="tight")
             plt.savefig(output_dir / file_name, dpi=150, bbox_inches="tight")
             plt.close()
-            # print(f"Saved visualization to {file_name}")
+            # logger.info(f"Saved visualization to {file_name}")
 
             # Save individual images
             for i in range(4):
