@@ -171,6 +171,7 @@ if __name__ == "__main__":
     amount = args.amount #If not single, gives the amount of pictures to process
     model_path = args.model #MST++ model to evaluate
     save_images = args.save_images
+
     run(
         root_dir=root_dir,
         data_type=data_type,

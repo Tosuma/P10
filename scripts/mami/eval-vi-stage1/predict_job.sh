@@ -88,17 +88,13 @@ run_eval() {
 
   echo "=== Beginning predictions ==="
 
-  echo "Using mode: ${model}"
-  echo "With data: ${data_type} from ${truth_path}"
-  echo "Saving data to: ${prediction_path}"
-
   singularity exec --nv \
     /ceph/container/pytorch/pytorch_26.02.sif \
     /bin/bash -lc "source p10_venv/bin/activate && \
         python ./mami/inference.py \
             --model ${model} \
             --data_path ${truth_path} \
-            --data_type ${data_type}
+            --data_type ${data_type} \
             --save_path ${prediction_path}"
 }
 
