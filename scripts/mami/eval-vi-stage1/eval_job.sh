@@ -3,8 +3,8 @@
 # Copyright (c) 2025 <Hugin J. Zachariasen, Magnus H. Jensen, Martin C. B. Nielsen, Tobias S. Madsen>.
 
 #SBATCH --job-name=eval_mami
-#SBATCH --output=logs/inference/eval_mami_%j.out
-#SBATCH --error=logs/inference/eval_mami_%j.err
+#SBATCH --output=logs/eval/eval_mami_%j.out
+#SBATCH --error=logs/eval/eval_mami_%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --mem=24G
