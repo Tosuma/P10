@@ -95,6 +95,7 @@ run_eval() {
             --model ${model} \
             --data_path ${truth_path} \
             --data_type ${data_type} \
+            --amount 10 \
             --save_path ${prediction_path}"
 }
 
