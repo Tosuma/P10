@@ -5,11 +5,10 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 from mstpp.mstpp import MST_Plus_Plus
-from data_carrier import DataCarrier
 from torch.utils.data import DataLoader
 import argparse
 from pathlib import Path
-from data_carrier import load_east_kaz, load_sri_lanka, load_weedy_rice, DataCarrier
+from data_carrier.datasets import KazDataset, SriLankaDataset, WeedyRiceDataset
 import cv2
 
 # device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -63,25 +62,23 @@ def run(root_dir="data/",
         # Single picture does not care for full or patch
         match data_type:
             case "Sri-Lanka":
-                dataset = DataCarrier(Path(root_dir + single_picture), load_sri_lanka, resize=False)
+                dataset = SriLankaDataset(Path(root_dir + single_picture), resize=False)
             case "Kazakhstan":
-                dataset = DataCarrier(Path(root_dir + single_picture), load_east_kaz, resize=False)
+                dataset = KazDataset(Path(root_dir + single_picture), resize=False)
             case "Weedy-Rice":
-                dataset = DataCarrier(Path(root_dir + single_picture), load_weedy_rice, resize=False)
+                dataset = WeedyRiceDataset(Path(root_dir + single_picture), resize=False)
             case _:
-                print("Unknown dataset type. Defaulting to Sri-Lanka patches.")
-                breakpoint() #Dummefejl
+                raise ValueError("Unknown dataset type.")
     else:
         match data_type:
             case "Sri-Lanka":
-                dataset = DataCarrier(Path(root_dir), load_sri_lanka, resize=False)
+                dataset = SriLankaDataset(Path(root_dir), resize=False)
             case "Kazakhstan":
-                dataset = DataCarrier(Path(root_dir), load_east_kaz, resize=False)
+                dataset = KazDataset(Path(root_dir), resize=False)
             case "Weedy-Rice":
-                dataset = DataCarrier(Path(root_dir), load_weedy_rice, resize=False)
+                dataset = WeedyRiceDataset(Path(root_dir), resize=False)
             case _:
-                print("Unknown dataset type. Defaulting to Sri-Lanka patches.")
-                breakpoint() #Dummefejl
+                raise ValueError("Unknown dataset type.")
 
     index = 0
 
@@ -166,10 +163,8 @@ if __name__ == "__main__":
     parser.add_argument("--save_images", help="Save the images predicted", action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
     root_dir = args.data_path # Root directory of data (data/)
-    try:
-        data_type = args.data_type #Dataset type (Sri-Lanka or Kazakhstan)
-    except:
-        print("No data type given, defaulting to Sri-Lanka")
+
+    data_type = args.data_type #Dataset type (Sri-Lanka or Kazakhstan)
     save_dir = args.save_path #Save path for results (also saves latest result in validation_result.png in main folder)
     single = args.single # One or many pictures
     single_picture = args.jpg #Only one picture
