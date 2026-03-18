@@ -108,12 +108,10 @@ def run(root_dir="data/",
         target = sample["ms"]
         file_path = Path(sample["path"][0])
 
-        step = (len(dataset) if limit is None else limit) // 10
-        if step > 0 and i % step == 0:
-            if limit is None:
-                logger.info(f"Processing {i + 1} / {len(dataset)}")
-            else: 
-                logger.info(f"Processing {i + 1} / {len(dataset)}")
+        if limit is None:
+            logger.info(f"Processing {i + 1} / {len(dataset)}")
+        else: 
+            logger.info(f"Processing {i + 1} / {len(dataset)}")
 
 
         rgb_vis = rgb.permute(0, 2, 3, 1).cpu().numpy().squeeze(0)
