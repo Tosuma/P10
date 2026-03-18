@@ -10,6 +10,7 @@ RETRY_TEXT="Could not lookup the current user"
 MAX_RETRIES=10
 
 mkdir -p logs/eval
+mkdir -p logs/inference
 
 for ndre in $(seq -f "%.1f" 0.2 0.1 0.3); do
   for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
