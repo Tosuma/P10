@@ -60,10 +60,10 @@ for ndre in $(seq -f "%.1f" 0.6 0.1 0.6); do
         echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished job ${job_id} successfully for ndre=${ndre}, ndvi=${ndvi}"
 
         # move prediction logs
-        mv "logs/inference/pred_mami_${job_id}.err" "logs/eval/re_${ndre}_vi_${ndvi}_stage1.err"
+        mv "logs/inference/pred_mami_${job_id}.err" "logs/eval/pred_re_${ndre}_vi_${ndvi}_stage1.err"
         echo "$(date '+%Y-%m-%d %H:%M:%S') :: Renamed 'vi/pred_mami_${job_id}.err' to 'eval/re_${ndre}_vi_${ndvi}.err'"
         
-        mv "logs/inference/pred_mami_${job_id}.out" "logs/eval/re_${ndre}_vi_${ndvi}_stage1.out"
+        mv "logs/inference/pred_mami_${job_id}.out" "logs/eval/pred_re_${ndre}_vi_${ndvi}_stage1.out"
         echo "$(date '+%Y-%m-%d %H:%M:%S') :: Renamed 'vi/pred_mami_${job_id}.out' to 'eval/re_${ndre}_vi_${ndvi}.out'"
         break # the retry loop
     done # retry loop
@@ -111,10 +111,10 @@ for ndre in $(seq -f "%.1f" 0.6 0.1 0.6); do
         echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished job ${job_id} successfully for ndre=${ndre}, ndvi=${ndvi}"
 
         # move evaluation logs
-        mv "logs/inference/eval_mami_${job_id}.err" "logs/eval/re_${ndre}_vi_${ndvi}_stage1.err"
+        mv "logs/inference/eval_mami_${job_id}.err" "logs/eval/eval_re_${ndre}_vi_${ndvi}_stage1.err"
         echo "$(date '+%Y-%m-%d %H:%M:%S') :: Renamed 'vi/eval_mami_${job_id}.err' to 'eval/re_${ndre}_vi_${ndvi}.err'"
         
-        mv "logs/inference/eval_mami_${job_id}.out" "logs/eval/re_${ndre}_vi_${ndvi}_stage1.out"
+        mv "logs/inference/eval_mami_${job_id}.out" "logs/eval/eval_re_${ndre}_vi_${ndvi}_stage1.out"
         echo "$(date '+%Y-%m-%d %H:%M:%S') :: Renamed 'vi/eval_mami_${job_id}.out' to 'eval/re_${ndre}_vi_${ndvi}.out'"
         break # the retry loop
     done # retry loop
