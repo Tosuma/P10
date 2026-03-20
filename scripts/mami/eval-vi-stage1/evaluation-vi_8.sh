@@ -14,15 +14,23 @@ mkdir -p logs/inference
 
 for ndre in $(seq -f "%.1f" 1.0 0.1 1.0); do
   for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
-    dir_name="results/vi/re_${ndre}_vi_${ndvi}_stage1"
+    dir_name="results/vi/stage1---weedy-rice/re_${ndre}_vi_${ndvi}"
     model_name="./checkpoints/vi/finals/vi-kaz-re_${ndre}-vi_${ndvi}_stage1_best.pth"
+
+
+    results="${dir_name}/results.json"
+    summary="${dir_name}/summary.json"
+    if [ -e "$results" ] && [ -e "$summary" ]; then
+        echo "RE: $ndre, VI: $ndvi has already been evaluated"
+        continue
+    fi
 
     # predict
     while true; do
         job_id=$(
             sbatch scripts/mami/eval-vi-stage1/predict_job.sh \
             --model_name "${model_name}" \
-            --dir_name "${dir_name}---weedy-rice" \
+            --dir_name "${dir_name}" \
             --truth "${weedy_path}" \
             --type "Weedy-Rice" \
             | grep -o '[0-9]\+'
@@ -61,10 +69,7 @@ for ndre in $(seq -f "%.1f" 1.0 0.1 1.0); do
 
         # move prediction logs
         mv "logs/inference/pred_mami_${job_id}.err" "logs/inference/pred_re_${ndre}_vi_${ndvi}_stage1.err"
-        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Renamed 'vi/pred_mami_${job_id}.err' to 'eval/re_${ndre}_vi_${ndvi}.err'"
-        
         mv "logs/inference/pred_mami_${job_id}.out" "logs/inference/pred_re_${ndre}_vi_${ndvi}_stage1.out"
-        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Renamed 'vi/pred_mami_${job_id}.out' to 'eval/re_${ndre}_vi_${ndvi}.out'"
         break # the retry loop
     done # retry loop
 
@@ -73,7 +78,7 @@ for ndre in $(seq -f "%.1f" 1.0 0.1 1.0); do
         job_id=$(
             sbatch scripts/mami/eval-vi-stage1/eval_job.sh \
             --model_name "${model_name}" \
-            --dir_name "${dir_name}---weedy-rice" \
+            --dir_name "${dir_name}" \
             --truth "${weedy_path}" \
             --type "Weedy-Rice" \
             | grep -o '[0-9]\+'
@@ -112,10 +117,11 @@ for ndre in $(seq -f "%.1f" 1.0 0.1 1.0); do
 
         # move evaluation logs
         mv "logs/eval/eval_mami_${job_id}.err" "logs/eval/eval_re_${ndre}_vi_${ndvi}_stage1.err"
-        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Renamed 'vi/eval_mami_${job_id}.err' to 'eval/re_${ndre}_vi_${ndvi}.err'"
-        
         mv "logs/eval/eval_mami_${job_id}.out" "logs/eval/eval_re_${ndre}_vi_${ndvi}_stage1.out"
-        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Renamed 'vi/eval_mami_${job_id}.out' to 'eval/re_${ndre}_vi_${ndvi}.out'"
+
+        # delete data folder
+        rm -r "${dir_name}/data"
+        
         break # the retry loop
     done # retry loop
   done # ndvi loop
