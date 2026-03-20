@@ -218,7 +218,6 @@ data/
 
 results/**/data
 results/**/images
-results/vi/**
 
 checkpoints/
 
