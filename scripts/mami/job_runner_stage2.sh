@@ -7,33 +7,30 @@ MODEL_BASE_NAME="vi-weedy"
 BASE_DIR="vi"
 
 RETRY_TEXT="Could not lookup the current user"
-MAX_RETRIES=20
+MAX_RETRIES=50
 
 chosen_models=(
-    "checkpoints/vi/re_0.0_vi_0.0/vi-kaz-re_0.0_vi_0.0_stage1_best.pth", # 0.053832
-    "checkpoints/vi/re_0.0_vi_0.1/vi-kaz-re_0.0_vi_0.1_stage1_best.pth", # 0.056462
-    "checkpoints/vi/re_0.1_vi_0.0/vi-kaz-re_0.1_vi_0.0_stage1_best.pth", # 0.057275
-    "checkpoints/vi/re_0.2_vi_0.0/vi-kaz-re_0.2_vi_0.0_stage1_best.pth", # 0.060610
-    "checkpoints/vi/re_0.0_vi_0.2/vi-kaz-re_0.0_vi_0.2_stage1_best.pth", # 0.063189
-    "checkpoints/vi/re_0.3_vi_0.0/vi-kaz-re_0.3_vi_0.0_stage1_best.pth", # 0.066163
-    "checkpoints/vi/re_0.2_vi_0.2/vi-kaz-re_0.2_vi_0.2_stage1_best.pth", # 0.068028
-    "checkpoints/vi/re_0.0_vi_0.3/vi-kaz-re_0.0_vi_0.3_stage1_best.pth", # 0.069299
-    "checkpoints/vi/re_0.4_vi_0.0/vi-kaz-re_0.4-vi_0.0_stage1_best.pth", # 0.06xxxx
-    "checkpoints/vi/re_0.1_vi_0.3/vi-kaz-re_0.1_vi_0.3_stage1_best.pth", # 0.071530
+    "checkpoints/vi/re_0.2_vi_0.6/vi-kaz-re_0.2_vi_0.6_stage1_best.pth",
+    "checkpoints/vi/re_0.4_vi_0.3/vi-kaz-re_0.4_vi_0.3_stage1_best.pth",
+    "checkpoints/vi/re_0.0_vi_0.0/vi-kaz-re_0.0_vi_0.0_stage1_best.pth",
+    "checkpoints/vi/re_0.2_vi_0.3/vi-kaz-re_0.2_vi_0.3_stage1_best.pth",
+    "checkpoints/vi/re_1.0_vi_0.1/vi-kaz-re_1.0_vi_0.1_stage1_best.pth",
+    "checkpoints/vi/re_0.6_vi_1.0/vi-kaz-re_0.6_vi_1.0_stage1_best.pth",
+    "checkpoints/vi/re_0.0_vi_0.9/vi-kaz-re_0.0_vi_0.9_stage1_best.pth",
 )
 
 for train_model in "${models[@]}"; do
-    for ndre in $(seq -f "%.1f" 0.0 0.1 5.0); do
+    for ndre in $(seq -f "%.1f" 0.0 0.1 1.0); do
         for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
             DIR_NAME="${BASE_DIR}/re_${ndre}_vi_${ndvi}_stage2"
             MODEL_NAME="${MODEL_BASE_NAME}-re_${ndre}-vi_${ndvi}"
 
             attempt=1
 
-            if [[ ("$ndre" == "0.1" && ("$ndvi" == "0.0" || "$ndvi" == "0.1" || "$ndvi" == "0.2" || "$ndvi" == "0.3" ||  "$ndvi" == "0.4" ||  "$ndvi" == "0.5" ||  "$ndvi" == "0.6" ||  "$ndvi" == "0.7" || "$ndvi" == "0.8" || "$ndvi" == "0.9")) || ("$ndre" == "0.2" && ("$ndvi" == "0.6" || "$ndvi" == "0.7" || "$ndvi" == "0.8" || "$ndvi" == "0.9" || "$ndvi" == "1.0")) ]]; then
-                echo "$(date '+%Y-%m-%d %H:%M:%S') :: skipped ndre=${ndre}, ndvi=${ndvi}"
-                continue
-            fi
+            # if [[ ("$ndre" == "0.1" && ("$ndvi" == "0.0" || "$ndvi" == "0.1" || "$ndvi" == "0.2" || "$ndvi" == "0.3" ||  "$ndvi" == "0.4" ||  "$ndvi" == "0.5" ||  "$ndvi" == "0.6" ||  "$ndvi" == "0.7" || "$ndvi" == "0.8" || "$ndvi" == "0.9")) || ("$ndre" == "0.2" && ("$ndvi" == "0.6" || "$ndvi" == "0.7" || "$ndvi" == "0.8" || "$ndvi" == "0.9" || "$ndvi" == "1.0")) ]]; then
+            #     echo "$(date '+%Y-%m-%d %H:%M:%S') :: skipped ndre=${ndre}, ndvi=${ndvi}"
+            #     continue
+            # fi
 
             while true; do
                 job_id=$(
