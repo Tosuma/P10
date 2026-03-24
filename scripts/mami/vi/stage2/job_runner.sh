@@ -78,7 +78,7 @@ for train_model in "${chosen_models[@]}"; do
 
                 mv "logs/vi/train_mami_${job_id}.err" "logs/vi/re_${ndre}_vi_${ndvi}_stage2.err"
                 rm "logs/vi/train_mami_${job_id}.out"
-                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Renamed 'train_mami_${job_id}.err' to 're_${ndre}_vi_${ndvi}_stage2.err'"
+                # echo "$(date '+%Y-%m-%d %H:%M:%S') :: Renamed 'train_mami_${job_id}.err' to 're_${ndre}_vi_${ndvi}_stage2.err'"
                 break # the retry loop
             done # retry loop
         done # ndvi loop
