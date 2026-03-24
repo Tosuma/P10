@@ -47,7 +47,6 @@ for train_model in "${chosen_models[@]}"; do
 
                 err_file="logs/vi/train_mami_${job_id}.err"
 
-                sleep 5
                 if [ ! -f "${err_file}" ]; then
                     echo "$(date '+%Y-%m-%d %H:%M:%S') :: Err file ${err_file} did not appear. Retrying..."
 
