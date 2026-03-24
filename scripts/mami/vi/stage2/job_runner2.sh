@@ -10,25 +10,21 @@ RETRY_TEXT="Could not lookup the current user"
 MAX_RETRIES=50
 
 chosen_models=(
-    "checkpoints/vi/finals/vi-kaz-re_0.5-vi_0.4_stage1_best.pth"
-    "checkpoints/vi/finals/vi-kaz-re_0.4-vi_0.6_stage1_best.pth"
-    "checkpoints/vi/finals/vi-kaz-re_0.1-vi_0.0_stage1_best.pth"
-    "checkpoints/vi/finals/vi-kaz-re_0.1-vi_0.3_stage1_best.pth"
-    "checkpoints/vi/finals/vi-kaz-re_0.4-vi_0.4_stage1_best.pth"
+    "checkpoints/vi/finals/vi-kaz-re_0.4-vi_0.0_stage1_best.pth"
 )
 
 for train_model in "${chosen_models[@]}"; do
-    for ndre in $(seq -f "%.1f" 0.0 0.1 1.0); do
+    for ndre in $(seq -f "%.1f" 0.5 0.1 1.0); do
         for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
             DIR_NAME="${BASE_DIR}/re_${ndre}_vi_${ndvi}"
             MODEL_NAME="${MODEL_BASE_NAME}-re_${ndre}-vi_${ndvi}"
 
             attempt=1
 
-            # if [[ ("$ndre" == "0.1" && ("$ndvi" == "0.0" || "$ndvi" == "0.1" || "$ndvi" == "0.2" || "$ndvi" == "0.3" ||  "$ndvi" == "0.4" ||  "$ndvi" == "0.5" ||  "$ndvi" == "0.6" ||  "$ndvi" == "0.7" || "$ndvi" == "0.8" || "$ndvi" == "0.9")) || ("$ndre" == "0.2" && ("$ndvi" == "0.6" || "$ndvi" == "0.7" || "$ndvi" == "0.8" || "$ndvi" == "0.9" || "$ndvi" == "1.0")) ]]; then
-            #     echo "$(date '+%Y-%m-%d %H:%M:%S') :: skipped ndre=${ndre}, ndvi=${ndvi}"
-            #     continue
-            # fi
+            if [[ ("$ndre" == "0.5" && ("$ndvi" == "0.0" || "$ndvi" == "0.1" || "$ndvi" == "0.2" || "$ndvi" == "0.3" ||  "$ndvi" == "0.4" ||  "$ndvi" == "0.5")) ]]; then
+                echo "$(date '+%Y-%m-%d %H:%M:%S') :: skipped ndre=${ndre}, ndvi=${ndvi}"
+                continue
+            fi
 
             while true; do
                 job_id=$(
