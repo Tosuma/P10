@@ -9,6 +9,8 @@ from typing import Any, Callable, Literal, Optional, get_args
 from torch.optim import Adam
 from torch.optim.lr_scheduler import CosineAnnealingLR
 
+from mami.data_carrier.base_dataset import DataCarrier
+
 # Reduce noisy OpenCV logging if present
 os.environ["OPENCV_LOG_LEVEL"] = "ERROR"
 
@@ -45,7 +47,7 @@ import argparse
 
 from utils import Loss_MRAE, Loss_PSNR, Loss_RMSE, Loss_NDVI, Loss_NDRE
 from mstpp.mstpp import MST_Plus_Plus
-from data_carrier import load_east_kaz, load_sri_lanka, load_weedy_rice, DataCarrier
+from data_carrier.datasets import KazDataset, WeedyRiceDataset, SriLankaDataset
 
 DatasetType = Literal["Sri-Lanka", "Kazakhstan", "Weedy-Rice"]
 
@@ -80,19 +82,18 @@ class DDPContext:
         dist.broadcast_object_list(buf, src=0)
         return buf[0]
 
-def _get_loader_function(data_type: DatasetType) -> Callable[[Path], tuple[list[Path], list[Path]]]:
+def _get_dataset(data_type: DatasetType, root_dir: Path, non_resize_picture=False) -> DataCarrier:
+    dataset: DataCarrier
     match data_type:
         case "Sri-Lanka":
-            return load_sri_lanka
+            dataset = SriLankaDataset(Path(root_dir), resize=(not non_resize_picture))
         case "Kazakhstan":
-            return load_east_kaz
+            dataset = KazDataset(Path(root_dir), resize=(not non_resize_picture))
         case "Weedy-Rice":
-            return load_weedy_rice
+            dataset = WeedyRiceDataset(Path(root_dir), resize=(not non_resize_picture))
         case _:
             raise ValueError(f"Unknown dataset type: {data_type}")
 
-def _get_dataset(root_dir: Path, loader: Callable[[Path], tuple[list[Path], list[Path]]], non_resize_picture=False) -> DataCarrier:
-    dataset = DataCarrier(root_dir, loader, resize=(not non_resize_picture))  # non_resize_picture is default False
     logger.info(f"[Loaded] Dataset loaded with {len(dataset)} samples.")
     return dataset
 
@@ -158,8 +159,8 @@ def load_datasets(
     ddp: DDPContext
 ) -> tuple[DataLoader[Any], DataLoader[Any], int]:
     dataset: DataCarrier = _get_dataset(
+        config.data_type,
         config.data_path,
-        _get_loader_function(config.data_type),
         config.non_resize
     )
 
