@@ -9,9 +9,6 @@ BASE_DIR="vi/stage2"
 RETRY_TEXT="Could not lookup the current user"
 MAX_RETRIES=50
 
-ERR_FILE_WAIT_RETRIES=12
-ERR_FILE_WAIT_SLEEP=5
-
 chosen_models=(
     "checkpoints/vi/finals/vi-kaz-re_0.4-vi_0.0_stage1_best.pth"
 )
@@ -22,7 +19,7 @@ for train_model in "${chosen_models[@]}"; do
             DIR_NAME="${BASE_DIR}/re_${ndre}_vi_${ndvi}"
             MODEL_NAME="${MODEL_BASE_NAME}-re_${ndre}-vi_${ndvi}"
 
-            attempt=1
+            attempt=0
 
             if [[ ("$ndre" == "0.5" && ("$ndvi" == "0.0" || "$ndvi" == "0.1" || "$ndvi" == "0.2" || "$ndvi" == "0.3" || "$ndvi" == "0.4" || "$ndvi" == "0.5")) ]]; then
                 echo "$(date '+%Y-%m-%d %H:%M:%S') :: skipped ndre=${ndre}, ndvi=${ndvi}"
@@ -50,13 +47,7 @@ for train_model in "${chosen_models[@]}"; do
 
                 err_file="logs/vi/train_mami_${job_id}.err"
 
-                wait_count=0
-                while [ ! -f "${err_file}" ] && [ "${wait_count}" -lt "${ERR_FILE_WAIT_RETRIES}" ]; do
-                    echo "$(date '+%Y-%m-%d %H:%M:%S') :: Waiting for err file ${err_file} to appear..."
-                    sleep "${ERR_FILE_WAIT_SLEEP}"
-                    wait_count=$((wait_count + 1))
-                done
-
+                sleep 5
                 if [ ! -f "${err_file}" ]; then
                     echo "$(date '+%Y-%m-%d %H:%M:%S') :: Err file ${err_file} did not appear. Retrying..."
 
