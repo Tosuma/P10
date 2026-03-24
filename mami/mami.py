@@ -9,7 +9,7 @@ from typing import Any, Callable, Literal, Optional, get_args
 from torch.optim import Adam
 from torch.optim.lr_scheduler import CosineAnnealingLR
 
-from mami.data_carrier.base_dataset import DataCarrier
+from data_carrier.base_dataset import DataCarrier
 
 # Reduce noisy OpenCV logging if present
 os.environ["OPENCV_LOG_LEVEL"] = "ERROR"
