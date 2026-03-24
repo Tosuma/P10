@@ -10,11 +10,11 @@ RETRY_TEXT="Could not lookup the current user"
 MAX_RETRIES=50
 
 chosen_models=(
-    "checkpoints/vi/finals/vi-kaz-re_0.5_vi_0.4_stage1_best.pth"
-    "checkpoints/vi/finals/vi-kaz-re_0.4_vi_0.6_stage1_best.pth"
-    "checkpoints/vi/finals/vi-kaz-re_0.1_vi_0.0_stage1_best.pth"
-    "checkpoints/vi/finals/vi-kaz-re_0.1_vi_0.3_stage1_best.pth"
-    "checkpoints/vi/finals/vi-kaz-re_0.4_vi_0.4_stage1_best.pth"
+    "checkpoints/vi/finals/vi-kaz-re_0.5-vi_0.4_stage1_best.pth"
+    "checkpoints/vi/finals/vi-kaz-re_0.4-vi_0.6_stage1_best.pth"
+    "checkpoints/vi/finals/vi-kaz-re_0.1-vi_0.0_stage1_best.pth"
+    "checkpoints/vi/finals/vi-kaz-re_0.1-vi_0.3_stage1_best.pth"
+    "checkpoints/vi/finals/vi-kaz-re_0.4-vi_0.4_stage1_best.pth"
 )
 
 for train_model in "${chosen_models[@]}"; do
@@ -74,7 +74,7 @@ for train_model in "${chosen_models[@]}"; do
 
                 echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished job ${job_id} successfully for ndre=${ndre}, ndvi=${ndvi}"
 
-                mv "logs/vi/train_mami_${job_id}.err" "logs/vi/re_${ndre}_vi_${ndvi}_stage2.err"
+                # mv "logs/vi/train_mami_${job_id}.err" "logs/vi/re_${ndre}_vi_${ndvi}_stage2.err"
                 rm "logs/vi/train_mami_${job_id}.out"
                 # echo "$(date '+%Y-%m-%d %H:%M:%S') :: Renamed 'train_mami_${job_id}.err' to 're_${ndre}_vi_${ndvi}_stage2.err'"
                 break # the retry loop

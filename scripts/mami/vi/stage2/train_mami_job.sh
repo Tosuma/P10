@@ -67,7 +67,7 @@ singularity exec --nv \
             --nproc_per_node=${GPUS} \
             mami/mami.py \
                 --stage2_model ${train_model} \
-                --stage2_data_path data/Weedy-Rice \
+                --stage2_data_path data/WeedyRice \
                 --stage2_data_type Weedy-Rice \
                 --stage2_epochs 300 \
                 --stage2_lr ${lr} \

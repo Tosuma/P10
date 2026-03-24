@@ -10,11 +10,11 @@ RETRY_TEXT="Could not lookup the current user"
 MAX_RETRIES=50
 
 chosen_models=(
-    "checkpoints/vi/finals/vi-kaz-re_0.4_vi_0.0_stage1_best.pth"
-    "checkpoints/vi/finals/vi-kaz-re_0.7_vi_0.3_stage1_best.pth"
-    "checkpoints/vi/finals/vi-kaz-re_0.4_vi_0.3_stage1_best.pth"
-    "checkpoints/vi/finals/vi-kaz-re_0.2_vi_0.6_stage1_best.pth"
-    "checkpoints/vi/finals/vi-kaz-re_0.5_vi_0.7_stage1_best.pth"
+    "checkpoints/vi/finals/vi-kaz-re_0.4-vi_0.0_stage1_best.pth"
+    "checkpoints/vi/finals/vi-kaz-re_0.7-vi_0.3_stage1_best.pth"
+    "checkpoints/vi/finals/vi-kaz-re_0.4-vi_0.3_stage1_best.pth"
+    "checkpoints/vi/finals/vi-kaz-re_0.2-vi_0.6_stage1_best.pth"
+    "checkpoints/vi/finals/vi-kaz-re_0.5-vi_0.7_stage1_best.pth"
 )
 
 for train_model in "${chosen_models[@]}"; do
