@@ -4,7 +4,7 @@ mkdir -p logs/vi
 LR="1e-5"
 MRAE="1.0"
 MODEL_BASE_NAME="vi-weedy"
-BASE_DIR="vi"
+BASE_DIR="vi/stage2"
 
 RETRY_TEXT="Could not lookup the current user"
 MAX_RETRIES=50
@@ -25,7 +25,7 @@ chosen_models=(
 for train_model in "${chosen_models[@]}"; do
     for ndre in $(seq -f "%.1f" 0.0 0.1 1.0); do
         for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
-            DIR_NAME="${BASE_DIR}/re_${ndre}_vi_${ndvi}_stage2"
+            DIR_NAME="${BASE_DIR}/re_${ndre}_vi_${ndvi}"
             MODEL_NAME="${MODEL_BASE_NAME}-re_${ndre}-vi_${ndvi}"
 
             attempt=1
@@ -74,7 +74,7 @@ for train_model in "${chosen_models[@]}"; do
                     attempt=$((attempt + 1))
                     echo "$(date '+%Y-%m-%d %H:%M:%S') :: Retrying ndre=${ndre}, ndvi=${ndvi}"
                     sleep 60
-                    continue
+                    continue # the retry loop
                 fi
 
                 echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished job ${job_id} successfully for ndre=${ndre}, ndvi=${ndvi}"
