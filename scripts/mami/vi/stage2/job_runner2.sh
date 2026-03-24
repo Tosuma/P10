@@ -57,7 +57,6 @@ for train_model in "${chosen_models[@]}"; do
                     fi
 
                     attempt=$((attempt + 1))
-                    sleep 60
                     continue
                 fi
 
