@@ -68,7 +68,7 @@ singularity exec --nv \
             mami/mami.py \
                 --stage2_model ${train_model} \
                 --stage2_data_path data/Weedy-Rice \
-                --stage2_data_type WeedyRice \
+                --stage2_data_type Weedy-Rice \
                 --stage2_epochs 300 \
                 --stage2_lr ${lr} \
                 --stage2_loss_mrae_w ${mrae} \
