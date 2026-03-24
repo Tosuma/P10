@@ -32,7 +32,7 @@ for train_model in "${chosen_models[@]}"; do
 
             while true; do
                 job_id=$(
-                    sbatch scripts/mami/stage2/train_mami_job.sh \
+                    sbatch scripts/mami/vi/stage2/train_mami_job.sh \
                         --train_model "${train_model}" \
                         --lr "${LR}" \
                         --loss_mrae_w "${MRAE}" \
