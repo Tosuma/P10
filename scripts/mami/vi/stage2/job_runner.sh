@@ -19,9 +19,9 @@ for train_model in "${chosen_models[@]}"; do
             DIR_NAME="${BASE_DIR}/re_${ndre}_vi_${ndvi}"
             MODEL_NAME="${MODEL_BASE_NAME}-re_${ndre}-vi_${ndvi}"
 
-            attempt=1
+            attempt=0
 
-            if [[ ("$ndre" == "0.5" && ("$ndvi" == "0.6" || "$ndvi" == "0.7" || "$ndvi" == "0.8" || "$ndvi" == "0.9" ||  "$ndvi" == "1.0")) ]]; then
+            if [[ ("$ndre" == "0.5" && ("$ndvi" == "0.6" || "$ndvi" == "0.7" || "$ndvi" == "0.8" || "$ndvi" == "0.9" || "$ndvi" == "1.0")) ]]; then
                 echo "$(date '+%Y-%m-%d %H:%M:%S') :: skipped ndre=${ndre}, ndvi=${ndvi}"
                 continue
             fi
@@ -39,20 +39,27 @@ for train_model in "${chosen_models[@]}"; do
                     | grep -o '[0-9]\+'
                 )
 
-                echo "$(date '+%Y-%m-%d %H:%M:%d') :: Starting job ${job_id} ndre: ${ndre}, ndvi: ${ndvi}"
+                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Starting job ${job_id} ndre: ${ndre}, ndvi: ${ndvi}"
 
                 while squeue --me | grep -q "$job_id"; do
-                    # echo "Job $job_id still running... sleeping 5 minutes"
                     sleep 10
-                done # sleep
+                done
 
                 err_file="logs/vi/train_mami_${job_id}.err"
-                sleep 5
-                
-                first_line=""
-                if [ -f "${err_file}" ]; then
-                    first_line="$(head -n 1 "${err_file}")"
+
+                if [ ! -f "${err_file}" ]; then
+                    echo "$(date '+%Y-%m-%d %H:%M:%S') :: Err file ${err_file} did not appear. Retrying..."
+
+                    if [ "${attempt}" -ge "${MAX_RETRIES}" ]; then
+                        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries (${MAX_RETRIES}) for ndre=${ndre}, ndvi=${ndvi}. Stopping."
+                        exit 1
+                    fi
+
+                    attempt=$((attempt + 1))
+                    continue
                 fi
+
+                first_line="$(head -n 1 "${err_file}")"
 
                 if grep -qF "$RETRY_TEXT" "$err_file"; then
                     echo "$(date '+%Y-%m-%d %H:%M:%S') :: Job ${job_id} hit retryable error: '${first_line}'"
@@ -65,16 +72,14 @@ for train_model in "${chosen_models[@]}"; do
                     attempt=$((attempt + 1))
                     echo "$(date '+%Y-%m-%d %H:%M:%S') :: Retrying ndre=${ndre}, ndvi=${ndvi}"
                     sleep 60
-                    continue # the retry loop
+                    continue
                 fi
 
                 echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished job ${job_id} successfully for ndre=${ndre}, ndvi=${ndvi}"
 
-                mv "logs/vi/train_mami_${job_id}.err" "logs/vi/re_${ndre}_vi_${ndvi}_stage2.err"
-                rm "logs/vi/train_mami_${job_id}.out"
-                # echo "$(date '+%Y-%m-%d %H:%M:%S') :: Renamed 'train_mami_${job_id}.err' to 're_${ndre}_vi_${ndvi}_stage2.err'"
-                break # the retry loop
-            done # retry loop
-        done # ndvi loop
-    done # ndre loop
-done # train_model loop
+                rm -f "logs/vi/train_mami_${job_id}.out"
+                break
+            done
+        done
+    done
+done
