@@ -9,15 +9,15 @@ BASE_DIR="vi"
 RETRY_TEXT="Could not lookup the current user"
 MAX_RETRIES=10
 
-for ndre in $(seq -f "%.1f" 0.4 0.1 0.7); do
-    for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
+for ndre in $(seq -f "%.1f" 0.0 0.1 0.0); do
+    for ndvi in $(seq -f "%.1f" 0.0 0.1 0.0); do
         DIR_NAME="${BASE_DIR}/re_${ndre}_vi_${ndvi}"
         MODEL_NAME="${MODEL_BASE_NAME}-re_${ndre}-vi_${ndvi}"
 
-        attempt=1
+        attempt=5
         while true; do
             job_id=$(
-                sbatch scripts/mami/train_mami_job.sh \
+                sbatch scripts/mami/train_mami_kaz_job.sh \
                     --lr "${LR}" \
                     --loss_mrae_w "${MRAE}" \
                     --loss_ndre_w "${ndre}" \
@@ -34,8 +34,18 @@ for ndre in $(seq -f "%.1f" 0.4 0.1 0.7); do
                 sleep 10
             done # sleep
 
-            err_file="logs/vi/train_mami/${job_id}.err"
+            err_file="logs/vi/train_mami_${job_id}.err"
             sleep 5
+
+	    if [ ! -f "${err_file}" ]; then
+		    echo "$(date '+%Y-%m-%d %H:%M:%S') :: Err file ${err_file} did not appear. Retrying..."
+		   if [ "${attempt}" -ge "${MAX_RETRIES}" ]; then 
+		    	echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries (${MAX_RETRIES})"
+		    	exit 1
+		   fi
+		   attemp=$((attempt + 1))
+		   continue
+	    fi
             
             first_line=""
             if [ -f "${err_file}" ]; then
