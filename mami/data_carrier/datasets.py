@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from data_carrier.base_dataset import DataCarrier
+from .base_dataset import DataCarrier
 
 class SriLankaDataset(DataCarrier):
     """
@@ -130,14 +130,37 @@ class AndhraDataset(DataCarrier):
         # Define band naming
         band_order = ["G", "R", "RE", "NIR"]
         ms_path_list: list[Path] = []
+        i = 0
         for rgb_path in rgb_path_list:
             rgb_str = str(rgb_path)
+
+            parts = rgb_path.stem.split('_')
+           
+
+            image_number = parts[-2]
+            if i < 10:
+                print(parts)
+                print(image_number)
+                i += 1
             for suffix in band_order:
-                ms_str = rgb_str.replace("_D.JPG", f"_MS_{suffix}.TIF")
-                ms_path_list.append(Path(ms_str))
+                search_pattern = f"*_{image_number}_MS_{suffix}.TIF"
+
+                matching_files = list(rgb_path.parent.glob(search_pattern))
+
+                if not matching_files:
+                    print("No matching files!")
+                    raise FileNotFoundError(f"Missing {suffix} MS band for {rgb_path.parent}")
+                if len(matching_files) > 1:
+                    print("Too many matching files")
+                    raise FileNotFoundError(f"Too many files found for suffix {suffix} in {rgb_path.parent}, number of files found {len(matching_files)}")
+                
+
+                ms_path_list.append(matching_files[0])
             if len(ms_path_list) % 4 != 0:
                 raise ValueError(f"Number of MS bands is not divisible by 4. Failed at {root_path.name}")
 
+        print(len(rgb_path_list))
+        print(len(ms_path_list))
         return rgb_path_list, ms_path_list
 
 

@@ -60,12 +60,13 @@ GPUS=${SLURM_GPUS_ON_NODE:-${SLURM_GPUS_PER_NODE:-1}}
 singularity exec --nv \
     /ceph/container/pytorch/pytorch_26.01.sif \
     /bin/bash -lc "source p10_venv/bin/activate && \
+    	#-B /ceph/project/tbd/data/ \
         python -u -m torch.distributed.run \
             --standalone \
             --nproc_per_node=${GPUS} \
             mami/mami.py \
-                --stage1_data_path data/East-Kaza \
-                --stage1_data_type Kazakhstan \
+                --stage1_data_path data/data/andhra \
+                --stage1_data_type Andhra \
                 --stage1_epochs 300 \
                 --stage1_lr ${lr} \
                 --stage1_loss_mrae_w ${mrae} \

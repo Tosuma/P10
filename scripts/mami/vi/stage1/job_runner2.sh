@@ -9,7 +9,7 @@ BASE_DIR="vi"
 RETRY_TEXT="Could not lookup the current user"
 MAX_RETRIES=10
 
-for ndre in $(seq -f "%.1f" 0.2 0.1 0.3); do
+for ndre in $(seq -f "%.1f" 0.0 0.1 0.3); do
     for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
         DIR_NAME="${BASE_DIR}/re_${ndre}_vi_${ndvi}"
         MODEL_NAME="${MODEL_BASE_NAME}-re_${ndre}-vi_${ndvi}"

@@ -47,9 +47,9 @@ import argparse
 
 from utils import Loss_MRAE, Loss_PSNR, Loss_RMSE, Loss_NDVI, Loss_NDRE
 from mstpp.mstpp import MST_Plus_Plus
-from data_carrier.datasets import KazDataset, WeedyRiceDataset, SriLankaDataset
+from data_carrier import KazDataset, SriLankaDataset, WeedyRiceDataset, AndhraDataset, DataCarrier
 
-DatasetType = Literal["Sri-Lanka", "Kazakhstan", "Weedy-Rice"]
+DatasetType = Literal["Sri-Lanka", "Kazakhstan", "Weedy-Rice", "Andhra"]
 
 @dataclass(frozen=True)
 class DatasetConfig:
@@ -86,14 +86,22 @@ def _get_dataset(data_type: DatasetType, root_dir: Path, non_resize_picture=Fals
     dataset: DataCarrier
     match data_type:
         case "Sri-Lanka":
-            dataset = SriLankaDataset(Path(root_dir), resize=(not non_resize_picture))
+            loader = SriLankaDataset 
         case "Kazakhstan":
-            dataset = KazDataset(Path(root_dir), resize=(not non_resize_picture))
+            loader = KazDataset
         case "Weedy-Rice":
-            dataset = WeedyRiceDataset(Path(root_dir), resize=(not non_resize_picture))
+            loader = WeedyRiceDataset
+        case "Andhra":
+            loader = AndhraDataset
         case _:
+            loader = None
             raise ValueError(f"Unknown dataset type: {data_type}")
+    return loader
 
+def _get_dataset(root_dir: Path, loader, resize: bool):
+    dataset = loader(root_path=root_dir, resize=resize)  # non_resize_picture is default False
+    logger.info(f"[Loaded] Using data loader: {type(loader)}")
+    logger.info(f"[Loaded] Dataset loaded from {root_dir}")
     logger.info(f"[Loaded] Dataset loaded with {len(dataset)} samples.")
     return dataset
 
@@ -158,10 +166,10 @@ def load_datasets(
     config: DatasetConfig,
     ddp: DDPContext
 ) -> tuple[DataLoader[Any], DataLoader[Any], int]:
-    dataset: DataCarrier = _get_dataset(
-        config.data_type,
+    dataset = _get_dataset(
         config.data_path,
-        config.non_resize
+        _get_loader_function(config.data_type),
+        resize = not config.non_resize
     )
 
     total_len = len(dataset)
@@ -281,7 +289,7 @@ def maybe_wrap_ddp(model: nn.Module, ctx: DDPContext) -> DDP | nn.Module:
             device_ids=[ctx.local_rank],
             output_device=ctx.local_rank,
             broadcast_buffers=False,
-            find_unused_parameters=True
+            find_unused_parameters=False
         )
         if ctx.is_main:
             logger.info(f"[DDP] Wrapped model in DistributedDataParallel on local_rank={ctx.local_rank}")
