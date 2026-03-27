@@ -18,11 +18,17 @@ for train_model in "${chosen_models[@]}"; do
         for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
             DIR_NAME="${BASE_DIR}/re_${ndre}_vi_${ndvi}"
             MODEL_NAME="${MODEL_BASE_NAME}-re_${ndre}-vi_${ndvi}"
+            FINAL_MODEL_LINE="Final model: checkpoints/vi/stage2/re_${ndre}_vi_${ndvi}"
 
             attempt=0
 
             if [[ ("$ndre" == "0.5" && ("$ndvi" == "0.0" || "$ndvi" == "0.1" || "$ndvi" == "0.2" || "$ndvi" == "0.3" || "$ndvi" == "0.4" || "$ndvi" == "0.5")) ]]; then
                 echo "$(date '+%Y-%m-%d %H:%M:%S') :: skipped ndre=${ndre}, ndvi=${ndvi}"
+                continue
+            fi
+
+            if grep -RqsF -- "${FINAL_MODEL_LINE}" logs/vi; then
+                echo "$(date '+%Y-%m-%d %H:%M:%S') :: RE: $ndre, VI: $ndvi has already been evaluated"
                 continue
             fi
 
