@@ -4,76 +4,104 @@ This repo contains a proof-of-concept binary weed segmentation pipeline built ar
 
 ## Workflow
 
+Run the commands below from the repository root. They use the root virtual environment at `.\.venv` and set `PYTHONPATH` so the `tbd\masking\src` package resolves correctly:
+
+```powershell
+$env:PYTHONPATH=".\tbd\masking"
+```
+
 1. Create aligned original-image splits:
 
 ```powershell
-.venv\Scripts\python.exe -m src.create_splits --dataset-root data/weedy-rice --output-dir data/splits --group-strategy datetime
+.\.venv\Scripts\python.exe -m src.create_splits --dataset-root .\tbd\masking\data\weedy-rice --output-dir .\tbd\masking\data\splits --group-strategy datetime
 ```
 
 2. Create deterministic patch manifests for each modality config:
 
 ```powershell
-.venv\Scripts\python.exe -m src.patchify --config configs/rgb.yaml
-.venv\Scripts\python.exe -m src.patchify --config configs/synth_msi.yaml
-.venv\Scripts\python.exe -m src.patchify --config configs/real_msi.yaml
-.venv\Scripts\python.exe -m src.patchify --config configs/rgb_synth_msi.yaml
-.venv\Scripts\python.exe -m src.patchify --config configs/rgb_real_msi.yaml
+.\.venv\Scripts\python.exe -m src.patchify --config .\tbd\masking\configs\rgb.yaml
+.\.venv\Scripts\python.exe -m src.patchify --config .\tbd\masking\configs\real_msi.yaml
+.\.venv\Scripts\python.exe -m src.patchify --config .\tbd\masking\configs\synth_msi.yaml
+.\.venv\Scripts\python.exe -m src.patchify --config .\tbd\masking\configs\rgb_real_msi.yaml
+.\.venv\Scripts\python.exe -m src.patchify --config .\tbd\masking\configs\rgb_synth_msi.yaml
 ```
 
-3. Train:
+3. Train RGB only:
 
 ```powershell
-.venv\Scripts\python.exe -m src.train --config configs/rgb.yaml
-.venv\Scripts\python.exe -m src.train --config configs/rgb_synth_msi.yaml
-.venv\Scripts\python.exe -m src.train --config configs/rgb_real_msi.yaml
+.\.venv\Scripts\python.exe -m src.train --config .\tbd\masking\configs\rgb.yaml
+```
+
+4. Train RGB + synthetic multispectral:
+
+```powershell
+.\.venv\Scripts\python.exe -m src.train --config .\tbd\masking\configs\rgb_synth_msi.yaml
+```
+
+5. Train RGB + real multispectral:
+
+```powershell
+.\.venv\Scripts\python.exe -m src.train --config .\tbd\masking\configs\rgb_real_msi.yaml
 ```
 
 Training writes run artifacts under `outputs/runs/<run_name>/`, including `logs/execution.log` with entries formatted as `%(asctime)s [Trainer] :: %(message)s`.
 
 Additional supported multimodal runs:
 
-- `configs/rgb_synth_msi.yaml`: RGB concatenated with synthetic multispectral input, for a 7-channel model.
-- `configs/rgb_real_msi.yaml`: RGB concatenated with real multispectral input, for a 7-channel model.
+- `.\tbd\masking\configs\rgb_synth_msi.yaml`: RGB concatenated with synthetic multispectral input, for a 7-channel model.
+- `.\tbd\masking\configs\rgb_real_msi.yaml`: RGB concatenated with real multispectral input, for a 7-channel model.
 
-4. Evaluate the best checkpoint:
+6. Evaluate the best checkpoint:
 
 ```powershell
-.venv\Scripts\python.exe -m src.evaluate --checkpoint outputs/runs/<run>/checkpoints/best.pt --split test
+.\.venv\Scripts\python.exe -m src.evaluate --checkpoint .\tbd\masking\outputs\runs\<run>\checkpoints\best.pt --split test
 ```
 
 Evaluation writes artifacts under `outputs/runs/<run>/evaluation/<split>/`, including `execution.log` with entries formatted as `%(asctime)s [Evaluator] :: %(message)s`.
 
-5. Summarize multiple runs:
+7. Summarize multiple runs:
 
 ```powershell
-.venv\Scripts\python.exe -m src.summarize --runs outputs/runs/<rgb_run> outputs/runs/<synth_run> outputs/runs/<real_run> --output outputs/metrics/final_comparison.csv
+.\.venv\Scripts\python.exe -m src.summarize --runs .\tbd\masking\outputs\runs\<rgb_run> .\tbd\masking\outputs\runs\<synth_run> .\tbd\masking\outputs\runs\<real_run> --output .\tbd\masking\outputs\metrics\final_comparison.csv
 ```
 
 Summarization writes the comparison CSV to the requested `--output` path and writes a companion log file next to it, for example `outputs/metrics/final_comparison.log`, with entries formatted as `%(asctime)s [Summarizer] :: %(message)s`.
 
 ## Command Reference
 
-Train a run:
+Train RGB:
 
 ```powershell
-cd tbd\masking
-..\..\.venv\Scripts\python.exe -m src.train --config configs\rgb.yaml
-..\..\.venv\Scripts\python.exe -m src.train --config configs\rgb_synth_msi.yaml
-..\..\.venv\Scripts\python.exe -m src.train --config configs\rgb_real_msi.yaml
+$env:PYTHONPATH=".\tbd\masking"
+.\.venv\Scripts\python.exe -m src.train --config .\tbd\masking\configs\rgb.yaml
+```
+
+Train RGB + synthetic multispectral:
+
+```powershell
+$env:PYTHONPATH=".\tbd\masking"
+.\.venv\Scripts\python.exe -m src.train --config .\tbd\masking\configs\rgb_synth_msi.yaml
+```
+
+Train RGB + real multispectral:
+
+```powershell
+$env:PYTHONPATH=".\tbd\masking"
+.\.venv\Scripts\python.exe -m src.train --config .\tbd\masking\configs\rgb_real_msi.yaml
 ```
 
 Evaluate a run:
 
 ```powershell
-cd tbd\masking
-..\..\.venv\Scripts\python.exe -m src.evaluate --checkpoint outputs\runs\<run>\checkpoints\best.pt --split test
+$env:PYTHONPATH=".\tbd\masking"
+.\.venv\Scripts\python.exe -m src.evaluate --checkpoint .\tbd\masking\outputs\runs\<run>\checkpoints\best.pt --split test
 ```
 
 Create a summary table:
 
 ```powershell
-cd tbd\masking
-..\..\.venv\Scripts\python.exe -m src.summarize --runs outputs\runs\<rgb_run> outputs\runs\<synth_run> outputs\runs\<real_run> --output outputs\metrics\final_comparison.csv
+$env:PYTHONPATH=".\tbd\masking"
+.\.venv\Scripts\python.exe -m src.summarize --runs .\tbd\masking\outputs\runs\<rgb_run> .\tbd\masking\outputs\runs\<synth_run> .\tbd\masking\outputs\runs\<real_run> --output .\tbd\masking\outputs\metrics\final_comparison.csv
 ```
 
 ## Notes
