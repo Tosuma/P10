@@ -7,14 +7,13 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from src.datasets import build_dataloader, load_mask, load_multichannel, load_rgb, load_synthetic
+from src.datasets import build_dataloader, load_image_for_modality, load_mask
 from src.losses import BCEDiceLoss
 from src.metrics import ConfusionTotals
 from src.model import build_model
 from src.utils import (
     device_from_config,
     ensure_dir,
-    parse_path_field,
     read_csv_rows,
     read_json,
     setup_file_logger,
@@ -113,13 +112,7 @@ def reconstruct_image_metrics(sample_rows: list[dict[str, str]], probabilities_b
 
 
 def load_preview_image(sample: dict[str, str], modality: str) -> np.ndarray:
-    if modality == "rgb":
-        return load_rgb(sample["rgb_path"])
-    if modality == "real_msi":
-        return load_multichannel(parse_path_field(sample["real_msi_path"]))
-    if modality == "synthetic_msi":
-        return load_synthetic(sample["synthetic_msi_path"])
-    raise ValueError(modality)
+    return load_image_for_modality(sample, modality)
 
 
 def main() -> None:

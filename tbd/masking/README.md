@@ -1,6 +1,6 @@
 # Binary Weed Segmentation POC
 
-This repo contains a proof-of-concept binary weed segmentation pipeline built around a U-Net with a ResNet34 encoder from `segmentation_models_pytorch`. The same training and evaluation pipeline supports RGB, synthetic multispectral, and ground-truth multispectral input.
+This repo contains a proof-of-concept binary weed segmentation pipeline built around a U-Net with a ResNet34 encoder from `segmentation_models_pytorch`. The same training and evaluation pipeline supports RGB, synthetic multispectral, real multispectral, RGB plus synthetic multispectral, and RGB plus real multispectral input.
 
 ## Workflow
 
@@ -16,15 +16,24 @@ This repo contains a proof-of-concept binary weed segmentation pipeline built ar
 .venv\Scripts\python.exe -m src.patchify --config configs/rgb.yaml
 .venv\Scripts\python.exe -m src.patchify --config configs/synth_msi.yaml
 .venv\Scripts\python.exe -m src.patchify --config configs/real_msi.yaml
+.venv\Scripts\python.exe -m src.patchify --config configs/rgb_synth_msi.yaml
+.venv\Scripts\python.exe -m src.patchify --config configs/rgb_real_msi.yaml
 ```
 
 3. Train:
 
 ```powershell
 .venv\Scripts\python.exe -m src.train --config configs/rgb.yaml
+.venv\Scripts\python.exe -m src.train --config configs/rgb_synth_msi.yaml
+.venv\Scripts\python.exe -m src.train --config configs/rgb_real_msi.yaml
 ```
 
 Training writes run artifacts under `outputs/runs/<run_name>/`, including `logs/execution.log` with entries formatted as `%(asctime)s [Trainer] :: %(message)s`.
+
+Additional supported multimodal runs:
+
+- `configs/rgb_synth_msi.yaml`: RGB concatenated with synthetic multispectral input, for a 7-channel model.
+- `configs/rgb_real_msi.yaml`: RGB concatenated with real multispectral input, for a 7-channel model.
 
 4. Evaluate the best checkpoint:
 
@@ -49,6 +58,8 @@ Train a run:
 ```powershell
 cd tbd\masking
 ..\..\.venv\Scripts\python.exe -m src.train --config configs\rgb.yaml
+..\..\.venv\Scripts\python.exe -m src.train --config configs\rgb_synth_msi.yaml
+..\..\.venv\Scripts\python.exe -m src.train --config configs\rgb_real_msi.yaml
 ```
 
 Evaluate a run:
@@ -70,6 +81,6 @@ cd tbd\masking
 - Splits are created at the original-image level before patching.
 - Patch manifests are deterministic given the config seed.
 - RGB normalization uses ImageNet statistics.
-- Non-RGB normalization is computed from train patches only and cached as JSON.
+- All other modalities, including the two RGB+MSI combined variants, compute normalization from train patches only and cache it as JSON.
 - Evaluation reconstructs full-image predictions by averaging patch probabilities into the original image canvas.
 - `synthetic_msi_path` is expected to point to a single `.npy` or `.npz` file per sample.

@@ -35,13 +35,15 @@ class SegmentationTransform:
             image = np.rot90(image, k=k, axes=(0, 1))
             mask = np.rot90(mask, k=k, axes=(0, 1))
 
-        if modality == "rgb" and self.brightness > 0:
+        if modality.startswith("rgb") and self.brightness > 0:
             brightness_scale = 1.0 + self.rng.uniform(-self.brightness, self.brightness)
-            image = image * brightness_scale
-        if modality == "rgb" and self.contrast > 0:
-            mean = image.mean(axis=(0, 1), keepdims=True)
+            image = image.copy()
+            image[..., :3] = image[..., :3] * brightness_scale
+        if modality.startswith("rgb") and self.contrast > 0:
+            mean = image[..., :3].mean(axis=(0, 1), keepdims=True)
             contrast_scale = 1.0 + self.rng.uniform(-self.contrast, self.contrast)
-            image = (image - mean) * contrast_scale + mean
+            image = image.copy()
+            image[..., :3] = (image[..., :3] - mean) * contrast_scale + mean
         if self.noise_std > 0:
             image = image + self.rng.normal(0.0, self.noise_std, size=image.shape)
 

@@ -55,6 +55,29 @@ def crop_hw(image: np.ndarray, left: int, top: int, width: int, height: int) -> 
     return image[top : top + height, left : left + width, ...]
 
 
+def load_image_for_modality(sample: dict[str, str], modality: str) -> np.ndarray:
+    if modality == "rgb":
+        return load_rgb(sample["rgb_path"])
+    if modality == "synthetic_msi":
+        if not sample.get("synthetic_msi_path"):
+            raise FileNotFoundError(f"Missing synthetic MSI path for sample {sample['sample_id']}")
+        return load_synthetic(sample["synthetic_msi_path"])
+    if modality == "real_msi":
+        paths = parse_path_field(sample["real_msi_path"])
+        if not paths:
+            raise FileNotFoundError(f"Missing real MSI path(s) for sample {sample['sample_id']}")
+        return load_multichannel(paths)
+    if modality == "rgb_real_msi":
+        rgb = load_rgb(sample["rgb_path"])
+        real_msi = load_image_for_modality(sample, "real_msi")
+        return np.concatenate([rgb, real_msi], axis=-1)
+    if modality == "rgb_synthetic_msi":
+        rgb = load_rgb(sample["rgb_path"])
+        synthetic_msi = load_image_for_modality(sample, "synthetic_msi")
+        return np.concatenate([rgb, synthetic_msi], axis=-1)
+    raise ValueError(f"Unsupported modality: {modality}")
+
+
 def normalize_image(image: np.ndarray, modality: str, normalization: dict[str, Any]) -> np.ndarray:
     if modality == "rgb":
         mean = np.asarray(normalization.get("mean", IMAGENET_MEAN), dtype=np.float32)
@@ -88,18 +111,7 @@ class WeedSegmentationDataset(Dataset):
         return len(self.patches)
 
     def _load_image(self, sample: dict[str, str]) -> np.ndarray:
-        if self.modality == "rgb":
-            return load_rgb(sample["rgb_path"])
-        if self.modality == "synthetic_msi":
-            if not sample.get("synthetic_msi_path"):
-                raise FileNotFoundError(f"Missing synthetic MSI path for sample {sample['sample_id']}")
-            return load_synthetic(sample["synthetic_msi_path"])
-        if self.modality == "real_msi":
-            paths = parse_path_field(sample["real_msi_path"])
-            if not paths:
-                raise FileNotFoundError(f"Missing real MSI path(s) for sample {sample['sample_id']}")
-            return load_multichannel(paths)
-        raise ValueError(f"Unsupported modality: {self.modality}")
+        return load_image_for_modality(sample, self.modality)
 
     def __getitem__(self, index: int) -> dict[str, Any]:
         patch = self.patches[index]
@@ -146,14 +158,7 @@ def compute_channel_stats(sample_manifest_path: str, patch_manifest_path: str, m
         left, top = int(patch["x"]), int(patch["y"])
         width, height = int(patch["width"]), int(patch["height"])
 
-        if modality == "rgb":
-            image = crop_hw(load_rgb(sample["rgb_path"]), left, top, width, height)
-        elif modality == "real_msi":
-            image = crop_hw(load_multichannel(parse_path_field(sample["real_msi_path"])), left, top, width, height)
-        elif modality == "synthetic_msi":
-            image = crop_hw(load_synthetic(sample["synthetic_msi_path"]), left, top, width, height)
-        else:
-            raise ValueError(f"Unsupported modality: {modality}")
+        image = crop_hw(load_image_for_modality(sample, modality), left, top, width, height)
 
         flat = image.reshape(-1, image.shape[-1]).astype(np.float64)
         patch_sum = flat.sum(axis=0)
