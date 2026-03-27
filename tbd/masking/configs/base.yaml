@@ -1,0 +1,42 @@
+experiment_name: base_unet_resnet34
+modality: rgb
+in_channels: 3
+seed: 42
+device: null
+paths:
+  run_root: outputs/runs
+  train_manifest: data/splits/train.csv
+  val_manifest: data/splits/val.csv
+  test_manifest: data/splits/test.csv
+  patch_manifest_dir: data/patches/default
+  train_patch_manifest: data/patches/default/train_patches.csv
+  val_patch_manifest: data/patches/default/val_patches.csv
+  test_patch_manifest: data/patches/default/test_patches.csv
+  normalization_stats: data/processed/default_normalization.json
+patch:
+  mode: fixed_grid
+  size: [640, 480]
+  patches_per_image: 8
+  keep_empty_probability: 0.25
+augmentations:
+  brightness: 0.10
+  contrast: 0.10
+  noise_std: 0.01
+loss:
+  bce_weight: 0.5
+  dice_weight: 0.5
+training:
+  batch_size: 8
+  num_workers: 0
+  lr: 0.001
+  weight_decay: 0.0001
+  epochs: 40
+  grad_clip: 1.0
+  early_stopping_patience: 8
+  freeze_encoder_epochs: 0
+  scheduler:
+    factor: 0.5
+    patience: 3
+evaluation:
+  threshold: 0.5
+  num_visualizations: 8

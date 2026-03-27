@@ -1,0 +1,10 @@
+{
+  "git_commit": null,
+  "seed": 42,
+  "packages": {
+    "torch": "2.11.0+cu128",
+    "numpy": "2.4.3",
+    "PIL": "12.1.1",
+    "python": "3.14.3 (tags/v3.14.3:323c59a, Feb  3 2026, 16:04:56) [MSC v.1944 64 bit (AMD64)]"
+  }
+}
