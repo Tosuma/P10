@@ -30,7 +30,7 @@ training:
   num_workers: 0
   lr: 0.001
   weight_decay: 0.0001
-  epochs: 40
+  epochs: 300
   grad_clip: 1.0
   early_stopping_patience: 8
   freeze_encoder_epochs: 0
