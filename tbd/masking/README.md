@@ -24,16 +24,45 @@ This repo contains a proof-of-concept binary weed segmentation pipeline built ar
 .venv\Scripts\python.exe -m src.train --config configs/rgb.yaml
 ```
 
+Training writes run artifacts under `outputs/runs/<run_name>/`, including `logs/execution.log` with entries formatted as `%(asctime)s [Trainer] :: %(message)s`.
+
 4. Evaluate the best checkpoint:
 
 ```powershell
 .venv\Scripts\python.exe -m src.evaluate --checkpoint outputs/runs/<run>/checkpoints/best.pt --split test
 ```
 
+Evaluation writes artifacts under `outputs/runs/<run>/evaluation/<split>/`, including `execution.log` with entries formatted as `%(asctime)s [Evaluator] :: %(message)s`.
+
 5. Summarize multiple runs:
 
 ```powershell
 .venv\Scripts\python.exe -m src.summarize --runs outputs/runs/<rgb_run> outputs/runs/<synth_run> outputs/runs/<real_run> --output outputs/metrics/final_comparison.csv
+```
+
+Summarization writes the comparison CSV to the requested `--output` path and writes a companion log file next to it, for example `outputs/metrics/final_comparison.log`, with entries formatted as `%(asctime)s [Summarizer] :: %(message)s`.
+
+## Command Reference
+
+Train a run:
+
+```powershell
+cd tbd\masking
+..\..\.venv\Scripts\python.exe -m src.train --config configs\rgb.yaml
+```
+
+Evaluate a run:
+
+```powershell
+cd tbd\masking
+..\..\.venv\Scripts\python.exe -m src.evaluate --checkpoint outputs\runs\<run>\checkpoints\best.pt --split test
+```
+
+Create a summary table:
+
+```powershell
+cd tbd\masking
+..\..\.venv\Scripts\python.exe -m src.summarize --runs outputs\runs\<rgb_run> outputs\runs\<synth_run> outputs\runs\<real_run> --output outputs\metrics\final_comparison.csv
 ```
 
 ## Notes

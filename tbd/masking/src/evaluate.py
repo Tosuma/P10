@@ -11,7 +11,16 @@ from src.datasets import build_dataloader, load_mask, load_multichannel, load_rg
 from src.losses import BCEDiceLoss
 from src.metrics import ConfusionTotals
 from src.model import build_model
-from src.utils import device_from_config, ensure_dir, parse_path_field, read_csv_rows, read_json, write_csv_rows, write_json
+from src.utils import (
+    device_from_config,
+    ensure_dir,
+    parse_path_field,
+    read_csv_rows,
+    read_json,
+    setup_file_logger,
+    write_csv_rows,
+    write_json,
+)
 from src.visualize import save_prediction_panel
 
 
@@ -124,6 +133,10 @@ def main() -> None:
     model, config, _ = load_checkpoint(args.checkpoint, device)
     run_dir = Path(args.checkpoint).resolve().parents[1]
     output_dir = ensure_dir(args.output_dir or (run_dir / "evaluation" / args.split))
+    logger = setup_file_logger("Evaluator", output_dir / "execution.log")
+    logger.info("Evaluation started for checkpoint %s", Path(args.checkpoint).resolve())
+    logger.info("Writing evaluation artifacts to %s", output_dir.resolve())
+    logger.info("Using split=%s and device=%s", args.split, device)
 
     normalization = read_json(Path(config["paths"]["normalization_stats"]))
     loader = build_dataloader(
@@ -139,6 +152,8 @@ def main() -> None:
     )
 
     threshold = float(config["evaluation"]["threshold"])
+    logger.info("Loaded normalization from %s", config["paths"]["normalization_stats"])
+    logger.info("Running inference with threshold=%.4f", threshold)
     results = evaluate_loader(model, loader, device, threshold=threshold)
     sample_rows = read_csv_rows(config["paths"][f"{args.split}_manifest"])
     per_image_rows, visuals = reconstruct_image_metrics(sample_rows, results["reconstruction_payload"], threshold)
@@ -152,6 +167,8 @@ def main() -> None:
     write_json(output_dir / "overall_metrics.json", {"patch_level": results["overall"], "image_level": image_summary})
     write_csv_rows(output_dir / "per_patch_metrics.csv", results["per_patch_rows"], list(results["per_patch_rows"][0].keys()) if results["per_patch_rows"] else ["sample_id"])
     write_csv_rows(output_dir / "per_image_metrics.csv", per_image_rows, list(per_image_rows[0].keys()) if per_image_rows else ["sample_id"])
+    logger.info("Saved aggregate metrics to %s", output_dir / "overall_metrics.json")
+    logger.info("Saved %s patch rows and %s image rows", len(results["per_patch_rows"]), len(per_image_rows))
 
     preview_dir = ensure_dir(output_dir / "visuals")
     sample_lookup = {row["sample_id"]: row for row in sample_rows}
@@ -165,6 +182,8 @@ def main() -> None:
             probability_map=visual["probability_map"],
             pred_mask=visual["pred_mask"],
         )
+    logger.info("Saved %s visualization panel(s) to %s", min(len(visuals), int(config["evaluation"].get("num_visualizations", 8))), preview_dir)
+    logger.info("Evaluation completed")
 
 
 if __name__ == "__main__":

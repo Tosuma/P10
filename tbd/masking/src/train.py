@@ -23,6 +23,7 @@ from src.utils import (
     package_versions,
     read_json,
     set_seed,
+    setup_file_logger,
     timestamp_utc,
     write_json,
 )
@@ -142,6 +143,7 @@ def main() -> None:
     checkpoint_dir = ensure_dir(run_dir / "checkpoints")
     log_dir = ensure_dir(run_dir / "logs")
     metrics_dir = ensure_dir(run_dir / "metrics")
+    logger = setup_file_logger("Trainer", log_dir / "execution.log")
 
     dump_config(run_dir / "config.yaml", config)
     metadata = {
@@ -150,9 +152,14 @@ def main() -> None:
         "packages": package_versions(["torch", "numpy", "PIL"]),
     }
     write_json(run_dir / "run_metadata.json", metadata)
+    logger.info("Training run initialized at %s", run_dir.resolve())
+    logger.info("Loaded config from %s", config.get("_config_path"))
+    logger.info("Using seed=%s and device=%s", config["seed"], config.get("device", "auto"))
 
     normalization = prepare_normalization(config, run_dir)
     device = device_from_config(config.get("device"))
+    logger.info("Resolved runtime device to %s", device)
+    logger.info("Prepared normalization from source=%s", normalization.get("source", "unknown"))
 
     train_loader = build_dataloader(
         sample_manifest_path=config["paths"]["train_manifest"],
@@ -194,6 +201,11 @@ def main() -> None:
         patience=int(config["training"]["scheduler"]["patience"]),
     )
     scaler = torch.amp.GradScaler("cuda", enabled=device.type == "cuda")
+    logger.info(
+        "Built dataloaders with batch_size=%s, num_workers=%s",
+        config["training"]["batch_size"],
+        config["training"]["num_workers"],
+    )
 
     freeze_epochs = int(config["training"].get("freeze_encoder_epochs", 0))
     best_val_iou = -1.0
@@ -222,6 +234,7 @@ def main() -> None:
         writer.writeheader()
 
         for epoch in range(1, int(config["training"]["epochs"]) + 1):
+            logger.info("Starting epoch %s", epoch)
             maybe_freeze_encoder(model, freeze=epoch <= freeze_epochs)
             train_metrics = run_epoch(
                 model=model,
@@ -259,20 +272,42 @@ def main() -> None:
             writer.writerow(row)
             handle.flush()
             history.append(row)
+            logger.info(
+                "Completed epoch %s: train_loss=%.6f train_iou=%.6f val_loss=%.6f val_iou=%.6f lr=%.8f",
+                epoch,
+                train_metrics["loss"],
+                train_metrics["iou"],
+                val_metrics["loss"],
+                val_metrics["iou"],
+                current_lr,
+            )
 
             save_checkpoint(checkpoint_dir / "latest.pt", model, optimizer, scheduler, epoch, best_val_iou, config)
+            logger.info("Updated latest checkpoint at epoch %s", epoch)
             if val_metrics["iou"] > best_val_iou:
                 best_val_iou = val_metrics["iou"]
                 epochs_without_improvement = 0
                 save_checkpoint(checkpoint_dir / "best.pt", model, optimizer, scheduler, epoch, best_val_iou, config)
+                logger.info("New best checkpoint saved with val_iou=%.6f", best_val_iou)
             else:
                 epochs_without_improvement += 1
+                logger.info(
+                    "No validation IoU improvement for %s epoch(s)",
+                    epochs_without_improvement,
+                )
 
             if epochs_without_improvement >= early_stopping_patience:
+                logger.info(
+                    "Early stopping triggered after %s epoch(s) without improvement",
+                    epochs_without_improvement,
+                )
                 break
 
     write_json(metrics_dir / "history.json", history)
     write_json(metrics_dir / "best_summary.json", {"best_val_iou": best_val_iou, "run_dir": str(run_dir.resolve())})
+    logger.info("Wrote training history to %s", metrics_dir / "history.json")
+    logger.info("Wrote best summary to %s", metrics_dir / "best_summary.json")
+    logger.info("Training completed")
     print(str(run_dir.resolve()))
 
 

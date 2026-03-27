@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
+import logging
 import random
 import subprocess
 import sys
@@ -17,6 +18,26 @@ def ensure_dir(path: str | Path) -> Path:
     path = Path(path)
     path.mkdir(parents=True, exist_ok=True)
     return path
+
+
+def setup_file_logger(announcer: str, path: str | Path) -> logging.Logger:
+    log_path = Path(path)
+    ensure_dir(log_path.parent)
+    logger = logging.getLogger(announcer)
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+
+    resolved_path = log_path.resolve()
+    for handler in list(logger.handlers):
+        if isinstance(handler, logging.FileHandler) and Path(handler.baseFilename).resolve() == resolved_path:
+            return logger
+
+    formatter = logging.Formatter("%(asctime)s [%(name)s] :: %(message)s")
+    file_handler = logging.FileHandler(log_path, encoding="utf-8")
+    file_handler.setLevel(logging.INFO)
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+    return logger
 
 
 def set_seed(seed: int) -> None:
