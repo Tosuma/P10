@@ -14,7 +14,7 @@ chosen_models=(
 )
 
 for train_model in "${chosen_models[@]}"; do
-    for ndre in $(seq -f "%.1f" 0.0 0.1 5.0); do
+    for ndre in $(seq -f "%.1f" 0.0 0.1 1.0); do
         for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
             DIR_NAME="${BASE_DIR}/re_${ndre}_vi_${ndvi}"
             MODEL_NAME="${MODEL_BASE_NAME}-re_${ndre}-vi_${ndvi}"
