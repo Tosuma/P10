@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import json
 import random
 from collections import defaultdict
 from pathlib import Path
@@ -36,19 +35,25 @@ def infer_group_id(sample_id: str, strategy: str) -> str:
     return sample_id
 
 
-def build_rows(dataset_root: Path, synthetic_root: Path | None, synthetic_ext: str) -> list[dict[str, str]]:
+def build_rows(
+    dataset_root: Path,
+    synthetic_root: Path | None,
+    synthetic_ext: str,
+    real_msi_root: Path | None,
+    real_msi_ext: str,
+) -> list[dict[str, str]]:
     rgb_dir = dataset_root / "RGB"
     mask_dir = dataset_root / "Masks"
-    msi_dir = dataset_root / "Multispectral"
-
-    msi_map: dict[str, list[str]] = defaultdict(list)
-    for tif_path in sorted(msi_dir.glob("*.TIF")):
-        msi_map[sample_id_from_msi(tif_path)].append(str(tif_path.resolve()))
 
     synthetic_map: dict[str, str] = {}
     if synthetic_root is not None and synthetic_root.exists():
         for synthetic_path in sorted(synthetic_root.rglob(f"*{synthetic_ext}")):
             synthetic_map[synthetic_path.stem] = str(synthetic_path.resolve())
+
+    real_msi_map: dict[str, str] = {}
+    if real_msi_root is not None and real_msi_root.exists():
+        for real_msi_path in sorted(real_msi_root.rglob(f"*{real_msi_ext}")):
+            real_msi_map[real_msi_path.stem] = str(real_msi_path.resolve())
 
     rows: list[dict[str, str]] = []
     for rgb_path in sorted(rgb_dir.glob("*.JPG")):
@@ -62,7 +67,7 @@ def build_rows(dataset_root: Path, synthetic_root: Path | None, synthetic_ext: s
                 "sample_id": sample_id,
                 "rgb_path": str(rgb_path.resolve()),
                 "synthetic_msi_path": synthetic_path,
-                "real_msi_path": json.dumps(sorted(msi_map.get(sample_id, []))),
+                "real_msi_path": real_msi_map.get(sample_id, ""),
                 "mask_path": str(mask_path.resolve()),
             }
         )
@@ -117,6 +122,8 @@ def main() -> None:
     parser.add_argument("--group-strategy", choices=["sample", "date", "datetime"], default="datetime")
     parser.add_argument("--synthetic-root", default=None)
     parser.add_argument("--synthetic-ext", default=".npy")
+    parser.add_argument("--real-msi-root", default=None)
+    parser.add_argument("--real-msi-ext", default=".npy")
     args = parser.parse_args()
 
     dataset_root = Path(args.dataset_root)
@@ -125,9 +132,14 @@ def main() -> None:
     else:
         default_synthetic_root = dataset_root / "Synthetic"
         synthetic_root = default_synthetic_root if default_synthetic_root.exists() else None
+    if args.real_msi_root:
+        real_msi_root = Path(args.real_msi_root)
+    else:
+        default_real_msi_root = dataset_root / "MultispectralNPY"
+        real_msi_root = default_real_msi_root if default_real_msi_root.exists() else None
     out_dir = ensure_dir(args.output_dir)
 
-    rows = build_rows(dataset_root, synthetic_root, args.synthetic_ext)
+    rows = build_rows(dataset_root, synthetic_root, args.synthetic_ext, real_msi_root, args.real_msi_ext)
     rows = assign_splits(rows, args.seed, args.train_ratio, args.val_ratio, args.group_strategy)
 
     fieldnames = ["sample_id", "rgb_path", "synthetic_msi_path", "real_msi_path", "mask_path", "group_id", "split"]
@@ -139,6 +151,7 @@ def main() -> None:
     summary = {
         "dataset_root": str(dataset_root.resolve()),
         "synthetic_root": str(synthetic_root.resolve()) if synthetic_root else None,
+        "real_msi_root": str(real_msi_root.resolve()) if real_msi_root else None,
         "seed": args.seed,
         "group_strategy": args.group_strategy,
         "counts": {split: sum(row["split"] == split for row in rows) for split in ("train", "val", "test")},

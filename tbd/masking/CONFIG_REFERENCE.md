@@ -59,6 +59,7 @@ Numeric fields may use normal decimal notation or scientific notation such as `1
 ### `train_manifest`, `val_manifest`, `test_manifest`
 
 - CSV files describing the samples in each split.
+- `real_msi_path` entries in these manifests should point to a single packed `.npy` file for each sample.
 
 ### `patch_manifest_dir`
 

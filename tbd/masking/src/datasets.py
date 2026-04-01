@@ -9,7 +9,7 @@ from PIL import Image
 from torch.utils.data import DataLoader, Dataset
 
 from src.transforms import build_transforms
-from src.utils import parse_path_field, read_csv_rows
+from src.utils import read_csv_rows
 
 IMAGENET_MEAN = np.array([0.485, 0.456, 0.406], dtype=np.float32)
 IMAGENET_STD = np.array([0.229, 0.224, 0.225], dtype=np.float32)
@@ -19,17 +19,7 @@ def load_rgb(path: str) -> np.ndarray:
     return np.asarray(Image.open(path).convert("RGB"), dtype=np.float32) / 255.0
 
 
-def load_multichannel(paths: list[str]) -> np.ndarray:
-    channels = []
-    for path in paths:
-        array = np.asarray(Image.open(path), dtype=np.float32)
-        if array.ndim == 3:
-            array = array[..., 0]
-        channels.append(array)
-    return np.stack(channels, axis=-1)
-
-
-def load_synthetic(path: str) -> np.ndarray:
+def load_array_file(path: str) -> np.ndarray:
     file_path = Path(path)
     if file_path.suffix.lower() == ".npy":
         array = np.load(file_path)
@@ -38,12 +28,20 @@ def load_synthetic(path: str) -> np.ndarray:
         first_key = list(payload.keys())[0]
         array = payload[first_key]
     else:
-        raise ValueError(f"Unsupported synthetic MSI format: {file_path}")
+        raise ValueError(f"Unsupported array format: {file_path}")
     if array.ndim != 3:
-        raise ValueError(f"Synthetic MSI must be 3D, got shape {array.shape}")
+        raise ValueError(f"Array input must be 3D, got shape {array.shape}")
     if array.shape[0] < array.shape[-1]:
         array = np.moveaxis(array, 0, -1)
     return array.astype(np.float32)
+
+
+def load_synthetic(path: str) -> np.ndarray:
+    return load_array_file(path)
+
+
+def load_real_msi(path: str) -> np.ndarray:
+    return load_array_file(path)
 
 
 def load_mask(path: str) -> np.ndarray:
@@ -63,10 +61,9 @@ def load_image_for_modality(sample: dict[str, str], modality: str) -> np.ndarray
             raise FileNotFoundError(f"Missing synthetic MSI path for sample {sample['sample_id']}")
         return load_synthetic(sample["synthetic_msi_path"])
     if modality == "real_msi":
-        paths = parse_path_field(sample["real_msi_path"])
-        if not paths:
-            raise FileNotFoundError(f"Missing real MSI path(s) for sample {sample['sample_id']}")
-        return load_multichannel(paths)
+        if not sample.get("real_msi_path"):
+            raise FileNotFoundError(f"Missing real MSI path for sample {sample['sample_id']}")
+        return load_real_msi(sample["real_msi_path"])
     if modality == "rgb_real_msi":
         rgb = load_rgb(sample["rgb_path"])
         real_msi = load_image_for_modality(sample, "real_msi")
