@@ -86,14 +86,14 @@ class WeedyRiceDataset(DataCarrier):
     """
     def _load_data(self, root_path: Path):
         # Weedy Rice RGB pictures have filenames like: <id>.JPG
-        rgb_path_list = sorted([f for f in root_path.rglob("*.JPG") if f.is_file()])
+        rgb_path_list = sorted([f for f in root_path.rglob("*RGB/*.JPG") if f.is_file()])
 
         band_order = ["G", "R", "RE", "NIR"]
 
         ms_path_list = []
         for path in rgb_path_list:
             for suffix in band_order:
-                ms_path = str(path).replace(".JPG", f"_{suffix}.TIF")
+                ms_path = str(path).replace("/RGB/", "/Multispectral/").replace(".JPG", f"_{suffix}.TIF")
                 ms_path_list.append(Path(ms_path))
             if len(ms_path_list) % 4 != 0:
                 raise ValueError(f"Number of MS bands is not divisible by 4. Failed at {path.name}")
