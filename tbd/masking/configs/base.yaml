@@ -28,15 +28,15 @@ loss:
 training:
   batch_size: 8
   num_workers: 0
-  lr: 0.001
-  weight_decay: 0.0001
+  lr: 1e-4
+  weight_decay: 1e-4
   epochs: 300
   grad_clip: 1.0
   early_stopping_patience: 8
   freeze_encoder_epochs: 0
   scheduler:
-    factor: 0.5
-    patience: 3
+    t_max: 300
+    eta_min: 1e-6
 evaluation:
   threshold: 0.5
   num_visualizations: 8

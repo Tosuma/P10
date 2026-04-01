@@ -8,7 +8,7 @@ import numpy as np
 from PIL import Image
 
 from src.config import load_config
-from src.utils import ensure_dir, read_csv_rows, write_csv_rows, write_json
+from src.utils import ensure_dir, read_csv_rows, resolve_seed, write_csv_rows, write_json
 
 
 def fixed_grid_patches(image_width: int, image_height: int, patch_width: int, patch_height: int) -> list[tuple[int, int, int, int]]:
@@ -125,6 +125,7 @@ def main() -> None:
     args = parser.parse_args()
 
     config = load_config(args.config)
+    config["seed"] = resolve_seed(config.get("seed"))
     patch_cfg = config["patch"]
     output_dir = ensure_dir(args.output_dir or config["paths"]["patch_manifest_dir"])
 

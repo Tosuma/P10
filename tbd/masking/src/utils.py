@@ -40,6 +40,16 @@ def setup_file_logger(announcer: str, path: str | Path) -> logging.Logger:
     return logger
 
 
+def generate_seed() -> int:
+    return random.SystemRandom().randrange(0, 2**32)
+
+
+def resolve_seed(seed: Any) -> int:
+    if seed is None:
+        return generate_seed()
+    return int(seed)
+
+
 def set_seed(seed: int) -> None:
     random.seed(seed)
     np.random.seed(seed)

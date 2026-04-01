@@ -37,6 +37,40 @@ class ConfusionTotals:
         }
 
 
+@dataclass
+class ConfidenceTotals:
+    confidence_sum: float = 0.0
+    positive_confidence_sum: float = 0.0
+    negative_confidence_sum: float = 0.0
+    count: int = 0
+    positive_count: int = 0
+    negative_count: int = 0
+
+    def update(self, probabilities: torch.Tensor, threshold: float) -> None:
+        probabilities = probabilities.float()
+        preds = probabilities >= threshold
+        confidence = torch.maximum(probabilities, 1.0 - probabilities)
+
+        self.confidence_sum += confidence.sum().item()
+        self.count += confidence.numel()
+
+        if preds.any():
+            self.positive_confidence_sum += probabilities[preds].sum().item()
+            self.positive_count += preds.sum().item()
+
+        neg_mask = torch.logical_not(preds)
+        if neg_mask.any():
+            self.negative_confidence_sum += (1.0 - probabilities[neg_mask]).sum().item()
+            self.negative_count += neg_mask.sum().item()
+
+    def compute(self) -> dict[str, float]:
+        return {
+            "confidence_mean": self.confidence_sum / max(self.count, 1),
+            "positive_confidence_mean": self.positive_confidence_sum / max(self.positive_count, 1),
+            "negative_confidence_mean": self.negative_confidence_sum / max(self.negative_count, 1),
+        }
+
+
 def threshold_predictions(logits: torch.Tensor, threshold: float) -> torch.Tensor:
     probabilities = torch.sigmoid(logits)
     return (probabilities >= threshold).float()

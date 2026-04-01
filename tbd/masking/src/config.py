@@ -1,8 +1,22 @@
 from __future__ import annotations
 
+import re
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
+
+
+_FLOAT_RESOLVER_PATTERN = re.compile(
+    r"""^(?:
+    [-+]?(?:[0-9][0-9_]*)\.[0-9_]*(?:[eE][-+]?[0-9]+)?
+    |\.[0-9][0-9_]*(?:[eE][-+]?[0-9]+)?
+    |[-+]?[0-9][0-9_]*(?:[eE][-+]?[0-9]+)
+    |[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+[.][0-9_]*
+    |[-+]?[.](?:inf|Inf|INF)
+    |[.](?:nan|NaN|NAN)
+    )$""",
+    re.X,
+)
 
 
 def _load_yaml_module():
@@ -11,6 +25,18 @@ def _load_yaml_module():
     except ImportError as exc:
         raise RuntimeError("PyYAML is required. Install `pyyaml` before running this pipeline.") from exc
     return yaml
+
+
+def _build_config_loader(yaml_module):
+    class ConfigLoader(yaml_module.SafeLoader):
+        pass
+
+    ConfigLoader.add_implicit_resolver(
+        "tag:yaml.org,2002:float",
+        _FLOAT_RESOLVER_PATTERN,
+        list("-+0123456789."),
+    )
+    return ConfigLoader
 
 
 def deep_update(base: dict[str, Any], updates: dict[str, Any]) -> dict[str, Any]:
@@ -25,8 +51,9 @@ def deep_update(base: dict[str, Any], updates: dict[str, Any]) -> dict[str, Any]
 
 def load_config(path: str | Path) -> dict[str, Any]:
     yaml = _load_yaml_module()
+    loader = _build_config_loader(yaml)
     path = Path(path)
-    raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    raw = yaml.load(path.read_text(encoding="utf-8"), Loader=loader) or {}
     if "base_config" in raw:
         base_path = (path.parent / raw["base_config"]).resolve()
         base_cfg = load_config(base_path)

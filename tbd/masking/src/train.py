@@ -8,7 +8,7 @@ from typing import Any
 
 import torch
 from torch.optim import AdamW
-from torch.optim.lr_scheduler import ReduceLROnPlateau
+from torch.optim.lr_scheduler import CosineAnnealingLR
 
 from src.config import dump_config, load_config
 from src.datasets import IMAGENET_MEAN, IMAGENET_STD, build_dataloader, compute_channel_stats
@@ -22,6 +22,7 @@ from src.utils import (
     move_batch_to_device,
     package_versions,
     read_json,
+    resolve_seed,
     set_seed,
     setup_file_logger,
     timestamp_utc,
@@ -136,7 +137,8 @@ def main() -> None:
     config = load_config(args.config)
     if args.seed is not None:
         config["seed"] = args.seed
-    set_seed(int(config["seed"]))
+    config["seed"] = resolve_seed(config.get("seed"))
+    set_seed(config["seed"])
 
     run_name = f"{config['experiment_name']}_seed{config['seed']}_{timestamp_utc()}"
     run_dir = ensure_dir(Path(config["paths"]["run_root"]) / run_name)
@@ -170,7 +172,7 @@ def main() -> None:
         num_workers=int(config["training"]["num_workers"]),
         is_train=True,
         transform_config=config,
-        seed=int(config["seed"]),
+        seed=config["seed"],
     )
     val_loader = build_dataloader(
         sample_manifest_path=config["paths"]["val_manifest"],
@@ -181,7 +183,7 @@ def main() -> None:
         num_workers=int(config["training"]["num_workers"]),
         is_train=False,
         transform_config=config,
-        seed=int(config["seed"]),
+        seed=config["seed"],
     )
 
     model = build_model(int(config["in_channels"])).to(device)
@@ -194,11 +196,10 @@ def main() -> None:
         lr=float(config["training"]["lr"]),
         weight_decay=float(config["training"]["weight_decay"]),
     )
-    scheduler = ReduceLROnPlateau(
+    scheduler = CosineAnnealingLR(
         optimizer,
-        mode="max",
-        factor=float(config["training"]["scheduler"]["factor"]),
-        patience=int(config["training"]["scheduler"]["patience"]),
+        T_max=int(config["training"]["scheduler"].get("t_max", config["training"]["epochs"])),
+        eta_min=float(config["training"]["scheduler"].get("eta_min", 0.0)),
     )
     scaler = torch.amp.GradScaler("cuda", enabled=device.type == "cuda")
     logger.info(
@@ -255,7 +256,7 @@ def main() -> None:
                     threshold=threshold,
                 )
 
-            scheduler.step(val_metrics["iou"])
+            scheduler.step()
             current_lr = optimizer.param_groups[0]["lr"]
             row = {
                 "epoch": epoch,

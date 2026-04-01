@@ -9,13 +9,14 @@ import torch
 
 from src.datasets import build_dataloader, load_image_for_modality, load_mask
 from src.losses import BCEDiceLoss
-from src.metrics import ConfusionTotals
+from src.metrics import ConfidenceTotals, ConfusionTotals
 from src.model import build_model
 from src.utils import (
     device_from_config,
     ensure_dir,
     read_csv_rows,
     read_json,
+    resolve_seed,
     setup_file_logger,
     write_csv_rows,
     write_json,
@@ -34,6 +35,7 @@ def load_checkpoint(checkpoint_path: str, device: torch.device):
 
 def evaluate_loader(model, loader, device: torch.device, threshold: float):
     totals = ConfusionTotals()
+    confidence_totals = ConfidenceTotals()
     per_patch_rows = []
     probabilities_by_sample = defaultdict(list)
     criterion = BCEDiceLoss()
@@ -51,11 +53,15 @@ def evaluate_loader(model, loader, device: torch.device, threshold: float):
             total_loss += loss.item()
             total_batches += 1
             totals.update(preds, masks.cpu())
+            confidence_totals.update(probs, threshold)
 
             for idx, metadata in enumerate(batch["metadata"]):
                 patch_totals = ConfusionTotals()
+                patch_confidence_totals = ConfidenceTotals()
                 patch_totals.update(preds[idx : idx + 1], masks[idx : idx + 1].cpu())
+                patch_confidence_totals.update(probs[idx : idx + 1], threshold)
                 metrics = patch_totals.compute()
+                confidence_metrics = patch_confidence_totals.compute()
                 per_patch_rows.append(
                     {
                         "sample_id": metadata["sample_id"],
@@ -68,13 +74,20 @@ def evaluate_loader(model, loader, device: torch.device, threshold: float):
                         "dice": metrics["dice"],
                         "precision": metrics["precision"],
                         "recall": metrics["recall"],
+                        "confidence_mean": confidence_metrics["confidence_mean"],
+                        "positive_confidence_mean": confidence_metrics["positive_confidence_mean"],
+                        "negative_confidence_mean": confidence_metrics["negative_confidence_mean"],
                     }
                 )
                 probabilities_by_sample[metadata["sample_id"]].append(
                     {"coords": metadata["coords"], "probability": probs[idx, 0].numpy()}
                 )
     return {
-        "overall": {**totals.compute(), "loss": total_loss / max(total_batches, 1)},
+        "overall": {
+            **totals.compute(),
+            **confidence_totals.compute(),
+            "loss": total_loss / max(total_batches, 1),
+        },
         "per_patch_rows": per_patch_rows,
         "reconstruction_payload": probabilities_by_sample,
     }
@@ -97,9 +110,11 @@ def reconstruct_image_metrics(sample_rows: list[dict[str, str]], probabilities_b
         probability_map = accumulator / np.clip(counts, 1e-6, None)
         pred_mask = (probability_map >= threshold).astype(np.float32)
         totals = ConfusionTotals()
+        confidence_totals = ConfidenceTotals()
         totals.update(torch.from_numpy(pred_mask[None, None, ...]), torch.from_numpy(gt_mask[None, None, ...]))
+        confidence_totals.update(torch.from_numpy(probability_map[None, None, ...]), threshold)
         metrics = totals.compute()
-        per_image_rows.append({"sample_id": sample_id, **metrics})
+        per_image_rows.append({"sample_id": sample_id, **metrics, **confidence_totals.compute()})
         visuals.append(
             {
                 "sample_id": sample_id,
@@ -132,6 +147,7 @@ def main() -> None:
     logger.info("Using split=%s and device=%s", args.split, device)
 
     normalization = read_json(Path(config["paths"]["normalization_stats"]))
+    resolved_seed = resolve_seed(config.get("seed"))
     loader = build_dataloader(
         sample_manifest_path=config["paths"][f"{args.split}_manifest"],
         patch_manifest_path=config["paths"][f"{args.split}_patch_manifest"],
@@ -141,7 +157,7 @@ def main() -> None:
         num_workers=int(config["training"]["num_workers"]),
         is_train=False,
         transform_config=config,
-        seed=int(config["seed"]),
+        seed=resolved_seed,
     )
 
     threshold = float(config["evaluation"]["threshold"])
@@ -155,6 +171,11 @@ def main() -> None:
         "mean_dice": float(np.mean([row["dice"] for row in per_image_rows])) if per_image_rows else 0.0,
         "mean_precision": float(np.mean([row["precision"] for row in per_image_rows])) if per_image_rows else 0.0,
         "mean_recall": float(np.mean([row["recall"] for row in per_image_rows])) if per_image_rows else 0.0,
+        "mean_accuracy": float(np.mean([row["accuracy"] for row in per_image_rows])) if per_image_rows else 0.0,
+        "mean_specificity": float(np.mean([row["specificity"] for row in per_image_rows])) if per_image_rows else 0.0,
+        "mean_confidence": float(np.mean([row["confidence_mean"] for row in per_image_rows])) if per_image_rows else 0.0,
+        "mean_positive_confidence": float(np.mean([row["positive_confidence_mean"] for row in per_image_rows])) if per_image_rows else 0.0,
+        "mean_negative_confidence": float(np.mean([row["negative_confidence_mean"] for row in per_image_rows])) if per_image_rows else 0.0,
     }
 
     write_json(output_dir / "overall_metrics.json", {"patch_level": results["overall"], "image_level": image_summary})
