@@ -3,14 +3,14 @@ mkdir -p logs/vi
 
 LR="1e-7"
 MRAE="1.0"
-MODEL_BASE_NAME="vi-weedy"
-BASE_DIR="vi/stage3"
+MODEL_BASE_NAME="vi-weedy-scheduler"
+BASE_DIR="vi/stage3-scheduler"
 
 RETRY_TEXT="Could not lookup the current user"
 MAX_RETRIES=50
 
 chosen_models=(
-    "checkpoints/vi/finals/stage2/vi-weedy-re_0.1-vi_0.1_stage2_best.pth"
+    "checkpoints/vi/finals/stage2-scheduler/vi-weedy-re_0.1-vi_0.1_stage2_best.pth"
 )
 
 for train_model in "${chosen_models[@]}"; do
@@ -18,7 +18,7 @@ for train_model in "${chosen_models[@]}"; do
         for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
             DIR_NAME="${BASE_DIR}/re_${ndre}_vi_${ndvi}"
             MODEL_NAME="${MODEL_BASE_NAME}-re_${ndre}-vi_${ndvi}"
-            FINAL_MODEL_LINE="Final model: checkpoints/vi/stage3/re_${ndre}_vi_${ndvi}"
+            FINAL_MODEL_LINE="Final model: checkpoints/${DIR_NAME}"
 
             attempt=0
 
