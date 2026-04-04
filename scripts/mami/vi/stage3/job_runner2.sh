@@ -10,7 +10,7 @@ RETRY_TEXT="Could not lookup the current user"
 MAX_RETRIES=50
 
 chosen_models=(
-    "checkpoints/vi/finals/stage2/vi-kaz-re_0.1-vi_0.1_stage2_best.pth"
+    "checkpoints/vi/finals/stage2/vi-weedy-re_0.1-vi_0.1_stage2_best.pth"
 )
 
 for train_model in "${chosen_models[@]}"; do
