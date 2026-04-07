@@ -1,0 +1,6 @@
+base_config: rgb.yaml
+experiment_name: rgb_segformer_b1
+model:
+  architecture: Segformer
+  encoder_name: mit_b1
+  encoder_weights: imagenet

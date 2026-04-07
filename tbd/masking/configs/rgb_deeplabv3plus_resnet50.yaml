@@ -1,0 +1,5 @@
+base_config: rgb.yaml
+experiment_name: rgb_deeplabv3plus_resnet50
+model:
+  architecture: DeepLabV3Plus
+  encoder_name: resnet50

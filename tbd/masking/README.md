@@ -4,6 +4,13 @@ This repo contains a proof-of-concept binary weed segmentation pipeline built ar
 
 Config field documentation is available in `tbd\masking\CONFIG_REFERENCE.md`.
 
+Supported model families in this repo:
+
+- `Unet` with `resnet34`
+- `UnetPlusPlus` with `resnet34` and `resnet50`
+- `DeepLabV3Plus` with `resnet34` and `resnet50`
+- `Segformer` with `mit_b0` and `mit_b1`
+
 ## Workflow
 
 Run the commands below from the repository root. Activate the project virtual environment first, then set `PYTHONPATH` so the `tbd\masking\src` package resolves correctly:
@@ -48,12 +55,29 @@ python -m src.train --config ./tbd/masking/configs/rgb_synth_msi.yaml
 python -m src.train --config ./tbd/masking/configs/rgb_real_msi.yaml
 ```
 
+Architecture-specific examples:
+
+```bash
+python -m src.train --config ./tbd/masking/configs/rgb_unetpp_resnet50.yaml
+python -m src.train --config ./tbd/masking/configs/rgb_deeplabv3plus_resnet34.yaml
+python -m src.train --config ./tbd/masking/configs/rgb_segformer_b1.yaml
+```
+
 Training writes run artifacts under `outputs/runs/<run_name>/`, including `logs/execution.log` with entries formatted as `%(asctime)s [Trainer] :: %(message)s`.
 
 Additional supported multimodal runs:
 
 - `./tbd/masking/configs/rgb_synth_msi.yaml`: RGB concatenated with synthetic multispectral input, for a 7-channel model.
 - `./tbd/masking/configs/rgb_real_msi.yaml`: RGB concatenated with real multispectral input, for a 7-channel model.
+
+Architecture config naming:
+
+- `<modality>_unetpp_resnet34.yaml`
+- `<modality>_unetpp_resnet50.yaml`
+- `<modality>_deeplabv3plus_resnet34.yaml`
+- `<modality>_deeplabv3plus_resnet50.yaml`
+- `<modality>_segformer_b0.yaml`
+- `<modality>_segformer_b1.yaml`
 
 6. Evaluate the best checkpoint:
 
@@ -93,12 +117,12 @@ Example for multiple models in one shell:
 
 ```bash
 bash ./tbd/masking/run_multi_seed.sh \
-  --config ./tbd/masking/configs/rgb.yaml \
-  --config ./tbd/masking/configs/synth_msi.yaml \
-  --config ./tbd/masking/configs/real_msi.yaml \
+  --config ./tbd/masking/configs/rgb_unetpp_resnet34.yaml \
+  --config ./tbd/masking/configs/rgb_deeplabv3plus_resnet34.yaml \
+  --config ./tbd/masking/configs/rgb_segformer_b0.yaml \
   --repeats 5 \
   --base-seed 1000 \
-  --summary-output ./tbd/masking/outputs/metrics/all_models_multi_seed.json
+  --summary-output ./tbd/masking/outputs/metrics/rgb_architectures_multi_seed.json
 ```
 
 To spread models across different shells, launch the same script in each shell with a different config list.
@@ -120,6 +144,7 @@ Seed scheduling:
 - repetition `2` uses seed `N + 1`
 - repetition `3` uses seed `N + 2`
 - because the schedule depends only on repetition index, all models are trained on the same set of seeds
+- the summary JSON includes `architecture` and `encoder_name` so runs from different model families stay separated
 
 ## Command Reference
 
@@ -162,12 +187,12 @@ Run repeated multi-seed experiments:
 
 ```bash
 bash ./tbd/masking/run_multi_seed.sh \
-  --config ./tbd/masking/configs/rgb.yaml \
-  --config ./tbd/masking/configs/rgb_synth_msi.yaml \
-  --config ./tbd/masking/configs/rgb_real_msi.yaml \
+  --config ./tbd/masking/configs/rgb_unetpp_resnet34.yaml \
+  --config ./tbd/masking/configs/rgb_deeplabv3plus_resnet34.yaml \
+  --config ./tbd/masking/configs/rgb_segformer_b0.yaml \
   --repeats 5 \
   --base-seed 1000 \
-  --summary-output ./tbd/masking/outputs/metrics/multi_seed_summary.json
+  --summary-output ./tbd/masking/outputs/metrics/rgb_architectures_multi_seed.json
 ```
 
 ## Notes

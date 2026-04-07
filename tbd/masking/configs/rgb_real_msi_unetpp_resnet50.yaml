@@ -1,0 +1,5 @@
+base_config: rgb_real_msi.yaml
+experiment_name: rgb_real_msi_unetplusplus_resnet50
+model:
+  architecture: UnetPlusPlus
+  encoder_name: resnet50

@@ -1,6 +1,11 @@
 experiment_name: rgb_smoke_unet_resnet34
 modality: rgb
 in_channels: 3
+model:
+  architecture: Unet
+  encoder_name: resnet34
+  encoder_weights: imagenet
+  classes: 1
 seed: 42
 device: null
 paths:

@@ -10,7 +10,7 @@ import torch
 from src.datasets import build_dataloader, load_image_for_modality, load_mask
 from src.losses import BCEDiceLoss
 from src.metrics import ConfidenceTotals, ConfusionTotals
-from src.model import build_model
+from src.model import build_model, resolve_model_config
 from src.utils import (
     device_from_config,
     ensure_dir,
@@ -27,7 +27,8 @@ from src.visualize import save_prediction_panel
 def load_checkpoint(checkpoint_path: str, device: torch.device):
     checkpoint = torch.load(checkpoint_path, map_location=device)
     config = checkpoint["config"]
-    model = build_model(int(config["in_channels"])).to(device)
+    config["model"] = resolve_model_config(config.get("model"))
+    model = build_model(int(config["in_channels"]), config["model"]).to(device)
     model.load_state_dict(checkpoint["model_state_dict"])
     model.eval()
     return model, config, checkpoint

@@ -33,7 +33,39 @@ Numeric fields may use normal decimal notation or scientific notation such as `1
 - Typical values:
   - `3` for RGB
   - `4` for MSI-only inputs in this project
-  - `7` for RGB + MSI combined inputs
+- `7` for RGB + MSI combined inputs
+
+### `model`
+
+- Defines which segmentation model family and encoder backbone to build.
+
+#### `model.architecture`
+
+- Segmentation model family.
+- Supported values in this project:
+  - `Unet`
+  - `UnetPlusPlus`
+  - `DeepLabV3Plus`
+  - `Segformer`
+
+#### `model.encoder_name`
+
+- Encoder or backbone name passed to the model implementation.
+- Typical values used in this project:
+  - `resnet34`
+  - `resnet50`
+  - `mit_b0`
+  - `mit_b1`
+
+#### `model.encoder_weights`
+
+- Pretrained encoder weights identifier.
+- Typical value is `imagenet`.
+
+#### `model.classes`
+
+- Number of output segmentation classes.
+- This binary segmentation pipeline uses `1`.
 
 ### `seed`
 

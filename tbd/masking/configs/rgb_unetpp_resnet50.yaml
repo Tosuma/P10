@@ -1,0 +1,5 @@
+base_config: rgb.yaml
+experiment_name: rgb_unetplusplus_resnet50
+model:
+  architecture: UnetPlusPlus
+  encoder_name: resnet50

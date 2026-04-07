@@ -58,16 +58,18 @@ def summarize_history(history: list[dict]) -> dict:
 
 
 def build_aggregate_rows(rows: list[dict]) -> list[dict]:
-    grouped: dict[tuple[str, str], list[dict]] = {}
+    grouped: dict[tuple[str, str, str, str], list[dict]] = {}
     for row in rows:
-        key = (row["experiment_name"], row["modality"])
+        key = (row["experiment_name"], row["modality"], row["architecture"], row["encoder_name"])
         grouped.setdefault(key, []).append(row)
 
     aggregate_rows = []
-    for (experiment_name, modality), group_rows in sorted(grouped.items()):
+    for (experiment_name, modality, architecture, encoder_name), group_rows in sorted(grouped.items()):
         aggregate_row = {
             "experiment_name": experiment_name,
             "modality": modality,
+            "architecture": architecture,
+            "encoder_name": encoder_name,
             "runs": len(group_rows),
         }
         for metric in AGGREGATE_METRICS:
@@ -98,10 +100,13 @@ def main() -> None:
         eval_metrics = read_json(run_path / "evaluation" / "test" / "overall_metrics.json")
         history = read_json(run_path / "metrics" / "history.json")
         best_summary = summarize_history(history)
+        model_config = config.get("model", {})
         rows.append(
             {
                 "experiment_name": config["experiment_name"],
                 "modality": config["modality"],
+                "architecture": model_config.get("architecture", "Unet"),
+                "encoder_name": model_config.get("encoder_name", "resnet34"),
                 "seed": metadata["seed"],
                 "best_epoch": best_summary["best_epoch"],
                 "val_loss": best_summary["val_loss"],

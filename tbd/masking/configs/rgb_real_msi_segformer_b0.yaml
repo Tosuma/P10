@@ -1,0 +1,6 @@
+base_config: rgb_real_msi.yaml
+experiment_name: rgb_real_msi_segformer_b0
+model:
+  architecture: Segformer
+  encoder_name: mit_b0
+  encoder_weights: imagenet

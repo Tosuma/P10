@@ -14,7 +14,7 @@ from src.config import dump_config, load_config
 from src.datasets import IMAGENET_MEAN, IMAGENET_STD, build_dataloader, compute_channel_stats
 from src.losses import BCEDiceLoss
 from src.metrics import ConfusionTotals, threshold_predictions
-from src.model import build_model
+from src.model import build_model, resolve_model_config
 from src.utils import (
     device_from_config,
     ensure_dir,
@@ -146,6 +146,8 @@ def main() -> None:
     log_dir = ensure_dir(run_dir / "logs")
     metrics_dir = ensure_dir(run_dir / "metrics")
     logger = setup_file_logger("Trainer", log_dir / "execution.log")
+    model_config = resolve_model_config(config.get("model"))
+    config["model"] = model_config
 
     dump_config(run_dir / "config.yaml", config)
     metadata = {
@@ -157,6 +159,12 @@ def main() -> None:
     logger.info("Training run initialized at %s", run_dir.resolve())
     logger.info("Loaded config from %s", config.get("_config_path"))
     logger.info("Using seed=%s and device=%s", config["seed"], config.get("device", "auto"))
+    logger.info(
+        "Using model architecture=%s encoder=%s encoder_weights=%s",
+        model_config["architecture"],
+        model_config["encoder_name"],
+        model_config["encoder_weights"],
+    )
 
     normalization = prepare_normalization(config, run_dir)
     device = device_from_config(config.get("device"))
@@ -186,7 +194,7 @@ def main() -> None:
         seed=config["seed"],
     )
 
-    model = build_model(int(config["in_channels"])).to(device)
+    model = build_model(int(config["in_channels"]), model_config).to(device)
     criterion = BCEDiceLoss(
         bce_weight=float(config["loss"]["bce_weight"]),
         dice_weight=float(config["loss"]["dice_weight"]),
