@@ -20,11 +20,24 @@ source ./.venv/Scripts/activate
 export PYTHONPATH=./tbd/masking
 ```
 
+Convenience scripts are available if you want one command for setup or training:
+
+- `bash ./tbd/masking/setup_data.sh`
+- `bash ./tbd/masking/train_configs.sh --config ...`
+- `bash ./tbd/masking/train_rgb_architectures.sh`
+- `bash ./tbd/masking/run_multi_seed.sh --config ...`
+
 1. Create aligned original-image splits:
 
 ```bash
 python -m src.pack_real_msi --input-dir ./tbd/masking/data/weedy-rice/Multispectral --output-dir ./tbd/masking/data/weedy-rice/MultispectralNPY
 python -m src.create_splits --dataset-root ./tbd/masking/data/weedy-rice --output-dir ./tbd/masking/data/splits --group-strategy datetime
+```
+
+Or run the full setup in one command:
+
+```bash
+bash ./tbd/masking/setup_data.sh
 ```
 
 2. Create deterministic patch manifests for each modality config:
@@ -61,6 +74,21 @@ Architecture-specific examples:
 python -m src.train --config ./tbd/masking/configs/rgb_unetpp_resnet50.yaml
 python -m src.train --config ./tbd/masking/configs/rgb_deeplabv3plus_resnet34.yaml
 python -m src.train --config ./tbd/masking/configs/rgb_segformer_b1.yaml
+```
+
+Or train a preset architecture suite with one command:
+
+```bash
+bash ./tbd/masking/train_rgb_architectures.sh
+```
+
+Or train any list of configs with one command:
+
+```bash
+bash ./tbd/masking/train_configs.sh \
+  --config ./tbd/masking/configs/rgb_unetpp_resnet34.yaml \
+  --config ./tbd/masking/configs/rgb_deeplabv3plus_resnet50.yaml \
+  --summary-output ./tbd/masking/outputs/metrics/custom_train_summary.json
 ```
 
 Training writes run artifacts under `outputs/runs/<run_name>/`, including `logs/execution.log` with entries formatted as `%(asctime)s [Trainer] :: %(message)s`.
@@ -134,6 +162,12 @@ The script:
 - evaluates the best checkpoint on the test split
 - writes a JSON summary with per-run metrics
 - includes aggregate per-model mean and standard deviation across runs
+
+Single-run convenience scripts:
+
+- `setup_data.sh`: packs real MSI `.TIF` bands, creates split manifests, and patchifies all five modality baselines
+- `train_configs.sh`: trains and evaluates any explicit list of config files once each
+- `train_rgb_architectures.sh`: trains the six requested RGB architecture variants once each and summarizes them
 
 If you pass `--skip-evaluate`, the script trains only and does not generate the final summary JSON, because evaluation metrics are required for summarization.
 
