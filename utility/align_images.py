@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 import os
 import glob
+from pathlib import Path 
 
 def read_and_preprocess(path, grayscale=True):
     if grayscale:
@@ -62,17 +63,31 @@ def crop_to_valid_overlap(images, extra_margin=0.05):
 
 def find_image_sets(input_folder):
     # Find all unique base names for image sets in the folder
-    pattern = os.path.join(input_folder, '*_MS_G.TIF')
-    green_files = glob.glob(pattern)
+    rgb_path_list = sorted(Path(input_folder).rglob("*_D.JPG"))
+    band_order = ["G", "R", "RE", "NIR"]
     sets = []
-    for green_path in green_files:
-        base = green_path.replace('_MS_G.TIF', '')
+
+    for rgb_path in rgb_path_list:
+        parts = rgb_path.stem.split('_')
+        image_number = parts[-2]
+        ms_path_list: list[Path] = []
+        for suffix in band_order:
+            search_pattern = f"*_{image_number}_MS_{suffix}.TIF"
+            matching_files = list(rgb_path.parent.rglob(search_pattern))
+            if not matching_files:
+                print("No matching files")
+            if len(matching_files) > 1:
+                print("Too many matching files")
+            ms_path_list.append(matching_files[0])
+    
+        if len(ms_path_list) > 4:
+            print("Forgot to clear list")
         paths = {
-            'rgb': base.replace('_MS', '') + '_D.JPG',
-            'green': base + '_MS_G.TIF',
-            'red': base + '_MS_R.TIF',
-            'red_edge': base + '_MS_RE.TIF',
-            'nir': base + '_MS_NIR.TIF',
+            'rgb': str(rgb_path),
+            'green': str(ms_path_list[0]),
+            'red': str(ms_path_list[1]),
+            'red_edge': str(ms_path_list[2]),
+            'nir': str(ms_path_list[3]),
         }
         if all(os.path.exists(paths[k]) for k in paths):
             sets.append(paths)

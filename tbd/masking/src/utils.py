@@ -60,6 +60,7 @@ def set_seed(seed: int) -> None:
 
 
 def read_csv_rows(path: str | Path) -> list[dict[str, str]]:
+    path = "./tbd/masking/" + path
     with Path(path).open("r", newline="", encoding="utf-8") as handle:
         return list(csv.DictReader(handle))
 
