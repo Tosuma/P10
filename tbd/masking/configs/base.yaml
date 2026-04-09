@@ -37,7 +37,7 @@ training:
   weight_decay: 1e-4
   epochs: 300
   grad_clip: 1.0
-  early_stopping_patience: 60
+  early_stopping_patience: 300
   freeze_encoder_epochs: 0
   scheduler:
     t_max: 300
