@@ -444,7 +444,7 @@ class Stage:
 
 
         # Load dataset
-        self.train_dataloader, self.val_dataloader, total_datapoints = load_datasets(
+        self.train_dataloader, self.val_dataloader, _ = load_datasets(
             train_batch_size=config.batch_size_train,
             val_batch_size=config.batch_size_val,
             config=DatasetConfig(
@@ -462,7 +462,7 @@ class Stage:
 
 
         # Setup optimizer and scheduler
-        self.total_steps: int = self.epochs * total_datapoints
+        self.total_steps: int = self.epochs * len(self.train_dataloader)
         
         self.configure_trainables()
         
