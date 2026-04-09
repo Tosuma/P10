@@ -4,19 +4,39 @@ This repo contains a proof-of-concept binary weed segmentation pipeline built ar
 
 Config field documentation is available in `tbd\masking\CONFIG_REFERENCE.md`.
 
+Supported model families in this repo:
+
+- `Unet` with `resnet34`
+- `UnetPlusPlus` with `resnet34` and `resnet50`
+- `DeepLabV3Plus` with `resnet34` and `resnet50`
+- `Segformer` with `mit_b0` and `mit_b1`
+
 ## Workflow
 
 Run the commands below from the repository root. Activate the project virtual environment first, then set `PYTHONPATH` so the `tbd\masking\src` package resolves correctly:
 
 ```bash
 source ./.venv/bin/activate
-export PYTHONPATH=./tbd/masking
 ```
+
+Convenience scripts are available if you want one command for setup or training:
+
+- `bash ./tbd/masking/setup_data.sh`
+- `bash ./tbd/masking/train_configs.sh --config ...`
+- `bash ./tbd/masking/train_rgb_architectures.sh`
+- `bash ./tbd/masking/run_multi_seed.sh --config ...`
 
 1. Create aligned original-image splits:
 
 ```bash
+python -m src.pack_real_msi --input-dir ./tbd/masking/data/weedy-rice/Multispectral --output-dir ./tbd/masking/data/weedy-rice/MultispectralNPY
 python -m src.create_splits --dataset-root ./tbd/masking/data/weedy-rice --output-dir ./tbd/masking/data/splits --group-strategy datetime
+```
+
+Or run the full setup in one command:
+
+```bash
+bash ./tbd/masking/setup_data.sh
 ```
 
 2. Create deterministic patch manifests for each modality config:
@@ -47,12 +67,44 @@ python -m src.train --config ./tbd/masking/configs/rgb_synth_msi.yaml
 python -m src.train --config ./tbd/masking/configs/rgb_real_msi.yaml
 ```
 
+Architecture-specific examples:
+
+```bash
+python -m src.train --config ./tbd/masking/configs/rgb_unetpp_resnet50.yaml
+python -m src.train --config ./tbd/masking/configs/rgb_deeplabv3plus_resnet34.yaml
+python -m src.train --config ./tbd/masking/configs/rgb_segformer_b1.yaml
+```
+
+Or train a preset architecture suite with one command:
+
+```bash
+bash ./tbd/masking/train_rgb_architectures.sh
+```
+
+Or train any list of configs with one command:
+
+```bash
+bash ./tbd/masking/train_configs.sh \
+  --config ./tbd/masking/configs/rgb_unetpp_resnet34.yaml \
+  --config ./tbd/masking/configs/rgb_deeplabv3plus_resnet50.yaml \
+  --summary-output ./tbd/masking/outputs/metrics/custom_train_summary.json
+```
+
 Training writes run artifacts under `outputs/runs/<run_name>/`, including `logs/execution.log` with entries formatted as `%(asctime)s [Trainer] :: %(message)s`.
 
 Additional supported multimodal runs:
 
 - `./tbd/masking/configs/rgb_synth_msi.yaml`: RGB concatenated with synthetic multispectral input, for a 7-channel model.
 - `./tbd/masking/configs/rgb_real_msi.yaml`: RGB concatenated with real multispectral input, for a 7-channel model.
+
+Architecture config naming:
+
+- `<modality>_unetpp_resnet34.yaml`
+- `<modality>_unetpp_resnet50.yaml`
+- `<modality>_deeplabv3plus_resnet34.yaml`
+- `<modality>_deeplabv3plus_resnet50.yaml`
+- `<modality>_segformer_b0.yaml`
+- `<modality>_segformer_b1.yaml`
 
 6. Evaluate the best checkpoint:
 
@@ -92,12 +144,12 @@ Example for multiple models in one shell:
 
 ```bash
 bash ./tbd/masking/run_multi_seed.sh \
-  --config ./tbd/masking/configs/rgb.yaml \
-  --config ./tbd/masking/configs/synth_msi.yaml \
-  --config ./tbd/masking/configs/real_msi.yaml \
+  --config ./tbd/masking/configs/rgb_unetpp_resnet34.yaml \
+  --config ./tbd/masking/configs/rgb_deeplabv3plus_resnet34.yaml \
+  --config ./tbd/masking/configs/rgb_segformer_b0.yaml \
   --repeats 5 \
   --base-seed 1000 \
-  --summary-output ./tbd/masking/outputs/metrics/all_models_multi_seed.json
+  --summary-output ./tbd/masking/outputs/metrics/rgb_architectures_multi_seed.json
 ```
 
 To spread models across different shells, launch the same script in each shell with a different config list.
@@ -110,6 +162,12 @@ The script:
 - writes a JSON summary with per-run metrics
 - includes aggregate per-model mean and standard deviation across runs
 
+Single-run convenience scripts:
+
+- `setup_data.sh`: packs real MSI `.TIF` bands, creates split manifests, and patchifies all five modality baselines
+- `train_configs.sh`: trains and evaluates any explicit list of config files once each
+- `train_rgb_architectures.sh`: trains the six requested RGB architecture variants once each and summarizes them
+
 If you pass `--skip-evaluate`, the script trains only and does not generate the final summary JSON, because evaluation metrics are required for summarization.
 
 Seed scheduling:
@@ -119,6 +177,7 @@ Seed scheduling:
 - repetition `2` uses seed `N + 1`
 - repetition `3` uses seed `N + 2`
 - because the schedule depends only on repetition index, all models are trained on the same set of seeds
+- the summary JSON includes `architecture` and `encoder_name` so runs from different model families stay separated
 
 ## Command Reference
 
@@ -161,12 +220,12 @@ Run repeated multi-seed experiments:
 
 ```bash
 bash ./tbd/masking/run_multi_seed.sh \
-  --config ./tbd/masking/configs/rgb.yaml \
-  --config ./tbd/masking/configs/rgb_synth_msi.yaml \
-  --config ./tbd/masking/configs/rgb_real_msi.yaml \
+  --config ./tbd/masking/configs/rgb_unetpp_resnet34.yaml \
+  --config ./tbd/masking/configs/rgb_deeplabv3plus_resnet34.yaml \
+  --config ./tbd/masking/configs/rgb_segformer_b0.yaml \
   --repeats 5 \
   --base-seed 1000 \
-  --summary-output ./tbd/masking/outputs/metrics/multi_seed_summary.json
+  --summary-output ./tbd/masking/outputs/metrics/rgb_architectures_multi_seed.json
 ```
 
 ## Notes
@@ -177,3 +236,4 @@ bash ./tbd/masking/run_multi_seed.sh \
 - All other modalities, including the two RGB+MSI combined variants, compute normalization from train patches only and cache it as JSON.
 - Evaluation reconstructs full-image predictions by averaging patch probabilities into the original image canvas.
 - `synthetic_msi_path` is expected to point to a single `.npy` or `.npz` file per sample.
+- `real_msi_path` is expected to point to a single packed `.npy` file per sample. Use `python -m src.pack_real_msi` to convert legacy per-band `.TIF` files into this format.
