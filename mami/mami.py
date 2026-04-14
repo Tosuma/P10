@@ -207,7 +207,11 @@ def load_mstpp(device: torch.device) -> MST_Plus_Plus:
     model = MST_Plus_Plus(in_channels=3, out_channels=4, n_feat=4, stage=3)
     return model.to(device, memory_format=torch.channels_last)
 
-def load_pretrained_model(device: torch.device, checkpoint_path: Path, is_main_process: bool) -> MST_Plus_Plus:
+def load_pretrained_model(
+        device: torch.device, 
+        checkpoint_path: Path, 
+        is_main_process: bool
+        ) -> tuple[MST_Plus_Plus, dict]:
     # Build base model (unwrapped) to keep checkpoint keys simple
     model = load_mstpp(device)
 
@@ -245,7 +249,7 @@ def load_pretrained_model(device: torch.device, checkpoint_path: Path, is_main_p
             f"[Pretrained loading] Loaded {len(filtered)} params, skipped {len(skipped)} params (missing/incompatible)."
         )
 
-    return model
+    return model, checkpoint
 
 def get_optimizer(model: nn.Module, learning_rate: float) -> Adam:
     trainable_params = [p for p in model.parameters() if p.requires_grad]
@@ -267,7 +271,7 @@ def get_scheduler(optimizer: Adam, total_steps: int, eta_min: float) -> CosineAn
         eta_min=eta_min
     )
     logger.info(
-        f"[Scheduler] CosineAnnealinLR schedular set with eta_min={eta_min}"
+        f"[Scheduler] CosineAnnealinLR scheduler set with eta_min={eta_min}"
     )
 
     return scheduler
@@ -311,7 +315,14 @@ def auto_cast(device_type: str) -> torch.autocast | nullcontext[None]:
         return torch.amp.autocast(device_type="cuda", dtype=torch.float16)
     return nullcontext()
 
-def save_model(model: nn.Module, optimizer: Adam, save_path: Path, model_name: str, epoch: int) -> Path:
+def save_model(
+        model: nn.Module, 
+        optimizer: Adam, 
+        scheduler: CosineAnnealingLR | None,
+        save_path: Path, 
+        model_name: str, 
+        epoch: int
+        ) -> Path:
     os.makedirs(save_path, exist_ok=True)
 
     filename = f"{model_name}.pth"
@@ -324,6 +335,7 @@ def save_model(model: nn.Module, optimizer: Adam, save_path: Path, model_name: s
     checkpoint = {
         "model_state_dict": unwrap_model(model).state_dict(),
         "optimizer_state_dict": optimizer.state_dict() if optimizer else None,
+        "scheduler_state_dict": scheduler.state_dict() if scheduler else None,
         "stage": stage_number,
         "epoch": epoch,
     }
@@ -444,12 +456,27 @@ class Stage:
 
 
         # Load model
-        self.model: nn.Module = load_pretrained_model(self.device, config.pretrained_model_path, self.is_main_process) if config.pretrained_model_path else load_mstpp(self.device)
+        self.checkpoint_data = None
+        if config.pretrained_model_path:
+            self.model, self.checkpoint_data = load_pretrained_model(self.device, config.pretrained_model_path, self.is_main_process)
+        else: 
+            self.model = load_mstpp(self.device)
+        
+        self.configure_trainables()
         self.model = maybe_wrap_ddp(self.model, self.ddp)
 
+        self.start_epoch = 0
+        if self.checkpoint_data and "epoch" in self.checkpoint_data:
+            self.start_epoch = self.checkpoint_data["epoch"] + 1
+            
+            if self.start_epoch == 300:
+                self.start_epoch = 0
+
+            if self.is_main_process:
+                logger.info(f"[Resume] Resuming training from epoch {self.start_epoch}")
 
         # Load dataset
-        self.train_dataloader, self.val_dataloader, total_datapoints = load_datasets(
+        self.train_dataloader, self.val_dataloader, _ = load_datasets(
             train_batch_size=config.batch_size_train,
             val_batch_size=config.batch_size_val,
             config=DatasetConfig(
@@ -467,9 +494,8 @@ class Stage:
 
 
         # Setup optimizer and scheduler
-        self.total_steps: int = self.epochs * total_datapoints
+        self.total_steps: int = self.epochs * len(self.train_dataloader)
         
-        self.configure_trainables()
         
         self._rebuild_optimizer()
 
@@ -667,11 +693,32 @@ class Stage:
     
     def _rebuild_optimizer(self) -> None:
         self.optimizer = get_optimizer(self.model, self.lr)
+        
+        # Determine if we are resuming the same stage or starting a new one
+        is_same_stage = False
+        if self.checkpoint_data and "stage" in self.checkpoint_data:
+            checkpoint_stage = self.checkpoint_data["stage"]
+            match = re.search(r"stage(\d+)", self.stage_id)
+            current_stage = int(match.group(1)) if match else -1
+            is_same_stage = (checkpoint_stage == current_stage)
+
+        # Restore optimizer state ONLY if resuming the same stage
+        if self.checkpoint_data and self.checkpoint_data.get("optimizer_state_dict"):
+            if is_same_stage:
+                self.optimizer.load_state_dict(self.checkpoint_data["optimizer_state_dict"])
+            elif self.is_main_process:
+                logger.info(f"[Optimizer] Skipping optimizer state load (checkpoint is from stage {checkpoint_stage}, current is {self.stage_id})")
+
         self.scheduler = (
             get_scheduler(self.optimizer, self.total_steps, 1e-6)
             if self.use_scheduler
             else None
         )
+
+        # Restore scheduler state ONLY if resuming the same stage
+        if self.scheduler and self.checkpoint_data and self.checkpoint_data.get("scheduler_state_dict"):
+            if is_same_stage:
+                self.scheduler.load_state_dict(self.checkpoint_data["scheduler_state_dict"])
 
 class Stage1(Stage):
     def train(self):
@@ -686,7 +733,7 @@ class Stage1(Stage):
         best_val_loss = float("inf")
         best_model_path: Path | None = None
 
-        for epoch in range(self.epochs):
+        for epoch in range(self.start_epoch, self.epochs):
             set_sampler_epoch(self.train_dataloader, epoch)
 
             if self.is_main_process:
@@ -720,6 +767,7 @@ class Stage1(Stage):
                     best_model_path = save_model(
                         self.model,
                         self.optimizer,
+                        self.scheduler,
                         self.save_dir,
                         f"{self.model_name}_stage1_best",
                         epoch
@@ -735,6 +783,7 @@ class Stage1(Stage):
                 save_model(
                     self.model,
                     self.optimizer,
+                    self.scheduler,
                     self.save_dir / "all-models",
                     f"{self.model_name}_stage1_epoch_{epoch}",
                     epoch
@@ -743,6 +792,7 @@ class Stage1(Stage):
         final_path: Path | None = save_model(
             self.model,
             self.optimizer,
+            self.scheduler,
             self.save_dir / "all-models",
             f"{self.model_name}_stage1_final",
             self.epochs
@@ -776,7 +826,7 @@ class Stage2(Stage):
         best_val_loss = float("inf")
         best_model_path = None
 
-        for epoch in range(self.epochs):
+        for epoch in range(self.start_epoch, self.epochs):
             set_sampler_epoch(self.train_dataloader, epoch)
 
             if self.is_main_process:
@@ -810,6 +860,7 @@ class Stage2(Stage):
                     best_model_path = save_model(
                         self.model,
                         self.optimizer,
+                        self.scheduler,
                         self.save_dir,
                         f"{self.model_name}_stage2_best",
                         epoch
@@ -825,6 +876,7 @@ class Stage2(Stage):
                 save_model(
                     self.model,
                     self.optimizer,
+                    self.scheduler,
                     self.save_dir / "all-models",
                     f"{self.model_name}_stage2_epoch_{epoch}",
                     epoch
@@ -833,6 +885,7 @@ class Stage2(Stage):
         final_path = save_model(
             self.model,
             self.optimizer,
+            self.scheduler,
             self.save_dir / "all-models",
             f"{self.model_name}_stage2_final",
             self.epochs
@@ -886,7 +939,7 @@ class Stage3(Stage):
         best_val_loss = float("inf")
         best_model_path = None
 
-        for epoch in range(self.epochs):
+        for epoch in range(self.start_epoch, self.epochs):
             set_sampler_epoch(self.train_dataloader, epoch)
 
             if self.is_main_process:
@@ -920,6 +973,7 @@ class Stage3(Stage):
                     best_model_path = save_model(
                         self.model,
                         self.optimizer,
+                        self.scheduler,
                         self.save_dir,
                         f"{self.model_name}_stage3_best",
                         epoch
@@ -935,6 +989,7 @@ class Stage3(Stage):
                 save_model(
                     self.model,
                     self.optimizer,
+                    self.scheduler,
                     self.save_dir / "all-models",
                     f"{self.model_name}_stage3_epoch_{epoch}",
                     epoch
@@ -943,6 +998,7 @@ class Stage3(Stage):
         final_path = save_model(
             self.model,
             self.optimizer,
+            self.scheduler,
             self.save_dir / "all-models",
             f"{self.model_name}_stage3_final",
             self.epochs
@@ -1017,6 +1073,7 @@ def get_arguments() -> argparse.Namespace:
 
     parser.add_argument("--stage1_data_path", default="data/East-Kaza")
     parser.add_argument("--stage1_data_type", default="Kazakhstan", choices=get_args(DatasetType), help="Which dataset")
+    parser.add_argument("--stage1_model", type=str, default=None, help="Path to model for stage 1")
     parser.add_argument("--stage1_non_resize", default=False, action=argparse.BooleanOptionalAction, help="Use non-resized pictures, default=False")
     parser.add_argument("--stage1_epochs", type=int, default=0, help="Number of epochs for stage 1 (train from scratch). To skip set epochs to '0'")
     parser.add_argument("--stage1_lr", type=float, default=4e-4, help="Learning rate for stage 1 (train from scratch)")
@@ -1061,7 +1118,7 @@ def build_mami_config(args: argparse.Namespace) -> MamiConfig:
         "stage1",
         0 < args.stage1_epochs, # IF TO RUN STAGE
         args.model_name,
-        None,
+        Path(args.stage1_model) if args.stage1_model is not None else None,
         args.dir_name,
         Path(args.stage1_data_path).resolve(),
         args.stage1_data_type,
