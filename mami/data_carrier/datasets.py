@@ -123,7 +123,7 @@ class AndhraDataset(DataCarrier):
         rgb_path_list = sorted([
             f for f in root_path.rglob("*_D.JPG")
             # If Nursery stage should be excluded, comment the following line
-            if "Nursery" in str(f)
+            if "Nursery" not in str(f)
         ])
 
         # Andhra MS bands have filenames like: <id>_MS_<band>.TIF
