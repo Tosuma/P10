@@ -12,6 +12,7 @@ from torch.optim.lr_scheduler import CosineAnnealingLR
 
 from src.config import dump_config, load_config
 from src.datasets import IMAGENET_MEAN, IMAGENET_STD, build_dataloader, compute_channel_stats
+from src.evaluate import evaluate_loader, load_checkpoint, reconstruct_image_metrics, summarize_metric_rows
 from src.losses import BCEDiceLoss
 from src.metrics import ConfusionTotals, threshold_predictions
 from src.model import build_model, resolve_model_config
@@ -21,6 +22,7 @@ from src.utils import (
     get_git_commit,
     move_batch_to_device,
     package_versions,
+    read_csv_rows,
     read_json,
     resolve_seed,
     set_seed,
@@ -104,6 +106,41 @@ def run_epoch(
     metrics = totals.compute()
     metrics["loss"] = total_loss / max(total_batches, 1)
     return metrics
+
+
+def evaluate_test_split(
+    checkpoint_path: Path,
+    config: dict[str, Any],
+    normalization: dict[str, Any],
+    device: torch.device,
+    threshold: float,
+) -> dict[str, Any]:
+    model, _, _ = load_checkpoint(str(checkpoint_path), device)
+    test_loader = build_dataloader(
+        sample_manifest_path=config["paths"]["test_manifest"],
+        patch_manifest_path=config["paths"]["test_patch_manifest"],
+        modality=config["modality"],
+        normalization=normalization,
+        batch_size=int(config["training"]["batch_size"]),
+        num_workers=int(config["training"]["num_workers"]),
+        is_train=False,
+        transform_config=config,
+        seed=config["seed"],
+    )
+
+    results = evaluate_loader(model, test_loader, device, threshold=threshold)
+    sample_rows = read_csv_rows(config["paths"]["test_manifest"])
+    per_image_rows, _ = reconstruct_image_metrics(sample_rows, results["reconstruction_payload"], threshold)
+
+    return {
+        "checkpoint": str(checkpoint_path.resolve()),
+        "split": "test",
+        "patch_level": results["overall"],
+        "patch_summary": summarize_metric_rows(results["per_patch_rows"]),
+        "image_summary": summarize_metric_rows(per_image_rows),
+        "num_patches": len(results["per_patch_rows"]),
+        "num_images": len(per_image_rows),
+    }
 
 
 def save_checkpoint(path: Path, model, optimizer, scheduler, epoch: int, best_val_iou: float, config: dict[str, Any]) -> None:
@@ -312,10 +349,18 @@ def main() -> None:
                 )
                 break
 
+    test_metrics = evaluate_test_split(
+        checkpoint_path=checkpoint_dir / "best.pt",
+        config=config,
+        normalization=normalization,
+        device=device,
+        threshold=threshold,
+    )
+
     write_json(metrics_dir / "history.json", history)
-    write_json(metrics_dir / "best_summary.json", {"best_val_iou": best_val_iou, "run_dir": str(run_dir.resolve())})
+    write_json(metrics_dir / "test_metrics.json", test_metrics)
     logger.info("Wrote training history to %s", metrics_dir / "history.json")
-    logger.info("Wrote best summary to %s", metrics_dir / "best_summary.json")
+    logger.info("Wrote test metrics to %s", metrics_dir / "test_metrics.json")
     logger.info("Training completed")
     print(str(run_dir.resolve()))
 

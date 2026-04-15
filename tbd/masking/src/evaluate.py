@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from collections import defaultdict
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import torch
@@ -75,6 +76,8 @@ def evaluate_loader(model, loader, device: torch.device, threshold: float):
                         "dice": metrics["dice"],
                         "precision": metrics["precision"],
                         "recall": metrics["recall"],
+                        "accuracy": metrics["accuracy"],
+                        "specificity": metrics["specificity"],
                         "confidence_mean": confidence_metrics["confidence_mean"],
                         "positive_confidence_mean": confidence_metrics["positive_confidence_mean"],
                         "negative_confidence_mean": confidence_metrics["negative_confidence_mean"],
@@ -127,6 +130,41 @@ def reconstruct_image_metrics(sample_rows: list[dict[str, str]], probabilities_b
     return per_image_rows, visuals
 
 
+def summarize_metric_rows(rows: list[dict[str, Any]]) -> dict[str, float]:
+    summary: dict[str, float] = {}
+    if not rows:
+        return summary
+
+    excluded_keys = {"sample_id", "patch_id", "x", "y", "width", "height"}
+    metric_keys = [
+        key
+        for key, value in rows[0].items()
+        if key not in excluded_keys and isinstance(value, int | float)
+    ]
+    for key in metric_keys:
+        values = [float(row[key]) for row in rows if isinstance(row.get(key), int | float)]
+        if not values:
+            continue
+        summary[f"avg_{key}"] = float(np.mean(values))
+        summary[f"median_{key}"] = float(np.median(values))
+    return summary
+
+
+def mean_aliases(summary: dict[str, float]) -> dict[str, float]:
+    aliases = {}
+    legacy_names = {
+        "confidence_mean": "confidence",
+        "positive_confidence_mean": "positive_confidence",
+        "negative_confidence_mean": "negative_confidence",
+    }
+    for key, value in summary.items():
+        if not key.startswith("avg_"):
+            continue
+        metric_name = key.removeprefix("avg_")
+        aliases[f"mean_{legacy_names.get(metric_name, metric_name)}"] = value
+    return aliases
+
+
 def load_preview_image(sample: dict[str, str], modality: str) -> np.ndarray:
     return load_image_for_modality(sample, modality)
 
@@ -167,19 +205,17 @@ def main() -> None:
     results = evaluate_loader(model, loader, device, threshold=threshold)
     sample_rows = read_csv_rows(config["paths"][f"{args.split}_manifest"])
     per_image_rows, visuals = reconstruct_image_metrics(sample_rows, results["reconstruction_payload"], threshold)
-    image_summary = {
-        "mean_iou": float(np.mean([row["iou"] for row in per_image_rows])) if per_image_rows else 0.0,
-        "mean_dice": float(np.mean([row["dice"] for row in per_image_rows])) if per_image_rows else 0.0,
-        "mean_precision": float(np.mean([row["precision"] for row in per_image_rows])) if per_image_rows else 0.0,
-        "mean_recall": float(np.mean([row["recall"] for row in per_image_rows])) if per_image_rows else 0.0,
-        "mean_accuracy": float(np.mean([row["accuracy"] for row in per_image_rows])) if per_image_rows else 0.0,
-        "mean_specificity": float(np.mean([row["specificity"] for row in per_image_rows])) if per_image_rows else 0.0,
-        "mean_confidence": float(np.mean([row["confidence_mean"] for row in per_image_rows])) if per_image_rows else 0.0,
-        "mean_positive_confidence": float(np.mean([row["positive_confidence_mean"] for row in per_image_rows])) if per_image_rows else 0.0,
-        "mean_negative_confidence": float(np.mean([row["negative_confidence_mean"] for row in per_image_rows])) if per_image_rows else 0.0,
-    }
+    patch_summary = summarize_metric_rows(results["per_patch_rows"])
+    image_summary = summarize_metric_rows(per_image_rows)
 
-    write_json(output_dir / "overall_metrics.json", {"patch_level": results["overall"], "image_level": image_summary})
+    write_json(
+        output_dir / "overall_metrics.json",
+        {
+            "patch_level": results["overall"],
+            "patch_summary": patch_summary,
+            "image_level": {**mean_aliases(image_summary), **image_summary},
+        },
+    )
     write_csv_rows(output_dir / "per_patch_metrics.csv", results["per_patch_rows"], list(results["per_patch_rows"][0].keys()) if results["per_patch_rows"] else ["sample_id"])
     write_csv_rows(output_dir / "per_image_metrics.csv", per_image_rows, list(per_image_rows[0].keys()) if per_image_rows else ["sample_id"])
     logger.info("Saved aggregate metrics to %s", output_dir / "overall_metrics.json")
