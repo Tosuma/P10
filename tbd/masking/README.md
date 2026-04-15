@@ -90,7 +90,7 @@ bash ./tbd/masking/train_configs.sh \
   --summary-output ./tbd/masking/outputs/metrics/custom_train_summary.json
 ```
 
-Training writes run artifacts under `outputs/runs/<run_name>/`, including `logs/execution.log` with entries formatted as `%(asctime)s [Trainer] :: %(message)s`.
+Training writes run artifacts under `outputs/runs/<run_name>/`, including `logs/execution.log` with entries formatted as `%(asctime)s [Trainer] :: %(message)s`. At the end of training, the best validation checkpoint is evaluated once on the configured test split. The resulting test metrics are written to `metrics/test_metrics.json`, and reconstructed test prediction masks are written to `metrics/test_masks/` as binary PNG files. Per-epoch training and validation do not save masks.
 
 Additional supported multimodal runs:
 
@@ -112,7 +112,7 @@ Architecture config naming:
 python -m src.evaluate --checkpoint ./tbd/masking/outputs/runs/<run>/checkpoints/best.pt --split test
 ```
 
-Evaluation writes artifacts under `outputs/runs/<run>/evaluation/<split>/`, including `execution.log` with entries formatted as `%(asctime)s [Evaluator] :: %(message)s`.
+Evaluation writes artifacts under `outputs/runs/<run>/evaluation/<split>/`, including `overall_metrics.json`, per-patch and per-image CSV metrics, reconstructed predicted masks in `masks/`, limited preview panels in `visuals/`, and `execution.log` with entries formatted as `%(asctime)s [Evaluator] :: %(message)s`.
 
 7. Summarize multiple runs:
 
@@ -157,8 +157,8 @@ To spread models across different shells, launch the same script in each shell w
 The script:
 
 - uses the same deterministic seed schedule for every model
-- trains the model
-- evaluates the best checkpoint on the test split
+- trains the model, including the training-time test metrics and test mask export
+- evaluates the best checkpoint on the test split to produce the full evaluation artifacts used by summarization
 - writes a JSON summary with per-run metrics
 - includes aggregate per-model mean and standard deviation across runs
 
@@ -168,7 +168,7 @@ Single-run convenience scripts:
 - `train_configs.sh`: trains and evaluates any explicit list of config files once each
 - `train_rgb_architectures.sh`: trains the six requested RGB architecture variants once each and summarizes them
 
-If you pass `--skip-evaluate`, the script trains only and does not generate the final summary JSON, because evaluation metrics are required for summarization.
+If you pass `--skip-evaluate`, the script trains only. Training still writes `metrics/test_metrics.json` and `metrics/test_masks/`, but the script does not run `src.evaluate` and does not generate the final summary JSON, because summarization reads `evaluation/test/overall_metrics.json`.
 
 Seed scheduling:
 
@@ -235,5 +235,7 @@ bash ./tbd/masking/run_multi_seed.sh \
 - RGB normalization uses ImageNet statistics.
 - All other modalities, including the two RGB+MSI combined variants, compute normalization from train patches only and cache it as JSON.
 - Evaluation reconstructs full-image predictions by averaging patch probabilities into the original image canvas.
+- Training-time test evaluation saves reconstructed binary prediction masks under `metrics/test_masks/`.
+- Standalone evaluation saves reconstructed binary prediction masks under `evaluation/<split>/masks/`.
 - `synthetic_msi_path` is expected to point to a single `.npy` or `.npz` file per sample.
 - `real_msi_path` is expected to point to a single packed `.npy` file per sample. Use `python -m src.pack_real_msi` to convert legacy per-band `.TIF` files into this format.

@@ -73,7 +73,7 @@ done
 
 if [[ ${#RUN_DIRS[@]} -gt 0 ]]; then
   if [[ "$SKIP_EVALUATE" -eq 1 ]]; then
-    echo "Skipping summary because --skip-evaluate was used and evaluation metrics were not generated."
+    echo "Skipping summary because --skip-evaluate was used and evaluation/test/overall_metrics.json was not generated."
   else
     echo "Writing summaries to ${SUMMARY_OUTPUT}"
     "$PYTHON_EXE" -m src.summarize --runs "${RUN_DIRS[@]}" --output "$SUMMARY_OUTPUT"
