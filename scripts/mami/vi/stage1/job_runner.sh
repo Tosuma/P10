@@ -7,17 +7,23 @@ MODEL_BASE_NAME="vi-kaz"
 BASE_DIR="vi"
 
 RETRY_TEXT="Could not lookup the current user"
-MAX_RETRIES=10
+MAX_RETRIES=20
 
-for ndre in $(seq -f "%.1f" 0.4 0.1 0.7); do
+for ndre in $(seq -f "%.1f" 0.1 0.1 0.2); do
     for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
         DIR_NAME="${BASE_DIR}/re_${ndre}_vi_${ndvi}"
         MODEL_NAME="${MODEL_BASE_NAME}-re_${ndre}-vi_${ndvi}"
 
         attempt=1
+
+        if [[ ("$ndre" == "0.1" && ("$ndvi" == "0.0" || "$ndvi" == "0.1" || "$ndvi" == "0.2" || "$ndvi" == "0.3" ||  "$ndvi" == "0.4" ||  "$ndvi" == "0.5" ||  "$ndvi" == "0.6" ||  "$ndvi" == "0.7" || "$ndvi" == "0.8" || "$ndvi" == "0.9")) || ("$ndre" == "0.2" && ("$ndvi" == "0.6" || "$ndvi" == "0.7" || "$ndvi" == "0.8" || "$ndvi" == "0.9" || "$ndvi" == "1.0")) ]]; then
+            echo "$(date '+%Y-%m-%d %H:%M:%S') :: skipped ndre=${ndre}, ndvi=${ndvi}"
+            continue
+        fi
+
         while true; do
             job_id=$(
-                sbatch scripts/mami/train_mami_job.sh \
+                sbatch scripts/mami/stage1/train_mami_job.sh \
                     --lr "${LR}" \
                     --loss_mrae_w "${MRAE}" \
                     --loss_ndre_w "${ndre}" \
@@ -34,7 +40,7 @@ for ndre in $(seq -f "%.1f" 0.4 0.1 0.7); do
                 sleep 10
             done # sleep
 
-            err_file="logs/vi/train_mami/${job_id}.err"
+            err_file="logs/vi/train_mami_${job_id}.err"
             sleep 5
             
             first_line=""
@@ -42,7 +48,7 @@ for ndre in $(seq -f "%.1f" 0.4 0.1 0.7); do
                 first_line="$(head -n 1 "${err_file}")"
             fi
 
-            if [[ "${first_line}" == *"${RETRY_TEXT}"* ]]; then
+            if grep -qF "$RETRY_TEXT" "$err_file"; then
                 echo "$(date '+%Y-%m-%d %H:%M:%S') :: Job ${job_id} hit retryable error: '${first_line}'"
 
                 if [ "${attempt}" -ge "${MAX_RETRIES}" ]; then
@@ -52,11 +58,14 @@ for ndre in $(seq -f "%.1f" 0.4 0.1 0.7); do
 
                 attempt=$((attempt + 1))
                 echo "$(date '+%Y-%m-%d %H:%M:%S') :: Retrying ndre=${ndre}, ndvi=${ndvi}"
-                sleep 10
+                sleep 60
                 continue
             fi
 
             echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished job ${job_id} successfully for ndre=${ndre}, ndvi=${ndvi}"
+
+            mv "logs/vi/train_mami_${job_id}.err" "logs/vi/re_${ndre}_vi_${ndvi}"
+            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Renamed 'train_mami_${job_id}.err' to 're_${ndre}_vi_${ndvi}'"
             break # the retry loop
         done # retry loop
     done # ndvi loop

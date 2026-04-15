@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from statistics import median
 from typing import Callable, Any
 
 from metric_calculator import MetricCalculator
@@ -133,6 +134,53 @@ class Evaluator:
 
         with path.open("w", encoding="utf-8") as f:
             json.dump(results_to_save, f, indent=4)
+            
+    @staticmethod
+    def save_summary(
+        path: str | Path,
+        results: list[dict[str, Any]]
+    ) -> None:
+        if path is None:
+            return
+    
+        output_dir = Path(path)
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        enriched_results: list[dict[str, float]] = []
+        for row in results:
+            new_row = dict(row)
+
+            if "NDVI_GT" in row and "NDVI_PRED" in row:
+                new_row["NAE_NDVI"] = abs(float(row["NDVI_GT"]) - float(row["NDVI_PRED"])) / 2.0
+
+            if "NDRE_GT" in row and "NDRE_PRED" in row:
+                new_row["NAE_NDRE"] = abs(float(row["NDRE_GT"]) - float(row["NDRE_PRED"])) / 2.0
+
+            enriched_results.append(new_row)
+        
+        metric_names: set[str] = set()
+        for row in enriched_results:
+            for key, value in row.items():
+                if isinstance(value, (int, float)) and not isinstance(value, bool):
+                    metric_names.add(key)
+
+        summary: dict[str, float] = {}
+        for metric in sorted(metric_names):
+            values = [
+                float(row[metric])
+                for row in enriched_results
+                if metric in row and isinstance(row[metric], (int, float)) and not isinstance(row[metric], bool)
+            ]
+
+            if not values:
+                continue
+
+            summary[f"{metric}_avg"] = sum(values) / len(values)
+            summary[f"{metric}_median"] = median(values)
+
+        with (output_dir / "summary.json").open("w", encoding="utf-8") as f:
+            json.dump(summary, f, indent=4)
+            
         
     @staticmethod
     def load_results(path: str | Path) -> list[dict[str, Any]]:
@@ -165,6 +213,7 @@ if __name__ == "__main__":
     parser.add_argument("--re_index", type=int, help="The index of the red edge band", default=2)
     parser.add_argument("--nir_index", type=int, help="The index of the nir band", default=3)
     parser.add_argument("--result_path", type=str, help="Path to the output directory with filename")
+    parser.add_argument("--summary_dir", type=str, help="Path to the output directory")
     parser.add_argument("--only_compute", type=bool, help="Only compute from a precomputed result json file - use with '--result_path'.", action=argparse.BooleanOptionalAction)
     parser.add_argument("--print_results", type=bool, help="Print the results of an evaluation foreach of the predictions - will be 'true' when using '--only_compute'.", action=argparse.BooleanOptionalAction)
 
@@ -188,9 +237,11 @@ if __name__ == "__main__":
 
         results = evaluator.evaluate()
         evaluator.save_results(args.result_path)
+        evaluator.save_summary(args.summary_dir, results)
 
     else:
         results = Evaluator.load_results(args.result_path)
+        Evaluator.save_summary(args.summary_dir, results)
 
     if args.print_results or args.only_compute:
         for i, r in enumerate(results):

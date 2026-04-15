@@ -5,15 +5,25 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 from mstpp.mstpp import MST_Plus_Plus
-from data_carrier import DataCarrier
 from torch.utils.data import DataLoader
 import argparse
 from pathlib import Path
-from data_carrier import load_east_kaz, load_sri_lanka, load_weedy_rice, DataCarrier
+from data_carrier.datasets import KazDataset, SriLankaDataset, WeedyRiceDataset
 import cv2
+import logging
 
-# device = "cuda" if torch.cuda.is_available() else "cpu"
-device = "cpu" # Recommended when running full pictures to avoid OOM errors
+log_dir = Path("logs")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(message)s",
+    handlers=[
+        logging.StreamHandler(),
+    ],
+)
+logger = logging.getLogger(__name__)
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+# device = "cpu" # Recommended when running full pictures to avoid OOM errors
 
 def run(root_dir="data/",
         data_type="Sri-Lanka",
@@ -24,6 +34,7 @@ def run(root_dir="data/",
         model_path="model_final.pkl",
         save_images=False):
     model = MST_Plus_Plus(in_channels=3, out_channels=4, n_feat=4, stage=3).to(device)
+    
     output_dir= Path(save_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -52,36 +63,34 @@ def run(root_dir="data/",
     missing = set(model_sd.keys()) - set(filtered.keys())
     extra = set(state_dict.keys()) - set(filtered.keys())
 
-    print(f"Loading checkpoint: kept {len(filtered)} params, missing {len(missing)} params, skipped {len(extra)} params")
+    logger.info(f"Loading checkpoint: kept {len(filtered)} params, missing {len(missing)} params, skipped {len(extra)} params")
 
     model.load_state_dict(filtered, strict=False)
     model.eval()
 
 
     if single:
-        print("Running single image")
+        logger.info("Running single image")
         # Single picture does not care for full or patch
         match data_type:
             case "Sri-Lanka":
-                dataset = DataCarrier(Path(root_dir + single_picture), load_sri_lanka, resize=False)
+                dataset = SriLankaDataset(Path(root_dir + single_picture), resize=False)
             case "Kazakhstan":
-                dataset = DataCarrier(Path(root_dir + single_picture), load_east_kaz, resize=False)
+                dataset = KazDataset(Path(root_dir + single_picture), resize=False)
             case "Weedy-Rice":
-                dataset = DataCarrier(Path(root_dir + single_picture), load_weedy_rice, resize=False)
+                dataset = WeedyRiceDataset(Path(root_dir + single_picture), resize=False)
             case _:
-                print("Unknown dataset type. Defaulting to Sri-Lanka patches.")
-                breakpoint() #Dummefejl
+                raise ValueError("Unknown dataset type.")
     else:
         match data_type:
             case "Sri-Lanka":
-                dataset = DataCarrier(Path(root_dir), load_sri_lanka, resize=False)
+                dataset = SriLankaDataset(Path(root_dir), resize=False)
             case "Kazakhstan":
-                dataset = DataCarrier(Path(root_dir), load_east_kaz, resize=False)
+                dataset = KazDataset(Path(root_dir), resize=False)
             case "Weedy-Rice":
-                dataset = DataCarrier(Path(root_dir), load_weedy_rice, resize=False)
+                dataset = WeedyRiceDataset(Path(root_dir), resize=False)
             case _:
-                print("Unknown dataset type. Defaulting to Sri-Lanka patches.")
-                breakpoint() #Dummefejl
+                raise ValueError("Unknown dataset type.")
 
     index = 0
 
@@ -91,6 +100,7 @@ def run(root_dir="data/",
     else:
         limit = int(amount)
 
+    logger.info("Beginning inference of images")
     for i, sample in enumerate(dataset):
         if limit is not None and index >= limit:
             break
@@ -98,12 +108,10 @@ def run(root_dir="data/",
         target = sample["ms"]
         file_path = Path(sample["path"][0])
 
-        step = (len(dataset) if limit is None else limit) // 10
-        if step > 0 and i % step == 0:
-            if limit is None:
-                print(f"Processing [{i+1}/{len(dataset)}]")
-            else: 
-                print(f"Processing [{i+1}/{limit}]")
+        if limit is None:
+            logger.info(f"Processing {i + 1} / {len(dataset)}")
+        else: 
+            logger.info(f"Processing {i + 1} / {len(dataset)}")
 
 
         rgb_vis = rgb.permute(0, 2, 3, 1).cpu().numpy().squeeze(0)
@@ -144,7 +152,7 @@ def run(root_dir="data/",
             plt.savefig("validation_result.png", dpi=150, bbox_inches="tight")
             plt.savefig(output_dir / file_name, dpi=150, bbox_inches="tight")
             plt.close()
-            # print(f"Saved visualization to {file_name}")
+            # logger.info(f"Saved visualization to {file_name}")
 
             # Save individual images
             for i in range(4):
@@ -166,16 +174,15 @@ if __name__ == "__main__":
     parser.add_argument("--save_images", help="Save the images predicted", action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
     root_dir = args.data_path # Root directory of data (data/)
-    try:
-        data_type = args.data_type #Dataset type (Sri-Lanka or Kazakhstan)
-    except:
-        print("No data type given, defaulting to Sri-Lanka")
+
+    data_type = args.data_type #Dataset type (Sri-Lanka or Kazakhstan)
     save_dir = args.save_path #Save path for results (also saves latest result in validation_result.png in main folder)
     single = args.single # One or many pictures
     single_picture = args.jpg #Only one picture
     amount = args.amount #If not single, gives the amount of pictures to process
     model_path = args.model #MST++ model to evaluate
     save_images = args.save_images
+
     run(
         root_dir=root_dir,
         data_type=data_type,

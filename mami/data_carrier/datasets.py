@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from base_dataset import DataCarrier
+from data_carrier.base_dataset import DataCarrier
 
 class SriLankaDataset(DataCarrier):
     """
