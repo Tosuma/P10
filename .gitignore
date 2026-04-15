@@ -216,8 +216,7 @@ CLAUDE.md
 
 data/
 
-results/**/data
-results/**/images
+results
 
 checkpoints/
 
