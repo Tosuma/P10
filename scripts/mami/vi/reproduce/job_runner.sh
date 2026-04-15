@@ -134,7 +134,7 @@ STAGE1_DIR="vi/reproduce/stage1/re_${NDRE}_vi_${NDVI}"
 STAGE1_MODEL="vi-kaz-re_${NDRE}-vi_${NDVI}"
 run_stage \
     "stage1" \
-    "scripts/mami/vi/reproduce/train_mami_job.sh" \
+    "scripts/mami/vi/reproduce/train_mami_stage1_job.sh" \
     "4e-4" \
     "${STAGE1_DIR}" \
     "${STAGE1_MODEL}"
@@ -144,7 +144,7 @@ STAGE2_DIR="vi/reproduce/stage2/re_${NDRE}_vi_${NDVI}"
 STAGE2_MODEL="vi-weedy-re_${NDRE}-vi_${NDVI}"
 run_stage \
     "stage2" \
-    "scripts/mami/vi/stage2/train_mami_job.sh" \
+    "scripts/mami/vi/reproduce/train_mami_stage2_job.sh" \
     "1e-5" \
     "${STAGE2_DIR}" \
     "${STAGE2_MODEL}" \
@@ -155,10 +155,31 @@ STAGE3_DIR="vi/reproduce/stage3/re_${NDRE}_vi_${NDVI}"
 STAGE3_MODEL="vi-weedy-re_${NDRE}-vi_${NDVI}"
 run_stage \
     "stage3" \
-    "scripts/mami/vi/stage3/train_mami_job.sh" \
+    "scripts/mami/vi/reproduce/train_mami_stage3_job.sh" \
     "1e-7" \
     "${STAGE3_DIR}" \
     "${STAGE3_MODEL}" \
     "${STAGE2_CHECKPOINT}"
+
+STAGE2_SCHEDULER_DIR="vi/reproduce/stage2-scheduler/re_${NDRE}_vi_${NDVI}"
+STAGE2_SCHEDULER_MODEL="vi-weedy-scheduler-re_${NDRE}-vi_${NDVI}"
+run_stage \
+    "stage2" \
+    "scripts/mami/vi/reproduce/train_mami_stage2_scheduler_job.sh" \
+    "1e-5" \
+    "${STAGE2_SCHEDULER_DIR}" \
+    "${STAGE2_SCHEDULER_MODEL}" \
+    "${STAGE1_CHECKPOINT}"
+STAGE2_SCHEDULER_CHECKPOINT="$(resolve_checkpoint "stage2" "${STAGE2_SCHEDULER_DIR}" "${STAGE2_SCHEDULER_MODEL}")"
+
+STAGE3_SCHEDULER_DIR="vi/reproduce/stage3-scheduler/re_${NDRE}_vi_${NDVI}"
+STAGE3_SCHEDULER_MODEL="vi-weedy-scheduler-re_${NDRE}-vi_${NDVI}"
+run_stage \
+    "stage3" \
+    "scripts/mami/vi/reproduce/train_mami_stage3_scheduler_job.sh" \
+    "1e-7" \
+    "${STAGE3_SCHEDULER_DIR}" \
+    "${STAGE3_SCHEDULER_MODEL}" \
+    "${STAGE2_SCHEDULER_CHECKPOINT}"
 
 echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished chained reproduce run for ndre=${NDRE}, ndvi=${NDVI}"
