@@ -30,6 +30,7 @@ from src.utils import (
     timestamp_utc,
     write_json,
 )
+from src.visualize import save_binary_mask
 
 
 def prepare_normalization(config: dict[str, Any], run_dir: Path) -> dict[str, Any]:
@@ -130,11 +131,15 @@ def evaluate_test_split(
 
     results = evaluate_loader(model, test_loader, device, threshold=threshold)
     sample_rows = read_csv_rows(config["paths"]["test_manifest"])
-    per_image_rows, _ = reconstruct_image_metrics(sample_rows, results["reconstruction_payload"], threshold)
+    per_image_rows, visuals = reconstruct_image_metrics(sample_rows, results["reconstruction_payload"], threshold)
+    mask_dir = ensure_dir(checkpoint_path.parents[1] / "metrics" / "test_masks")
+    for visual in visuals:
+        save_binary_mask(mask_dir / f"{visual['sample_id']}.png", visual["pred_mask"])
 
     return {
         "checkpoint": str(checkpoint_path.resolve()),
         "split": "test",
+        "mask_dir": str(mask_dir.resolve()),
         "patch_level": results["overall"],
         "patch_summary": summarize_metric_rows(results["per_patch_rows"]),
         "image_summary": summarize_metric_rows(per_image_rows),

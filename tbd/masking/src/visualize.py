@@ -42,6 +42,13 @@ def overlay_mask(image_rgb: np.ndarray, mask: np.ndarray, color: tuple[int, int,
     return np.clip(blended, 0, 255).astype(np.uint8)
 
 
+def save_binary_mask(output_path: str | Path, mask: np.ndarray) -> None:
+    output_path = Path(output_path)
+    ensure_dir(output_path.parent)
+    mask_uint8 = np.where(np.asarray(mask) > 0, 255, 0).astype(np.uint8)
+    Image.fromarray(mask_uint8).save(output_path)
+
+
 def save_prediction_panel(
     output_path: str | Path,
     image: np.ndarray,

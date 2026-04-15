@@ -22,7 +22,7 @@ from src.utils import (
     write_csv_rows,
     write_json,
 )
-from src.visualize import save_prediction_panel
+from src.visualize import save_binary_mask, save_prediction_panel
 
 
 def load_checkpoint(checkpoint_path: str, device: torch.device):
@@ -220,6 +220,11 @@ def main() -> None:
     write_csv_rows(output_dir / "per_image_metrics.csv", per_image_rows, list(per_image_rows[0].keys()) if per_image_rows else ["sample_id"])
     logger.info("Saved aggregate metrics to %s", output_dir / "overall_metrics.json")
     logger.info("Saved %s patch rows and %s image rows", len(results["per_patch_rows"]), len(per_image_rows))
+
+    mask_dir = ensure_dir(output_dir / "masks")
+    for visual in visuals:
+        save_binary_mask(mask_dir / f"{visual['sample_id']}.png", visual["pred_mask"])
+    logger.info("Saved %s predicted mask(s) to %s", len(visuals), mask_dir)
 
     preview_dir = ensure_dir(output_dir / "visuals")
     sample_lookup = {row["sample_id"]: row for row in sample_rows}
