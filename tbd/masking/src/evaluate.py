@@ -145,8 +145,8 @@ def summarize_metric_rows(rows: list[dict[str, Any]]) -> dict[str, float]:
         values = [float(row[key]) for row in rows if isinstance(row.get(key), int | float)]
         if not values:
             continue
-        summary[f"avg_{key}"] = float(np.mean(values))
-        summary[f"median_{key}"] = float(np.median(values))
+        summary[f"{key}_avg"] = float(np.mean(values))
+        summary[f"{key}_median"] = float(np.median(values))
     return summary
 
 
@@ -158,9 +158,9 @@ def mean_aliases(summary: dict[str, float]) -> dict[str, float]:
         "negative_confidence_mean": "negative_confidence",
     }
     for key, value in summary.items():
-        if not key.startswith("avg_"):
+        if not key.endswith("_avg"):
             continue
-        metric_name = key.removeprefix("avg_")
+        metric_name = key.removesuffix("_avg")
         aliases[f"mean_{legacy_names.get(metric_name, metric_name)}"] = value
     return aliases
 
