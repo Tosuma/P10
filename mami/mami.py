@@ -82,7 +82,7 @@ class DDPContext:
         dist.broadcast_object_list(buf, src=0)
         return buf[0]
 
-def _get_dataset(data_type: DatasetType, root_dir: Path, non_resize_picture=False) -> DataCarrier:
+def _get_loader_function(data_type: DatasetType, root_dir: Path, non_resize_picture=False) -> DataCarrier:
     dataset: DataCarrier
     match data_type:
         case "Sri-Lanka":
