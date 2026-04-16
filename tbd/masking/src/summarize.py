@@ -74,6 +74,7 @@ def build_aggregate_rows(rows: list[dict]) -> list[dict]:
         }
         for metric in AGGREGATE_METRICS:
             values = [float(row[metric]) for row in group_rows]
+            aggregate_row[f"{metric}_median"] = statistics.median(values)
             aggregate_row[f"{metric}_mean"] = statistics.fmean(values)
             aggregate_row[f"{metric}_std"] = statistics.stdev(values) if len(values) > 1 else 0.0
         aggregate_rows.append(aggregate_row)

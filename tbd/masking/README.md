@@ -22,6 +22,7 @@ source ./.venv/bin/activate
 Convenience scripts are available if you want one command for setup or training:
 
 - `bash ./tbd/masking/setup_data.sh`
+- `bash ./tbd/masking/run_smoke.sh`
 - `bash ./tbd/masking/train_configs.sh --config ...`
 - `bash ./tbd/masking/train_rgb_architectures.sh`
 - `bash ./tbd/masking/run_multi_seed.sh --config ...`
@@ -90,7 +91,13 @@ bash ./tbd/masking/train_configs.sh \
   --summary-output ./tbd/masking/outputs/metrics/custom_train_summary.json
 ```
 
-Training writes run artifacts under `outputs/runs/<run_name>/`, including `logs/execution.log` with entries formatted as `%(asctime)s [Trainer] :: %(message)s`. At the end of training, the best validation checkpoint is evaluated once on the configured test split. The resulting test metrics are written to `metrics/test_metrics.json`, and reconstructed test prediction masks are written to `metrics/test_masks/` as binary PNG files. Per-epoch training and validation do not save masks.
+Or run the full smoke pipeline with one command:
+
+```bash
+bash ./tbd/masking/run_smoke.sh
+```
+
+Training writes run artifacts under `outputs/runs/<run_name>/`, including `logs/execution.log` with entries formatted as `%(asctime)s [Trainer] :: %(message)s`. At the end of training, the best validation checkpoint is evaluated once on the configured test split. The resulting test summary is written to `metrics/test_summary.json`, and reconstructed test prediction masks are written to `metrics/test_masks/` as binary PNG files. Per-epoch training and validation do not save masks.
 
 Additional supported multimodal runs:
 
@@ -120,7 +127,7 @@ Evaluation writes artifacts under `outputs/runs/<run>/evaluation/<split>/`, incl
 python -m src.summarize --runs ./tbd/masking/outputs/runs/<rgb_run> ./tbd/masking/outputs/runs/<synth_run> ./tbd/masking/outputs/runs/<real_run> --output ./tbd/masking/outputs/metrics/final_comparison.json
 ```
 
-Summarization writes a JSON file to the requested `--output` path with two top-level sections: `runs` for per-run metrics and `aggregates` for per-model mean/std values. It also writes a companion log file next to it, for example `outputs/metrics/final_comparison.log`, with entries formatted as `%(asctime)s [Summarizer] :: %(message)s`.
+Summarization writes a JSON file to the requested `--output` path with two top-level sections: `runs` for per-run metrics and `aggregates` for per-model aggregate metrics. Each aggregate row now includes average, median, mean, and standard deviation fields for every tracked metric. It also writes a companion log file next to it, for example `outputs/metrics/final_comparison.log`, with entries formatted as `%(asctime)s [Summarizer] :: %(message)s`.
 
 Confidence-style metrics are also included in the summary. They are derived from the sigmoid output probabilities and indicate how certain the model was about its predicted mask values:
 
@@ -165,10 +172,11 @@ The script:
 Single-run convenience scripts:
 
 - `setup_data.sh`: packs real MSI `.TIF` bands, creates split manifests, and patchifies all five modality baselines
+- `run_smoke.sh`: patchifies the checked-in smoke split, trains the smoke config, runs test evaluation, and writes a one-run summary
 - `train_configs.sh`: trains and evaluates any explicit list of config files once each
 - `train_rgb_architectures.sh`: trains the six requested RGB architecture variants once each and summarizes them
 
-If you pass `--skip-evaluate`, the script trains only. Training still writes `metrics/test_metrics.json` and `metrics/test_masks/`, but the script does not run `src.evaluate` and does not generate the final summary JSON, because summarization reads `evaluation/test/overall_metrics.json`.
+If you pass `--skip-evaluate`, the script trains only. Training still writes `metrics/test_summary.json` and `metrics/test_masks/`, but the script does not run `src.evaluate` and does not generate the final summary JSON, because summarization reads `evaluation/test/overall_metrics.json`.
 
 Seed scheduling:
 
@@ -228,9 +236,16 @@ bash ./tbd/masking/run_multi_seed.sh \
   --summary-output ./tbd/masking/outputs/metrics/rgb_architectures_multi_seed.json
 ```
 
+Run the full smoke pipeline:
+
+```bash
+bash ./tbd/masking/run_smoke.sh
+```
+
 ## Notes
 
 - Splits are created at the original-image level before patching.
+- `run_smoke.sh` uses the checked-in `smoke_train.csv`, `smoke_val.csv`, and `smoke_test.csv` manifests rather than regenerating smoke splits.
 - Patch manifests are deterministic given the config seed.
 - RGB normalization uses ImageNet statistics.
 - All other modalities, including the two RGB+MSI combined variants, compute normalization from train patches only and cache it as JSON.

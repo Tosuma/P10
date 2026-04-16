@@ -354,7 +354,7 @@ def main() -> None:
                 )
                 break
 
-    test_metrics = evaluate_test_split(
+    test_summary = evaluate_test_split(
         checkpoint_path=checkpoint_dir / "best.pt",
         config=config,
         normalization=normalization,
@@ -363,9 +363,9 @@ def main() -> None:
     )
 
     write_json(metrics_dir / "history.json", history)
-    write_json(metrics_dir / "test_metrics.json", test_metrics)
+    write_json(metrics_dir / "test_summary.json", test_summary)
     logger.info("Wrote training history to %s", metrics_dir / "history.json")
-    logger.info("Wrote test metrics to %s", metrics_dir / "test_metrics.json")
+    logger.info("Wrote test summary to %s", metrics_dir / "test_summary.json")
     logger.info("Training completed")
     print(str(run_dir.resolve()))
 
