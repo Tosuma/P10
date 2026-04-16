@@ -56,6 +56,12 @@ python -m src.patchify --config ./tbd/masking/configs/rgb_synth_msi.yaml
 python -m src.train --config ./tbd/masking/configs/rgb.yaml
 ```
 
+Optional fuzzy-halo RGB variant:
+
+```bash
+python -m src.train --config ./tbd/masking/configs/rgb_fuzzy_halo.yaml
+```
+
 4. Train RGB + synthetic multispectral:
 
 ```bash
@@ -97,7 +103,13 @@ Or run the full smoke pipeline with one command:
 bash ./tbd/masking/run_smoke.sh
 ```
 
-Training writes run artifacts under `outputs/runs/<run_name>/`, including `logs/execution.log` with entries formatted as `%(asctime)s [Trainer] :: %(message)s`. At the end of training, the best validation checkpoint is evaluated once on the configured test split. The resulting test summary is written to `metrics/test_summary.json`, and reconstructed test prediction masks are written to `metrics/test_masks/` as binary PNG files. Per-epoch training and validation do not save masks.
+Fuzzy-halo smoke variant:
+
+```bash
+bash ./tbd/masking/run_smoke.sh --config configs/smoke_rgb_fuzzy_halo.yaml
+```
+
+Training writes run artifacts under `outputs/runs/<run_name>/`, including `logs/execution.log` with entries formatted as `%(asctime)s [Trainer] :: %(message)s`. At the end of training, the best validation checkpoint is evaluated once on the configured test split. The resulting test summary is written to `metrics/test_summary.json`, and reconstructed test prediction masks are written to `metrics/test_masks/` as binary PNG files. Per-epoch training and validation do not save masks. Fuzzy-halo runs use the relaxed target as the primary training/evaluation target and also record additional `original_*` test metrics against the hard weed masks.
 
 Additional supported multimodal runs:
 
@@ -119,7 +131,7 @@ Architecture config naming:
 python -m src.evaluate --checkpoint ./tbd/masking/outputs/runs/<run>/checkpoints/best.pt --split test
 ```
 
-Evaluation writes artifacts under `outputs/runs/<run>/evaluation/<split>/`, including `overall_metrics.json`, per-patch and per-image CSV metrics, reconstructed predicted masks in `masks/`, limited preview panels in `visuals/`, and `execution.log` with entries formatted as `%(asctime)s [Evaluator] :: %(message)s`.
+Evaluation writes artifacts under `outputs/runs/<run>/evaluation/<split>/`, including `overall_metrics.json`, per-patch and per-image CSV metrics, reconstructed predicted masks in `masks/`, limited preview panels in `visuals/`, and `execution.log` with entries formatted as `%(asctime)s [Evaluator] :: %(message)s`. Fuzzy-halo runs keep the primary CSV/JSON metrics on the relaxed target and add `original_*` metrics and companion CSV files for scoring against the hard masks.
 
 7. Summarize multiple runs:
 
@@ -127,7 +139,7 @@ Evaluation writes artifacts under `outputs/runs/<run>/evaluation/<split>/`, incl
 python -m src.summarize --runs ./tbd/masking/outputs/runs/<rgb_run> ./tbd/masking/outputs/runs/<synth_run> ./tbd/masking/outputs/runs/<real_run> --output ./tbd/masking/outputs/metrics/final_comparison.json
 ```
 
-Summarization writes a JSON file to the requested `--output` path with two top-level sections: `runs` for per-run metrics and `aggregates` for per-model aggregate metrics. Each aggregate row now includes average, median, mean, and standard deviation fields for every tracked metric. It also writes a companion log file next to it, for example `outputs/metrics/final_comparison.log`, with entries formatted as `%(asctime)s [Summarizer] :: %(message)s`.
+Summarization writes a JSON file to the requested `--output` path with two top-level sections: `runs` for per-run metrics and `aggregates` for per-model aggregate metrics. Each aggregate row now includes median, mean, and standard deviation fields for every tracked metric. Fuzzy-halo runs also include `original_test_*` metrics so the hard-mask scoring view is preserved alongside the relaxed target view. It also writes a companion log file next to it, for example `outputs/metrics/final_comparison.log`, with entries formatted as `%(asctime)s [Summarizer] :: %(message)s`.
 
 Confidence-style metrics are also included in the summary. They are derived from the sigmoid output probabilities and indicate how certain the model was about its predicted mask values:
 
@@ -249,6 +261,7 @@ bash ./tbd/masking/run_smoke.sh
 - Patch manifests are deterministic given the config seed.
 - RGB normalization uses ImageNet statistics.
 - All other modalities, including the two RGB+MSI combined variants, compute normalization from train patches only and cache it as JSON.
+- The optional `fuzzy_halo` target variant keeps the labeled weed mask as the core region and adds a soft halo only outside the labeled boundary.
 - Evaluation reconstructs full-image predictions by averaging patch probabilities into the original image canvas.
 - Training-time test evaluation saves reconstructed binary prediction masks under `metrics/test_masks/`.
 - Standalone evaluation saves reconstructed binary prediction masks under `evaluation/<split>/masks/`.

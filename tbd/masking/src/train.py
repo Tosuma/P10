@@ -16,6 +16,7 @@ from src.evaluate import evaluate_loader, load_checkpoint, reconstruct_image_met
 from src.losses import BCEDiceLoss
 from src.metrics import ConfusionTotals, threshold_predictions
 from src.model import build_model, resolve_model_config
+from src.targets import resolve_target_config
 from src.utils import (
     device_from_config,
     ensure_dir,
@@ -116,6 +117,7 @@ def evaluate_test_split(
     device: torch.device,
     threshold: float,
 ) -> dict[str, Any]:
+    target_config = resolve_target_config(config)
     model, _, _ = load_checkpoint(str(checkpoint_path), device)
     test_loader = build_dataloader(
         sample_manifest_path=config["paths"]["test_manifest"],
@@ -129,23 +131,30 @@ def evaluate_test_split(
         seed=config["seed"],
     )
 
-    results = evaluate_loader(model, test_loader, device, threshold=threshold)
+    results = evaluate_loader(model, test_loader, device, threshold=threshold, config=config)
     sample_rows = read_csv_rows(config["paths"]["test_manifest"])
-    per_image_rows, visuals = reconstruct_image_metrics(sample_rows, results["reconstruction_payload"], threshold)
+    image_results = reconstruct_image_metrics(sample_rows, results["reconstruction_payload"], threshold, config=config)
     mask_dir = ensure_dir(checkpoint_path.parents[1] / "metrics" / "test_masks")
-    for visual in visuals:
+    for visual in image_results["visuals"]:
         save_binary_mask(mask_dir / f"{visual['sample_id']}.png", visual["pred_mask"])
 
-    return {
+    primary_view = results["primary_view"]
+    summary = {
         "checkpoint": str(checkpoint_path.resolve()),
         "split": "test",
+        "target_mode": target_config["mode"],
         "mask_dir": str(mask_dir.resolve()),
-        "patch_level": results["overall"],
-        "patch_summary": summarize_metric_rows(results["per_patch_rows"]),
-        "image_summary": summarize_metric_rows(per_image_rows),
-        "num_patches": len(results["per_patch_rows"]),
-        "num_images": len(per_image_rows),
+        "patch_level": results["views"][primary_view]["overall"],
+        "patch_summary": summarize_metric_rows(results["views"][primary_view]["per_patch_rows"]),
+        "image_summary": summarize_metric_rows(image_results["views"][primary_view]),
+        "num_patches": len(results["views"][primary_view]["per_patch_rows"]),
+        "num_images": len(image_results["views"][primary_view]),
     }
+    if target_config["mode"] == "fuzzy_halo":
+        summary["original_patch_level"] = results["views"]["original"]["overall"]
+        summary["original_patch_summary"] = summarize_metric_rows(results["views"]["original"]["per_patch_rows"])
+        summary["original_image_summary"] = summarize_metric_rows(image_results["views"]["original"])
+    return summary
 
 
 def save_checkpoint(path: Path, model, optimizer, scheduler, epoch: int, best_val_iou: float, config: dict[str, Any]) -> None:

@@ -32,6 +32,24 @@ AGGREGATE_METRICS = [
     "test_image_confidence",
     "test_image_positive_confidence",
     "test_image_negative_confidence",
+    "original_test_patch_iou",
+    "original_test_patch_dice",
+    "original_test_patch_precision",
+    "original_test_patch_recall",
+    "original_test_patch_accuracy",
+    "original_test_patch_specificity",
+    "original_test_patch_confidence",
+    "original_test_patch_positive_confidence",
+    "original_test_patch_negative_confidence",
+    "original_test_image_iou",
+    "original_test_image_dice",
+    "original_test_image_precision",
+    "original_test_image_recall",
+    "original_test_image_accuracy",
+    "original_test_image_specificity",
+    "original_test_image_confidence",
+    "original_test_image_positive_confidence",
+    "original_test_image_negative_confidence",
 ]
 
 
@@ -60,16 +78,27 @@ def summarize_history(history: list[dict]) -> dict:
 def build_aggregate_rows(rows: list[dict]) -> list[dict]:
     grouped: dict[tuple[str, str, str, str], list[dict]] = {}
     for row in rows:
-        key = (row["experiment_name"], row["modality"], row["architecture"], row["encoder_name"])
+        key = (
+            row["experiment_name"],
+            row["modality"],
+            row["architecture"],
+            row["encoder_name"],
+            row["target_mode"],
+            str(row["halo_radius_px"]),
+            str(row["halo_min_value"]),
+        )
         grouped.setdefault(key, []).append(row)
 
     aggregate_rows = []
-    for (experiment_name, modality, architecture, encoder_name), group_rows in sorted(grouped.items()):
+    for (experiment_name, modality, architecture, encoder_name, target_mode, halo_radius_px, halo_min_value), group_rows in sorted(grouped.items()):
         aggregate_row = {
             "experiment_name": experiment_name,
             "modality": modality,
             "architecture": architecture,
             "encoder_name": encoder_name,
+            "target_mode": target_mode,
+            "halo_radius_px": int(halo_radius_px),
+            "halo_min_value": float(halo_min_value),
             "runs": len(group_rows),
         }
         for metric in AGGREGATE_METRICS:
@@ -102,12 +131,18 @@ def main() -> None:
         history = read_json(run_path / "metrics" / "history.json")
         best_summary = summarize_history(history)
         model_config = config.get("model", {})
+        target_config = config.get("target", {})
+        original_patch_level = eval_metrics.get("original_patch_level", eval_metrics["patch_level"])
+        original_image_level = eval_metrics.get("original_image_level", eval_metrics["image_level"])
         rows.append(
             {
                 "experiment_name": config["experiment_name"],
                 "modality": config["modality"],
                 "architecture": model_config.get("architecture", "Unet"),
                 "encoder_name": model_config.get("encoder_name", "resnet34"),
+                "target_mode": target_config.get("mode", "binary"),
+                "halo_radius_px": int(target_config.get("halo_radius_px", 0)),
+                "halo_min_value": float(target_config.get("halo_min_value", 0.0)),
                 "seed": metadata["seed"],
                 "best_epoch": best_summary["best_epoch"],
                 "val_loss": best_summary["val_loss"],
@@ -134,6 +169,24 @@ def main() -> None:
                 "test_image_confidence": eval_metrics["image_level"].get("mean_confidence", 0.0),
                 "test_image_positive_confidence": eval_metrics["image_level"].get("mean_positive_confidence", 0.0),
                 "test_image_negative_confidence": eval_metrics["image_level"].get("mean_negative_confidence", 0.0),
+                "original_test_patch_iou": original_patch_level["iou"],
+                "original_test_patch_dice": original_patch_level["dice"],
+                "original_test_patch_precision": original_patch_level["precision"],
+                "original_test_patch_recall": original_patch_level["recall"],
+                "original_test_patch_accuracy": original_patch_level["accuracy"],
+                "original_test_patch_specificity": original_patch_level["specificity"],
+                "original_test_patch_confidence": original_patch_level.get("confidence_mean", 0.0),
+                "original_test_patch_positive_confidence": original_patch_level.get("positive_confidence_mean", 0.0),
+                "original_test_patch_negative_confidence": original_patch_level.get("negative_confidence_mean", 0.0),
+                "original_test_image_iou": original_image_level["mean_iou"],
+                "original_test_image_dice": original_image_level["mean_dice"],
+                "original_test_image_precision": original_image_level["mean_precision"],
+                "original_test_image_recall": original_image_level["mean_recall"],
+                "original_test_image_accuracy": original_image_level.get("mean_accuracy", 0.0),
+                "original_test_image_specificity": original_image_level.get("mean_specificity", 0.0),
+                "original_test_image_confidence": original_image_level.get("mean_confidence", 0.0),
+                "original_test_image_positive_confidence": original_image_level.get("mean_positive_confidence", 0.0),
+                "original_test_image_negative_confidence": original_image_level.get("mean_negative_confidence", 0.0),
             }
         )
     aggregate_rows = build_aggregate_rows(rows)

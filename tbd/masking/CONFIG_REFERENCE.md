@@ -157,6 +157,25 @@ Numeric fields may use normal decimal notation or scientific notation such as `1
 
 - Weight of the Dice loss term in the segmentation loss.
 
+## `target`
+
+### `mode`
+
+- Training/evaluation target style.
+- Supported values:
+  - `binary`: current hard weed mask
+  - `fuzzy_halo`: keep the labeled weed pixels at `1.0` and add a soft halo outside the weed boundary
+
+### `halo_radius_px`
+
+- Only used for `fuzzy_halo`.
+- Number of pixels outside the hard weed mask where the relaxed target remains positive.
+
+### `halo_min_value`
+
+- Only used for `fuzzy_halo`.
+- Lowest soft-target value used near the outer edge of the halo band.
+
 ## `training`
 
 ### `batch_size`
@@ -215,3 +234,4 @@ Numeric fields may use normal decimal notation or scientific notation such as `1
 ### `num_visualizations`
 
 - Number of sample visualization panels to save during evaluation.
+- For `fuzzy_halo` runs, evaluation reports both the primary relaxed-target metrics and additional `original_*` metrics against the hard weed mask.

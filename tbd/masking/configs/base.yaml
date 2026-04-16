@@ -30,6 +30,10 @@ augmentations:
 loss:
   bce_weight: 0.5
   dice_weight: 0.5
+target:
+  mode: binary
+  halo_radius_px: 0
+  halo_min_value: 0.35
 training:
   batch_size: 8
   num_workers: 0
