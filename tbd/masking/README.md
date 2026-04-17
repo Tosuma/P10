@@ -147,6 +147,15 @@ python -m src.evaluate_base --config ./tbd/masking/configs/binary/rgb.yaml --spl
 
 Evaluation writes artifacts under `outputs/runs/<run>/evaluation/<split>/`, including `overall_metrics.json`, per-patch and per-image CSV metrics, reconstructed predicted masks in `masks/`, limited preview panels in `visuals/`, and `execution.log` with entries formatted as `%(asctime)s [Evaluator] :: %(message)s`. Fuzzy-halo runs keep the primary CSV/JSON metrics on the relaxed target and add `original_*` metrics and companion CSV files for scoring against the hard masks.
 
+`overall_metrics.json` fields are interpreted as follows:
+
+- `patch_level`: one global metric set computed by pooling all evaluated patch pixels together first
+- `patch_summary`: average and median of the per-patch metrics, describing a typical patch rather than one pooled score
+- `image_level`: average and median of the per-image metrics after reconstructing full-image predictions from patches
+- `original_patch_level`, `original_patch_summary`, `original_image_level`: only present for `fuzzy_halo` runs; these are the same three views, but scored against the original hard weed mask instead of the relaxed fuzzy target
+
+In practice, `image_level` is usually the best headline full-scene result, `patch_level` is the pooled patch-wise score, and `patch_summary` is useful when you want the distribution across individual patches.
+
 Baseline evaluation writes the same evaluation artifacts into a baseline-named run directory under `outputs/runs/`, plus `config.yaml` and `run_metadata.json` with `run_kind: baseline`. It does not create checkpoints or training history.
 
 7. Summarize multiple runs:

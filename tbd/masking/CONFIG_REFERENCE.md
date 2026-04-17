@@ -180,11 +180,20 @@ Numeric fields may use normal decimal notation or scientific notation such as `1
 
 - Only used for `fuzzy_halo`.
 - Number of pixels outside the hard weed mask where the relaxed target remains positive.
+- `0` disables the halo and makes the target equivalent to the original binary mask.
+- Must be greater than or equal to `0`.
 
 ### `halo_min_value`
 
 - Only used for `fuzzy_halo`.
 - Lowest soft-target value used near the outer edge of the halo band.
+- Valid range is `0.0` to `1.0`.
+- The original labeled weed pixels stay at `1.0`.
+- Halo pixels between the weed boundary and the outer edge are assigned values interpolated between just below `1.0` near the boundary and `halo_min_value` at the outer edge.
+- Example:
+  - with `halo_radius_px: 12` and `halo_min_value: 0.35`, the farthest halo ring gets target value `0.35`
+  - halo rings closer to the weed boundary get progressively higher target values
+  - pixels outside the halo stay at `0.0`
 
 ## `training`
 
