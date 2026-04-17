@@ -7,11 +7,11 @@ GROUP_STRATEGY="datetime"
 PACK_REAL_MSI=1
 
 PATCH_CONFIGS=(
-  "configs/rgb.yaml"
-  "configs/real_msi.yaml"
-  "configs/synth_msi.yaml"
-  "configs/rgb_real_msi.yaml"
-  "configs/rgb_synth_msi.yaml"
+  "configs/binary/rgb.yaml"
+  "configs/binary/real_msi.yaml"
+  "configs/binary/synth_msi.yaml"
+  "configs/binary/rgb_real_msi.yaml"
+  "configs/binary/rgb_synth_msi.yaml"
 )
 
 while [[ $# -gt 0 ]]; do

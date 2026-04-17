@@ -1,0 +1,6 @@
+base_config: ../binary/synth_msi_deeplabv3plus_resnet34.yaml
+experiment_name: synthetic_msi_deeplabv3plus_resnet34_fuzzy_halo
+target:
+  mode: fuzzy_halo
+  halo_radius_px: 12
+  halo_min_value: 0.35

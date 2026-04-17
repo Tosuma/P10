@@ -1,4 +1,4 @@
-base_config: rgb.yaml
+base_config: ../binary/rgb.yaml
 experiment_name: rgb_unet_resnet34_fuzzy_halo
 target:
   mode: fuzzy_halo

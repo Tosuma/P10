@@ -43,43 +43,43 @@ bash ./tbd/masking/setup_data.sh
 2. Create deterministic patch manifests for each modality config:
 
 ```bash
-python -m src.patchify --config ./tbd/masking/configs/rgb.yaml
-python -m src.patchify --config ./tbd/masking/configs/real_msi.yaml
-python -m src.patchify --config ./tbd/masking/configs/synth_msi.yaml
-python -m src.patchify --config ./tbd/masking/configs/rgb_real_msi.yaml
-python -m src.patchify --config ./tbd/masking/configs/rgb_synth_msi.yaml
+python -m src.patchify --config ./tbd/masking/configs/binary/rgb.yaml
+python -m src.patchify --config ./tbd/masking/configs/binary/real_msi.yaml
+python -m src.patchify --config ./tbd/masking/configs/binary/synth_msi.yaml
+python -m src.patchify --config ./tbd/masking/configs/binary/rgb_real_msi.yaml
+python -m src.patchify --config ./tbd/masking/configs/binary/rgb_synth_msi.yaml
 ```
 
 3. Train RGB only:
 
 ```bash
-python -m src.train --config ./tbd/masking/configs/rgb.yaml
+python -m src.train --config ./tbd/masking/configs/binary/rgb.yaml
 ```
 
 Optional fuzzy-halo RGB variant:
 
 ```bash
-python -m src.train --config ./tbd/masking/configs/rgb_fuzzy_halo.yaml
+python -m src.train --config ./tbd/masking/configs/fuzzy/rgb.yaml
 ```
 
 4. Train RGB + synthetic multispectral:
 
 ```bash
-python -m src.train --config ./tbd/masking/configs/rgb_synth_msi.yaml
+python -m src.train --config ./tbd/masking/configs/binary/rgb_synth_msi.yaml
 ```
 
 5. Train RGB + real multispectral:
 
 ```bash
-python -m src.train --config ./tbd/masking/configs/rgb_real_msi.yaml
+python -m src.train --config ./tbd/masking/configs/binary/rgb_real_msi.yaml
 ```
 
 Architecture-specific examples:
 
 ```bash
-python -m src.train --config ./tbd/masking/configs/rgb_unetpp_resnet50.yaml
-python -m src.train --config ./tbd/masking/configs/rgb_deeplabv3plus_resnet34.yaml
-python -m src.train --config ./tbd/masking/configs/rgb_segformer_b1.yaml
+python -m src.train --config ./tbd/masking/configs/binary/rgb_unetpp_resnet50.yaml
+python -m src.train --config ./tbd/masking/configs/binary/rgb_deeplabv3plus_resnet34.yaml
+python -m src.train --config ./tbd/masking/configs/binary/rgb_segformer_b1.yaml
 ```
 
 Or train a preset architecture suite with one command:
@@ -92,8 +92,8 @@ Or train any list of configs with one command:
 
 ```bash
 bash ./tbd/masking/train_configs.sh \
-  --config ./tbd/masking/configs/rgb_unetpp_resnet34.yaml \
-  --config ./tbd/masking/configs/rgb_deeplabv3plus_resnet50.yaml \
+  --config ./tbd/masking/configs/binary/rgb_unetpp_resnet34.yaml \
+  --config ./tbd/masking/configs/binary/rgb_deeplabv3plus_resnet50.yaml \
   --summary-output ./tbd/masking/outputs/metrics/custom_train_summary.json
 ```
 
@@ -106,15 +106,22 @@ bash ./tbd/masking/run_smoke.sh
 Fuzzy-halo smoke variant:
 
 ```bash
-bash ./tbd/masking/run_smoke.sh --config configs/smoke_rgb_fuzzy_halo.yaml
+bash ./tbd/masking/run_smoke.sh --config configs/smoke/smoke_rgb_fuzzy_halo.yaml
 ```
+
+Config layout:
+
+- `./tbd/masking/configs/binary/`: standard hard-mask training configs
+- `./tbd/masking/configs/fuzzy/`: fuzzy-halo variants that mirror the binary config names
+- `./tbd/masking/configs/smoke/`: smoke-test configs
+- `./tbd/masking/configs/base.yaml`: shared root defaults
 
 Training writes run artifacts under `outputs/runs/<run_name>/`, including `logs/execution.log` with entries formatted as `%(asctime)s [Trainer] :: %(message)s`. At the end of training, the best validation checkpoint is evaluated once on the configured test split. The resulting test summary is written to `metrics/test_summary.json`, and reconstructed test prediction masks are written to `metrics/test_masks/` as binary PNG files. Per-epoch training and validation do not save masks. Fuzzy-halo runs use the relaxed target as the primary training/evaluation target and also record additional `original_*` test metrics against the hard weed masks.
 
 Additional supported multimodal runs:
 
-- `./tbd/masking/configs/rgb_synth_msi.yaml`: RGB concatenated with synthetic multispectral input, for a 7-channel model.
-- `./tbd/masking/configs/rgb_real_msi.yaml`: RGB concatenated with real multispectral input, for a 7-channel model.
+- `./tbd/masking/configs/binary/rgb_synth_msi.yaml`: RGB concatenated with synthetic multispectral input, for a 7-channel model.
+- `./tbd/masking/configs/binary/rgb_real_msi.yaml`: RGB concatenated with real multispectral input, for a 7-channel model.
 
 Architecture config naming:
 
@@ -156,16 +163,16 @@ To estimate average performance, train the same config multiple times with diffe
 Example for one model:
 
 ```bash
-bash ./tbd/masking/run_multi_seed.sh --config ./tbd/masking/configs/rgb.yaml --repeats 5 --base-seed 1000 --summary-output ./tbd/masking/outputs/metrics/rgb_multi_seed.json
+bash ./tbd/masking/run_multi_seed.sh --config ./tbd/masking/configs/binary/rgb.yaml --repeats 5 --base-seed 1000 --summary-output ./tbd/masking/outputs/metrics/rgb_multi_seed.json
 ```
 
 Example for multiple models in one shell:
 
 ```bash
 bash ./tbd/masking/run_multi_seed.sh \
-  --config ./tbd/masking/configs/rgb_unetpp_resnet34.yaml \
-  --config ./tbd/masking/configs/rgb_deeplabv3plus_resnet34.yaml \
-  --config ./tbd/masking/configs/rgb_segformer_b0.yaml \
+  --config ./tbd/masking/configs/binary/rgb_unetpp_resnet34.yaml \
+  --config ./tbd/masking/configs/binary/rgb_deeplabv3plus_resnet34.yaml \
+  --config ./tbd/masking/configs/binary/rgb_segformer_b0.yaml \
   --repeats 5 \
   --base-seed 1000 \
   --summary-output ./tbd/masking/outputs/metrics/rgb_architectures_multi_seed.json
@@ -205,21 +212,21 @@ Train RGB:
 
 ```bash
 export PYTHONPATH=./tbd/masking
-python -m src.train --config ./tbd/masking/configs/rgb.yaml
+python -m src.train --config ./tbd/masking/configs/binary/rgb.yaml
 ```
 
 Train RGB + synthetic multispectral:
 
 ```bash
 export PYTHONPATH=./tbd/masking
-python -m src.train --config ./tbd/masking/configs/rgb_synth_msi.yaml
+python -m src.train --config ./tbd/masking/configs/binary/rgb_synth_msi.yaml
 ```
 
 Train RGB + real multispectral:
 
 ```bash
 export PYTHONPATH=./tbd/masking
-python -m src.train --config ./tbd/masking/configs/rgb_real_msi.yaml
+python -m src.train --config ./tbd/masking/configs/binary/rgb_real_msi.yaml
 ```
 
 Evaluate a run:
@@ -240,9 +247,9 @@ Run repeated multi-seed experiments:
 
 ```bash
 bash ./tbd/masking/run_multi_seed.sh \
-  --config ./tbd/masking/configs/rgb_unetpp_resnet34.yaml \
-  --config ./tbd/masking/configs/rgb_deeplabv3plus_resnet34.yaml \
-  --config ./tbd/masking/configs/rgb_segformer_b0.yaml \
+  --config ./tbd/masking/configs/binary/rgb_unetpp_resnet34.yaml \
+  --config ./tbd/masking/configs/binary/rgb_deeplabv3plus_resnet34.yaml \
+  --config ./tbd/masking/configs/binary/rgb_segformer_b0.yaml \
   --repeats 5 \
   --base-seed 1000 \
   --summary-output ./tbd/masking/outputs/metrics/rgb_architectures_multi_seed.json

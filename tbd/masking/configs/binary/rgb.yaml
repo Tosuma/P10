@@ -1,4 +1,4 @@
-base_config: base.yaml
+base_config: ../base.yaml
 experiment_name: rgb_unet_resnet34
 modality: rgb
 in_channels: 3

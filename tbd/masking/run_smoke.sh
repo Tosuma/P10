@@ -5,7 +5,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 PYTHON_EXE="python"
-CONFIG="configs/smoke_rgb.yaml"
+CONFIG="configs/smoke/smoke_rgb.yaml"
 SUMMARY_OUTPUT="outputs/metrics/smoke_summary.json"
 SKIP_EVALUATE=0
 SKIP_SUMMARY=0

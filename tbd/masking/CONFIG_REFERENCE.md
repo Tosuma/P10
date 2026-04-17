@@ -2,11 +2,21 @@
 
 This document explains the fields used by the YAML config files in `tbd\masking\configs`.
 
+Config directories are organized by purpose:
+
+- `configs\binary\`: standard hard-mask training configs
+- `configs\fuzzy\`: fuzzy-halo variants that mirror the binary config names
+- `configs\smoke\`: smoke-test configs
+- `configs\base.yaml`: shared root defaults
+
 Numeric fields may use normal decimal notation or scientific notation such as `1e-4` and `1e-6`.
 
 ## How config inheritance works
 
-- A config can declare `base_config: base.yaml`.
+- A config can declare `base_config: ...` using a path relative to the config file itself.
+- Examples:
+  - `configs\binary\rgb.yaml` uses `base_config: ../base.yaml`
+  - `configs\fuzzy\rgb.yaml` uses `base_config: ../binary/rgb.yaml`
 - When present, the child config overrides only the fields it redefines.
 - Effective runtime config is written into each run directory as `config.yaml`.
 

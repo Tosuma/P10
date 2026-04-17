@@ -1,4 +1,4 @@
-base_config: base.yaml
+base_config: ../base.yaml
 experiment_name: real_msi_unet_resnet34
 modality: real_msi
 in_channels: 4
