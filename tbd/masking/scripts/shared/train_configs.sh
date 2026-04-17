@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 PYTHON_EXE="python"
 SKIP_EVALUATE=0
 SUMMARY_OUTPUT=""
@@ -36,12 +38,17 @@ if [[ ${#CONFIGS[@]} -eq 0 ]]; then
   exit 1
 fi
 
-export PYTHONPATH="./tbd/masking"
-
 if ! command -v "$PYTHON_EXE" >/dev/null 2>&1; then
   echo "Python executable not found: ${PYTHON_EXE}" >&2
   exit 1
 fi
+
+if [[ ! -d "src" || ! -d "configs" ]]; then
+  echo "Run this script from tbd/masking." >&2
+  exit 1
+fi
+
+export PYTHONPATH="${PWD}"
 
 for config in "${CONFIGS[@]}"; do
   echo "Training ${config}"

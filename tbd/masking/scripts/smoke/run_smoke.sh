@@ -2,8 +2,6 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 PYTHON_EXE="python"
 CONFIG="configs/smoke/smoke_rgb.yaml"
 SUMMARY_OUTPUT="outputs/metrics/smoke_summary.json"
@@ -49,8 +47,12 @@ if ! command -v "$PYTHON_EXE" >/dev/null 2>&1; then
   exit 1
 fi
 
-cd "$SCRIPT_DIR"
-export PYTHONPATH="$SCRIPT_DIR"
+if [[ ! -d "src" || ! -d "configs" ]]; then
+  echo "Run this script from tbd/masking." >&2
+  exit 1
+fi
+
+export PYTHONPATH="${PWD}"
 
 echo "Checking smoke manifests"
 for manifest in \

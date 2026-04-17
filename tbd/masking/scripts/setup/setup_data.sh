@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 PYTHON_EXE="python"
 DATASET_ROOT="data/weedy-rice"
 SPLITS_DIR="data/splits"
@@ -47,6 +49,13 @@ if ! command -v "$PYTHON_EXE" >/dev/null 2>&1; then
   echo "Python executable not found: ${PYTHON_EXE}" >&2
   exit 1
 fi
+
+if [[ ! -d "src" || ! -d "configs" ]]; then
+  echo "Run this script from tbd/masking." >&2
+  exit 1
+fi
+
+export PYTHONPATH="${PWD}"
 
 # if [[ "$PACK_REAL_MSI" -eq 1 ]]; then
 #   echo "Packing real MSI TIFF bands into NPY files"

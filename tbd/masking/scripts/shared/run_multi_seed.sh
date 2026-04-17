@@ -3,7 +3,7 @@
 set -euo pipefail
 
 PYTHON_EXE="python"
-SUMMARY_OUTPUT="./tbd/masking/outputs/metrics/multi_seed_summary.json"
+SUMMARY_OUTPUT="outputs/metrics/multi_seed_summary.json"
 REPEATS=3
 SKIP_EVALUATE=0
 BASE_SEED=12345
@@ -47,12 +47,17 @@ if [[ ${#CONFIGS[@]} -eq 0 ]]; then
   exit 1
 fi
 
-export PYTHONPATH="./tbd/masking"
-
 if ! command -v "$PYTHON_EXE" >/dev/null 2>&1; then
   echo "Python executable not found: ${PYTHON_EXE}" >&2
   exit 1
 fi
+
+if [[ ! -d "src" || ! -d "configs" ]]; then
+  echo "Run this script from tbd/masking." >&2
+  exit 1
+fi
+
+export PYTHONPATH="${PWD}"
 
 RUN_DIRS=()
 
@@ -79,3 +84,5 @@ if [[ ${#RUN_DIRS[@]} -gt 0 ]]; then
     "$PYTHON_EXE" -m src.summarize --runs "${RUN_DIRS[@]}" --output "$SUMMARY_OUTPUT"
   fi
 fi
+
+echo "Multi-seed run(s) completed."
