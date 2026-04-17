@@ -26,6 +26,7 @@ Convenience scripts are available if you want one command for setup or training:
 - `bash ./tbd/masking/train_configs.sh --config ...`
 - `bash ./tbd/masking/train_rgb_architectures.sh`
 - `bash ./tbd/masking/run_multi_seed.sh --config ...`
+- `bash ./tbd/masking/evaluate_base_configs.sh --config ...`
 
 1. Create aligned original-image splits:
 
@@ -138,7 +139,15 @@ Architecture config naming:
 python -m src.evaluate --checkpoint ./tbd/masking/outputs/runs/<run>/checkpoints/best.pt --split test
 ```
 
+Evaluate an unfine-tuned base model from config:
+
+```bash
+python -m src.evaluate_base --config ./tbd/masking/configs/binary/rgb.yaml --split test
+```
+
 Evaluation writes artifacts under `outputs/runs/<run>/evaluation/<split>/`, including `overall_metrics.json`, per-patch and per-image CSV metrics, reconstructed predicted masks in `masks/`, limited preview panels in `visuals/`, and `execution.log` with entries formatted as `%(asctime)s [Evaluator] :: %(message)s`. Fuzzy-halo runs keep the primary CSV/JSON metrics on the relaxed target and add `original_*` metrics and companion CSV files for scoring against the hard masks.
+
+Baseline evaluation writes the same evaluation artifacts into a baseline-named run directory under `outputs/runs/`, plus `config.yaml` and `run_metadata.json` with `run_kind: baseline`. It does not create checkpoints or training history.
 
 7. Summarize multiple runs:
 
@@ -194,6 +203,7 @@ Single-run convenience scripts:
 - `run_smoke.sh`: patchifies the checked-in smoke split, trains the smoke config, runs test evaluation, and writes a one-run summary
 - `train_configs.sh`: trains and evaluates any explicit list of config files once each
 - `train_rgb_architectures.sh`: trains the six requested RGB architecture variants once each and summarizes them
+- `evaluate_base_configs.sh`: evaluates one or more unfine-tuned base models from config and can summarize the baseline run set
 
 If you pass `--skip-evaluate`, the script trains only. Training still writes `metrics/test_summary.json` and `metrics/test_masks/`, but the script does not run `src.evaluate` and does not generate the final summary JSON, because summarization reads `evaluation/test/overall_metrics.json`.
 
@@ -234,6 +244,13 @@ Evaluate a run:
 ```bash
 export PYTHONPATH=./tbd/masking
 python -m src.evaluate --checkpoint ./tbd/masking/outputs/runs/<run>/checkpoints/best.pt --split test
+```
+
+Evaluate an unfine-tuned base run:
+
+```bash
+export PYTHONPATH=./tbd/masking
+python -m src.evaluate_base --config ./tbd/masking/configs/binary/rgb.yaml --split test
 ```
 
 Create a summary table:

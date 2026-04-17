@@ -205,6 +205,7 @@ def main() -> None:
         "git_commit": get_git_commit(),
         "seed": config["seed"],
         "packages": package_versions(["torch", "numpy", "PIL"]),
+        "run_kind": "finetuned",
     }
     write_json(run_dir / "run_metadata.json", metadata)
     logger.info("Training run initialized at %s", run_dir.resolve())

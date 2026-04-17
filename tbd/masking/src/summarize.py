@@ -76,9 +76,10 @@ def summarize_history(history: list[dict]) -> dict:
 
 
 def build_aggregate_rows(rows: list[dict]) -> list[dict]:
-    grouped: dict[tuple[str, str, str, str], list[dict]] = {}
+    grouped: dict[tuple[str, str, str, str, str, str, str, str], list[dict]] = {}
     for row in rows:
         key = (
+            row["run_kind"],
             row["experiment_name"],
             row["modality"],
             row["architecture"],
@@ -90,8 +91,9 @@ def build_aggregate_rows(rows: list[dict]) -> list[dict]:
         grouped.setdefault(key, []).append(row)
 
     aggregate_rows = []
-    for (experiment_name, modality, architecture, encoder_name, target_mode, halo_radius_px, halo_min_value), group_rows in sorted(grouped.items()):
+    for (run_kind, experiment_name, modality, architecture, encoder_name, target_mode, halo_radius_px, halo_min_value), group_rows in sorted(grouped.items()):
         aggregate_row = {
+            "run_kind": run_kind,
             "experiment_name": experiment_name,
             "modality": modality,
             "architecture": architecture,
@@ -128,7 +130,8 @@ def main() -> None:
         config = load_config(run_path / "config.yaml")
         metadata = read_json(run_path / "run_metadata.json")
         eval_metrics = read_json(run_path / "evaluation" / "test" / "overall_metrics.json")
-        history = read_json(run_path / "metrics" / "history.json")
+        history_path = run_path / "metrics" / "history.json"
+        history = read_json(history_path) if history_path.exists() else []
         best_summary = summarize_history(history)
         model_config = config.get("model", {})
         target_config = config.get("target", {})
@@ -136,6 +139,7 @@ def main() -> None:
         original_image_level = eval_metrics.get("original_image_level", eval_metrics["image_level"])
         rows.append(
             {
+                "run_kind": metadata.get("run_kind", "finetuned"),
                 "experiment_name": config["experiment_name"],
                 "modality": config["modality"],
                 "architecture": model_config.get("architecture", "Unet"),

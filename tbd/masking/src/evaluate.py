@@ -210,27 +210,19 @@ def load_preview_image(sample: dict[str, str], modality: str) -> np.ndarray:
     return load_image_for_modality(sample, modality)
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser(description="Evaluate a trained segmentation checkpoint.")
-    parser.add_argument("--checkpoint", required=True)
-    parser.add_argument("--split", default="test", choices=["train", "val", "test"])
-    parser.add_argument("--output-dir", default=None)
-    args = parser.parse_args()
-
-    device = device_from_config()
-    model, config, _ = load_checkpoint(args.checkpoint, device)
-    run_dir = Path(args.checkpoint).resolve().parents[1]
-    output_dir = ensure_dir(args.output_dir or (run_dir / "evaluation" / args.split))
-    logger = setup_file_logger("Evaluator", output_dir / "execution.log")
-    logger.info("Evaluation started for checkpoint %s", Path(args.checkpoint).resolve())
-    logger.info("Writing evaluation artifacts to %s", output_dir.resolve())
-    logger.info("Using split=%s and device=%s", args.split, device)
-
+def run_split_evaluation(
+    model,
+    config: dict[str, Any],
+    split: str,
+    output_dir: Path,
+    device: torch.device,
+    logger,
+) -> dict[str, Any]:
     normalization = read_json(Path(config["paths"]["normalization_stats"]))
     resolved_seed = resolve_seed(config.get("seed"))
     loader = build_dataloader(
-        sample_manifest_path=config["paths"][f"{args.split}_manifest"],
-        patch_manifest_path=config["paths"][f"{args.split}_patch_manifest"],
+        sample_manifest_path=config["paths"][f"{split}_manifest"],
+        patch_manifest_path=config["paths"][f"{split}_patch_manifest"],
         modality=config["modality"],
         normalization=normalization,
         batch_size=int(config["training"]["batch_size"]),
@@ -244,7 +236,7 @@ def main() -> None:
     logger.info("Loaded normalization from %s", config["paths"]["normalization_stats"])
     logger.info("Running inference with threshold=%.4f", threshold)
     results = evaluate_loader(model, loader, device, threshold=threshold, config=config)
-    sample_rows = read_csv_rows(config["paths"][f"{args.split}_manifest"])
+    sample_rows = read_csv_rows(config["paths"][f"{split}_manifest"])
     image_results = reconstruct_image_metrics(sample_rows, results["reconstruction_payload"], threshold, config=config)
     primary_view = results["primary_view"]
     secondary_view = "original" if primary_view == "relaxed" else None
@@ -308,6 +300,26 @@ def main() -> None:
             pred_mask=visual["pred_mask"],
         )
     logger.info("Saved %s visualization panel(s) to %s", min(len(image_results["visuals"]), int(config["evaluation"].get("num_visualizations", 8))), preview_dir)
+    return overall_payload
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Evaluate a trained segmentation checkpoint.")
+    parser.add_argument("--checkpoint", required=True)
+    parser.add_argument("--split", default="test", choices=["train", "val", "test"])
+    parser.add_argument("--output-dir", default=None)
+    args = parser.parse_args()
+
+    device = device_from_config()
+    model, config, _ = load_checkpoint(args.checkpoint, device)
+    run_dir = Path(args.checkpoint).resolve().parents[1]
+    output_dir = ensure_dir(args.output_dir or (run_dir / "evaluation" / args.split))
+    logger = setup_file_logger("Evaluator", output_dir / "execution.log")
+    logger.info("Evaluation started for checkpoint %s", Path(args.checkpoint).resolve())
+    logger.info("Writing evaluation artifacts to %s", output_dir.resolve())
+    logger.info("Using split=%s and device=%s", args.split, device)
+
+    run_split_evaluation(model, config, args.split, output_dir, device, logger)
     logger.info("Evaluation completed")
 
 
