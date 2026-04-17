@@ -8,35 +8,30 @@ if [[ ! -d "src" || ! -d "configs" ]]; then
 fi
 
 bash ./scripts/shared/train_configs.sh \
-  --config "configs/binary/rgb.yaml" \
   --config "configs/binary/rgb_unetpp_resnet34.yaml" \
   --config "configs/binary/rgb_unetpp_resnet50.yaml" \
   --config "configs/binary/rgb_deeplabv3plus_resnet34.yaml" \
   --config "configs/binary/rgb_deeplabv3plus_resnet50.yaml" \
   --config "configs/binary/rgb_segformer_b0.yaml" \
   --config "configs/binary/rgb_segformer_b1.yaml" \
-  --config "configs/binary/real_msi.yaml" \
   --config "configs/binary/real_msi_unetpp_resnet34.yaml" \
   --config "configs/binary/real_msi_unetpp_resnet50.yaml" \
   --config "configs/binary/real_msi_deeplabv3plus_resnet34.yaml" \
   --config "configs/binary/real_msi_deeplabv3plus_resnet50.yaml" \
   --config "configs/binary/real_msi_segformer_b0.yaml" \
   --config "configs/binary/real_msi_segformer_b1.yaml" \
-  --config "configs/binary/synth_msi.yaml" \
   --config "configs/binary/synth_msi_unetpp_resnet34.yaml" \
   --config "configs/binary/synth_msi_unetpp_resnet50.yaml" \
   --config "configs/binary/synth_msi_deeplabv3plus_resnet34.yaml" \
   --config "configs/binary/synth_msi_deeplabv3plus_resnet50.yaml" \
   --config "configs/binary/synth_msi_segformer_b0.yaml" \
   --config "configs/binary/synth_msi_segformer_b1.yaml" \
-  --config "configs/binary/rgb_real_msi.yaml" \
   --config "configs/binary/rgb_real_msi_unetpp_resnet34.yaml" \
   --config "configs/binary/rgb_real_msi_unetpp_resnet50.yaml" \
   --config "configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml" \
   --config "configs/binary/rgb_real_msi_deeplabv3plus_resnet50.yaml" \
   --config "configs/binary/rgb_real_msi_segformer_b0.yaml" \
   --config "configs/binary/rgb_real_msi_segformer_b1.yaml" \
-  --config "configs/binary/rgb_synth_msi.yaml" \
   --config "configs/binary/rgb_synth_msi_unetpp_resnet34.yaml" \
   --config "configs/binary/rgb_synth_msi_unetpp_resnet50.yaml" \
   --config "configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml" \

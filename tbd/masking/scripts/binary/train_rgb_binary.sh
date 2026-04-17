@@ -14,5 +14,4 @@ bash ./scripts/shared/train_configs.sh \
   --config "configs/binary/rgb_deeplabv3plus_resnet50.yaml" \
   --config "configs/binary/rgb_segformer_b0.yaml" \
   --config "configs/binary/rgb_segformer_b1.yaml" \
-  --summary-output "outputs/metrics/rgb_architectures_once.json" \
   "$@"
