@@ -8,6 +8,8 @@ weedy_path="./data/WeedyRice/"
 
 RETRY_TEXT="Could not lookup the current user"
 MAX_RETRIES=50
+PREDICT_SCRIPT="scripts/mami/vi/stage3-scheduler/eval-vi/predict_job.sh"
+EVAL_SCRIPT="scripts/mami/vi/stage3-scheduler/eval-vi/eval_job.sh"
 
 mkdir -p logs/eval
 mkdir -p logs/inference
@@ -28,36 +30,29 @@ for ndre in $(seq -f "%.1f" 0.0 0.1 0.5); do
 
     # predict
     while true; do
-        job_id=$(
-            sbatch scripts/mami/vi/stage3/eval-vi/predict_job.sh \
+        run_id="$(date '+%Y%m%d_%H%M%S')_$$_pred_re_${ndre}_vi_${ndvi}_attempt_${attempt}"
+        out_file="logs/inference/pred_mami_${run_id}.out"
+        err_file="logs/inference/pred_mami_${run_id}.err"
+
+        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Starting inference srun ${run_id} ndre: ${ndre}, ndvi: ${ndvi}"
+
+        srun \
+            --job-name=eval_mami \
+            --output="${out_file}" \
+            --error="${err_file}" \
+            --nodes=1 \
+            --ntasks=1 \
+            --mem=24G \
+            --cpus-per-task=15 \
+            --gres=gpu:1 \
+            --time=00:10:00 \
+            bash "${PREDICT_SCRIPT}" \
             --model_name "${model_name}" \
             --dir_name "${dir_name}" \
             --truth "${sri_path}" \
             --type "Sri-Lanka" \
-            | grep -o '[0-9]\+'
-        )
-
-        if [ -z "${job_id}" ]; then
-            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Empty job id returned for ndre=${ndre}, ndvi=${ndvi}. Retrying..."
-
-            if [ "${attempt}" -ge "${MAX_RETRIES}" ]; then
-                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries (${MAX_RETRIES}) for ndre=${ndre}, ndvi=${ndvi}. Stopping."
-                exit 1
-            fi
-
-            attempt=$((attempt + 1))
-            sleep 60
-            continue
-        fi
-
-        echo "$(date '+%Y-%m-%d %H:%M:%d') :: Starting inference job ${job_id} ndre: ${ndre}, ndvi: ${ndvi}"
-
-        while squeue --me | grep -q "$job_id"; do
-            # echo "Job $job_id still running... sleeping 5 minutes"
-            sleep 10
-        done # sleep
-
-        err_file="logs/inference/pred_mami_${job_id}.err"
+            2>> "${err_file}"
+        exit_code=$?
         
         if [ ! -f "$err_file" ]; then
             echo "$(date '+%Y-%m-%d %H:%M:%S') :: Err file $err_file did not appear. Retrying..."
@@ -74,7 +69,7 @@ for ndre in $(seq -f "%.1f" 0.0 0.1 0.5); do
         first_line="$(head -n 1 "$err_file")"
 
         if grep -qF "$RETRY_TEXT" "$err_file"; then
-            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Job ${job_id} hit retryable error: '${first_line}'"
+            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Inference srun ${run_id} hit retryable error: '${first_line}'"
 
             if [ "${attempt}" -ge "${MAX_RETRIES}" ]; then
                 echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries (${MAX_RETRIES}) for ndre=${ndre}, ndvi=${ndvi}. Stopping."
@@ -87,45 +82,43 @@ for ndre in $(seq -f "%.1f" 0.0 0.1 0.5); do
             continue
         fi
 
-        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished inference job ${job_id} successfully for ndre=${ndre}, ndvi=${ndvi}"
+        if [ "${exit_code}" -ne 0 ]; then
+            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Inference srun ${run_id} failed with exit code ${exit_code}. See ${err_file}."
+            exit "${exit_code}"
+        fi
+
+        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished inference srun ${run_id} successfully for ndre=${ndre}, ndvi=${ndvi}"
 
         # remove out dir
-        rm "logs/inference/pred_mami_${job_id}.out"
+        rm -f "${out_file}"
         break # the retry loop
     done # retry loop
 
     # evaluate
     while true; do
-        job_id=$(
-            sbatch scripts/mami/vi/stage3/eval-vi/eval_job.sh \
+        run_id="$(date '+%Y%m%d_%H%M%S')_$$_eval_re_${ndre}_vi_${ndvi}_attempt_${attempt}"
+        out_file="logs/eval/eval_mami_${run_id}.out"
+        err_file="logs/eval/eval_mami_${run_id}.err"
+
+        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Starting evaluation srun ${run_id} ndre: ${ndre}, ndvi: ${ndvi}"
+
+        srun \
+            --job-name=eval_mami \
+            --output="${out_file}" \
+            --error="${err_file}" \
+            --nodes=1 \
+            --ntasks=1 \
+            --mem=24G \
+            --cpus-per-task=15 \
+            --gres=gpu:1 \
+            --time=00:10:00 \
+            bash "${EVAL_SCRIPT}" \
             --model_name "${model_name}" \
             --dir_name "${dir_name}" \
             --truth "${sri_path}" \
             --type "Sri-Lanka" \
-            | grep -o '[0-9]\+'
-        )
-
-        if [ -z "${job_id}" ]; then
-            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Empty job id returned for ndre=${ndre}, ndvi=${ndvi}. Retrying..."
-
-            if [ "${attempt}" -ge "${MAX_RETRIES}" ]; then
-                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries (${MAX_RETRIES}) for ndre=${ndre}, ndvi=${ndvi}. Stopping."
-                exit 1
-            fi
-
-            attempt=$((attempt + 1))
-            sleep 60
-            continue
-        fi
-
-        echo "$(date '+%Y-%m-%d %H:%M:%d') :: Starting evaluation job ${job_id} ndre: ${ndre}, ndvi: ${ndvi}"
-
-        while squeue --me | grep -q "$job_id"; do
-            # echo "Job $job_id still running... sleeping 5 minutes"
-            sleep 10
-        done # sleep
-
-        err_file="logs/eval/eval_mami_${job_id}.err"
+            2>> "${err_file}"
+        exit_code=$?
 
         if [ ! -f "$err_file" ]; then
             echo "$(date '+%Y-%m-%d %H:%M:%S') :: Err file $err_file did not appear. Retrying..."
@@ -142,7 +135,7 @@ for ndre in $(seq -f "%.1f" 0.0 0.1 0.5); do
         first_line="$(head -n 1 "$err_file")"
 
         if grep -qF "$RETRY_TEXT" "$err_file"; then
-            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Job ${job_id} hit retryable error: '${first_line}'"
+            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Evaluation srun ${run_id} hit retryable error: '${first_line}'"
 
             if [ "${attempt}" -ge "${MAX_RETRIES}" ]; then
                 echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries (${MAX_RETRIES}) for ndre=${ndre}, ndvi=${ndvi}. Stopping."
@@ -155,10 +148,15 @@ for ndre in $(seq -f "%.1f" 0.0 0.1 0.5); do
             continue
         fi
 
-        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished evaluation job ${job_id} successfully for ndre=${ndre}, ndvi=${ndvi}"
+        if [ "${exit_code}" -ne 0 ]; then
+            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Evaluation srun ${run_id} failed with exit code ${exit_code}. See ${err_file}."
+            exit "${exit_code}"
+        fi
+
+        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished evaluation srun ${run_id} successfully for ndre=${ndre}, ndvi=${ndvi}"
 
         # move evaluation logs
-        rm "logs/eval/eval_mami_${job_id}.out"
+        rm -f "${out_file}"
 
         # delete data folder
         rm -r "${dir_name}/data"
