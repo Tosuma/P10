@@ -10,7 +10,7 @@
 #SBATCH --mem=24G
 #SBATCH --cpus-per-task=15
 #SBATCH --gres=gpu:1
-#SBATCH --time=12:00:00
+#SBATCH --time=00:10:00
 
 
 # run_eval
