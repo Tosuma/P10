@@ -1,0 +1,16 @@
+{
+    "tasks": [
+        {
+            "group": "binary_baseline",
+            "kind": "baseline",
+            "config": "configs/binary/rgb.yaml",
+            "split": "test"
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_unetpp_resnet34.yaml",
+            "split": "test"
+        }
+    ]
+}
