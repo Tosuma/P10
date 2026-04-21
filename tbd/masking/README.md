@@ -173,16 +173,16 @@ bash ./scripts/baseline/evaluate_all_fuzzy_baselines.sh
 Run the full binary, fuzzy, and unfine-tuned baseline workload through Slurm with up to six one-GPU jobs active at a time:
 
 ```bash
-bash ./scripts/slurm/run_masking_batch.sh --manifest scripts/slurm/workloads/all.tsv
+bash ./scripts/slurm/run_masking_batch.sh --manifest scripts/slurm/workloads/all.json
 ```
 
 The Slurm batching scripts also provide narrower manifests:
 
 ```bash
-bash ./scripts/slurm/run_masking_batch.sh --manifest scripts/slurm/workloads/binary_train.tsv
-bash ./scripts/slurm/run_masking_batch.sh --manifest scripts/slurm/workloads/fuzzy_train.tsv
-bash ./scripts/slurm/run_masking_batch.sh --manifest scripts/slurm/workloads/binary_baseline.tsv
-bash ./scripts/slurm/run_masking_batch.sh --manifest scripts/slurm/workloads/fuzzy_baseline.tsv
+bash ./scripts/slurm/run_masking_batch.sh --manifest scripts/slurm/workloads/binary_train.json
+bash ./scripts/slurm/run_masking_batch.sh --manifest scripts/slurm/workloads/fuzzy_train.json
+bash ./scripts/slurm/run_masking_batch.sh --manifest scripts/slurm/workloads/binary_baseline.json
+bash ./scripts/slurm/run_masking_batch.sh --manifest scripts/slurm/workloads/fuzzy_baseline.json
 ```
 
 Evaluation writes artifacts under `outputs/runs/<run>/evaluation/<split>/`, including `overall_metrics.json`, per-patch and per-image CSV metrics, reconstructed predicted masks in `masks/`, limited preview panels in `visuals/`, and `execution.log` with entries formatted as `%(asctime)s [Evaluator] :: %(message)s`. Fuzzy-halo runs keep the primary CSV/JSON metrics on the relaxed target and add `original_*` metrics and companion CSV files for scoring against the hard masks.
@@ -260,21 +260,37 @@ Single-run convenience scripts:
 - `scripts/baseline/evaluate_all_fuzzy_baselines.sh`: evaluates the full unfine-tuned fuzzy baseline family
 - `scripts/slurm/run_masking_batch.sh`: runs a manifest through Slurm, keeping up to six one-GPU jobs active and validating each completed job before starting more work
 - `scripts/slurm/masking_job.sh`: the Slurm job submitted by the batch controller for one train or baseline task
+- `scripts/slurm/read_manifest.py`: validates JSON workload manifests and emits the normalized task rows consumed by the batch controller
 
 Slurm workload manifests:
 
-- `scripts/slurm/workloads/all.tsv`: binary training, fuzzy training, binary baselines, and fuzzy baselines
-- `scripts/slurm/workloads/binary_train.tsv`: the same configs as `scripts/binary/train_all_binary.sh`
-- `scripts/slurm/workloads/fuzzy_train.tsv`: the same configs as `scripts/fuzzy/train_all_fuzzy.sh`
-- `scripts/slurm/workloads/binary_baseline.tsv`: the same configs as `scripts/baseline/evaluate_all_binary_baselines.sh`
-- `scripts/slurm/workloads/fuzzy_baseline.tsv`: the same configs as `scripts/baseline/evaluate_all_fuzzy_baselines.sh`
+- `scripts/slurm/workloads/all.json`: binary training, fuzzy training, binary baselines, and fuzzy baselines
+- `scripts/slurm/workloads/binary_train.json`: the same configs as `scripts/binary/train_all_binary.sh`
+- `scripts/slurm/workloads/fuzzy_train.json`: the same configs as `scripts/fuzzy/train_all_fuzzy.sh`
+- `scripts/slurm/workloads/binary_baseline.json`: the same configs as `scripts/baseline/evaluate_all_binary_baselines.sh`
+- `scripts/slurm/workloads/fuzzy_baseline.json`: the same configs as `scripts/baseline/evaluate_all_fuzzy_baselines.sh`
+
+The manifest format is JSON with a top-level `tasks` list. Each task has `group`, `kind`, `config`, and `split` fields:
+
+```json
+{
+  "tasks": [
+    {
+      "group": "binary_train",
+      "kind": "train",
+      "config": "configs/binary/rgb_unetpp_resnet34.yaml",
+      "split": "test"
+    }
+  ]
+}
+```
 
 The Slurm controller is intended to run from a login shell in `tbd/masking`. It submits individual `sbatch` jobs, keeps `--max-parallel 6` jobs active by default, retries failed or suspicious tasks according to the `MAX_RETRIES` variable near the top of `scripts/slurm/run_masking_batch.sh`, and then writes per-group summaries to `outputs/metrics/slurm_<manifest>_<group>_summary.json`. The controller stores task status files under `outputs/slurm/status/`, Slurm stdout/stderr logs under `logs/masking/slurm/`, and a failed-task report in each status directory. It also creates an atomic controller lock under `outputs/slurm/status/.masking_batch_controller.lock` so two controllers are not accidentally started against the same GPU pool.
 
 Cluster defaults are editable near the top of `scripts/slurm/run_masking_batch.sh` and in the SBATCH header of `scripts/slurm/masking_job.sh`. Set `MAX_RETRIES=10` or `MAX_RETRIES=50` in the controller if you want more retries after bad logs or missing outputs; set `SBATCH_SUBMIT_RETRIES` separately for cases where `sbatch` does not return a job id. The default job settings request one GPU, 15 CPUs, 24 GB memory, and 12 hours, and run through `/ceph/container/pytorch/pytorch_26.02.sif` with `p10_venv/bin/activate`. Use `--dry-run` to verify manifest parsing without submitting jobs:
 
 ```bash
-bash ./scripts/slurm/run_masking_batch.sh --manifest scripts/slurm/workloads/all.tsv --dry-run
+bash ./scripts/slurm/run_masking_batch.sh --manifest scripts/slurm/workloads/all.json --dry-run
 ```
 
 If you pass `--skip-evaluate`, the shared training scripts train only. Training still writes `metrics/test_summary.json` and `metrics/test_masks/`, but the script does not run `src.evaluate` and does not generate the final summary JSON, because summarization reads `evaluation/test/overall_metrics.json`.

@@ -23,12 +23,12 @@ MANIFEST=""
 usage() {
   cat <<'EOF'
 Usage:
-  bash ./scripts/slurm/run_masking_batch.sh --manifest scripts/slurm/workloads/all.tsv
+  bash ./scripts/slurm/run_masking_batch.sh --manifest scripts/slurm/workloads/all.json
 
 Options:
-  --manifest PATH             TSV manifest with: group<TAB>kind<TAB>config<TAB>split
+  --manifest PATH             JSON manifest with a top-level tasks list
   --max-parallel N            Number of active Slurm jobs to keep running (default: 6)
-  --max-retries N             Retries per task after validation failure (default: 2)
+  --max-retries N             Retries per task after validation failure (default: 50)
   --sbatch-submit-retries N   Retries when sbatch does not return a job id (default: 3)
   --poll-seconds N            Seconds between squeue polls (default: 10)
   --python PATH               Python executable inside the runtime environment
@@ -195,16 +195,6 @@ TASK_JOB_IDS=()
 TASK_COUNT=0
 
 while IFS=$'\t' read -r group kind config split extra; do
-  if [[ -z "${group}${kind}${config}${split}${extra:-}" ]]; then
-    continue
-  fi
-  if [[ "${group:0:1}" == "#" ]]; then
-    continue
-  fi
-  if [[ -n "${extra:-}" ]]; then
-    echo "Malformed manifest row has more than 4 columns: ${group} ${kind} ${config} ${split} ${extra}" >&2
-    exit 2
-  fi
   if [[ "$kind" != "train" && "$kind" != "baseline" ]]; then
     echo "Unsupported task kind '${kind}' in ${MANIFEST}." >&2
     exit 2
@@ -221,7 +211,7 @@ while IFS=$'\t' read -r group kind config split extra; do
   TASK_RUN_DIRS+=("")
   TASK_JOB_IDS+=("")
   TASK_COUNT=$((TASK_COUNT + 1))
-done < "$MANIFEST"
+done < <("$PYTHON_EXE" scripts/slurm/read_manifest.py "$MANIFEST")
 
 if [[ "$TASK_COUNT" -eq 0 ]]; then
   echo "Manifest contains no tasks: ${MANIFEST}" >&2
