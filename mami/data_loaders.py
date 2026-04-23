@@ -141,46 +141,54 @@ def make_weedy_rice_tif_loader(root_dir: str) -> Callable[[], dict[str, dict[str
     """
     Create a zero-arg loader for the WeedyRice dataset.
 
-    Expects TIF filenames like:
-        "<some description>.<id>.TIF"
-    where <id> has the form:
-        "<number with leading zeros>m_<spectrum>"
+    Supports two layouts:
+    1) Split roots:
+       - RGB images in:          <root>/RGB/<id>.JPG
+       - MS band images in:      <root>/Multispectral/<id>_<band>.TIF
+    2) Flat root:
+       - RGB images in:          <root>/<id>.JPG
+       - MS band images in:      <root>/<id>_<band>.TIF
 
-    Examples:
-        "whatever.004m_R.TIF"
-        "foo.bar.999m_NIR.TIF"
-
-    All files sharing the same numeric ID are grouped into a 4-band cube
+    All files sharing the same <id> are grouped into a 4-band cube
     with channel order: ["G", "R", "RE", "NIR"].
 
     Returns a dict:
         {
-            "<true_id>": {
+            "<id>": {
                 "cube": np.ndarray(float32, shape=(4, H, W)),
-                "path": "/abs/path/to/one-band-file",
+                "path": "/abs/path/to/rgb-file",
                 "paths": { "G": "...", "R": "...", "RE": "...", "NIR": "..." },
             },
             ...
         }
-
-    where <true_id> is the numeric ID as a string without leading zeros
-    (e.g. "4" for "004m_R").
     """
 
     def loader() -> dict[str, dict[str, str]]:
         root = Path(root_dir)
         out: dict[str, dict[str, Any]] = {}
 
-        rgb_path_list = sorted([f for f in root.rglob("*.JPG") if f.is_file()])
+        rgb_root = root / "RGB" if (root / "RGB").is_dir() else root
+        ms_root = root / "Multispectral" if (root / "Multispectral").is_dir() else root
+
+        rgb_path_list = sorted([f for f in rgb_root.rglob("*.JPG") if f.is_file()])
         band_order = ["G", "R", "RE", "NIR"]
 
-        for path in rgb_path_list:
-            sid = path.stem
+        for rgb_path in rgb_path_list:
+            sid = rgb_path.stem
             ms_paths: list[Path] = []
             layers: list[np.ndarray] = []
-            for suffix in band_order:
-                ms_path = str(path).replace(".JPG", f"_{suffix}.TIF")
-                ms_paths.append(Path(ms_path))
+            for band in band_order:
+                if ms_root == rgb_path.parent:
+                    ms_path = rgb_path.with_name(f"{sid}_{band}.TIF")
+                else:
+                    ms_path = ms_root / f"{sid}_{band}.TIF"
+
+                if not ms_path.is_file():
+                    raise FileNotFoundError(
+                        f"Missing multispectral band '{band}' for '{sid}': {ms_path}"
+                    )
+
+                ms_paths.append(ms_path)
                 arr = _load_tif_as_gray(ms_path)
                 layers.append(arr)
 
@@ -188,7 +196,7 @@ def make_weedy_rice_tif_loader(root_dir: str) -> Callable[[], dict[str, dict[str
 
             out[sid] = {
                 "cube": cube,
-                "path": str(path.resolve()),
+                "path": str(rgb_path.resolve()),
                 "paths": {band: str(ms_paths[i].resolve()) for i, band in enumerate(band_order)},
             }
                 
