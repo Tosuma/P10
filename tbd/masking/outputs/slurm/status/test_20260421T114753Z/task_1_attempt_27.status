@@ -1,0 +1,12 @@
+task_id=1
+group=binary_train
+kind=train
+config=configs/binary/rgb_unetpp_resnet34.yaml
+split=test
+attempt=27
+state=failed
+exit_code=1
+run_dir=
+message=job exited before producing a successful status
+slurm_job_id=762020
+finished_at=2026-04-21T15:10:40Z

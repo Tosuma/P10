@@ -1,0 +1,3 @@
+task_id	group	kind	config	split	attempts	state
+0	binary_baseline	baseline	configs/binary/rgb.yaml	test	51	failed
+1	binary_train	train	configs/binary/rgb_unetpp_resnet34.yaml	test	51	failed

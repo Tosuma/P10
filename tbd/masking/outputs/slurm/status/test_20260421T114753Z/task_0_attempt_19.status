@@ -1,0 +1,12 @@
+task_id=0
+group=binary_baseline
+kind=baseline
+config=configs/binary/rgb.yaml
+split=test
+attempt=19
+state=failed
+exit_code=1
+run_dir=
+message=job exited before producing a successful status
+slurm_job_id=761993
+finished_at=2026-04-21T14:55:08Z
