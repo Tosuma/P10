@@ -5,7 +5,7 @@
 MAX_PARALLEL=6
 # Number of times a task is retried after a submitted job finishes without
 # valid outputs. Set this to 10, 50, etc. if the cluster is flaky.
-MAX_RETRIES=50
+MAX_RETRIES=3
 # Number of times to retry sbatch itself when Slurm does not return a job id.
 SBATCH_SUBMIT_RETRIES=3
 POLL_SECONDS=10
