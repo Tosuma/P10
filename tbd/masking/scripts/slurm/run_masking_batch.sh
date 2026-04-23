@@ -160,19 +160,41 @@ MANIFEST_NAME="${MANIFEST_NAME%.*}"
 RUN_ID="$(date -u '+%Y%m%dT%H%M%SZ')"
 STATUS_DIR="${STATUS_ROOT}/${MANIFEST_NAME}_${RUN_ID}"
 FAILED_REPORT="${STATUS_DIR}/failed_tasks.tsv"
+CONTROLLER_LOG="${STATUS_DIR}/controller.log"
 LOCK_DIR="${STATUS_ROOT}/.masking_batch_controller.lock"
+
+log() {
+  local level="$1"
+  shift
+  local message="$*"
+  local timestamp
+  timestamp="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+  printf '%s [%s] %s\n' "$timestamp" "$level" "$message" | tee -a "$CONTROLLER_LOG"
+}
+
+log_error() {
+  local message="$*"
+  log "ERROR" "$message" >&2
+}
 
 cleanup_lock() {
   if [[ -n "${LOCK_DIR:-}" && -d "${LOCK_DIR:-}" ]]; then
+    rm -f "${LOCK_DIR}/owner" 2>/dev/null || true
     rmdir "$LOCK_DIR" 2>/dev/null || true
   fi
 }
 
 mkdir -p "$LOG_DIR" "$STATUS_ROOT" "$SUMMARY_DIR"
+mkdir -p "$STATUS_DIR"
+log "INFO" "Controller started"
+log "INFO" "manifest=${MANIFEST} max_parallel=${MAX_PARALLEL} max_retries=${MAX_RETRIES} sbatch_submit_retries=${SBATCH_SUBMIT_RETRIES} poll_seconds=${POLL_SECONDS}"
+log "INFO" "python=${PYTHON_EXE} singularity_image=${SINGULARITY_IMAGE} venv_activate=${VENV_ACTIVATE}"
+log "INFO" "status_dir=${STATUS_DIR} summary_dir=${SUMMARY_DIR} log_dir=${LOG_DIR}"
+
 if [[ "$DRY_RUN" -eq 0 ]]; then
   if ! mkdir "$LOCK_DIR" 2>/dev/null; then
-    echo "Another masking Slurm batch controller appears to be running: ${LOCK_DIR}" >&2
-    echo "Remove the lock only after confirming no controller is active." >&2
+    log_error "Another masking Slurm batch controller appears to be running: ${LOCK_DIR}"
+    log_error "Remove the lock only after confirming no controller is active."
     exit 1
   fi
   {
@@ -181,8 +203,8 @@ if [[ "$DRY_RUN" -eq 0 ]]; then
     date -u '+started_at=%Y-%m-%dT%H:%M:%SZ'
   } > "${LOCK_DIR}/owner"
   trap cleanup_lock EXIT
+  log "INFO" "Acquired controller lock ${LOCK_DIR}"
 fi
-mkdir -p "$STATUS_DIR"
 
 TASK_GROUPS=()
 TASK_KINDS=()
@@ -218,8 +240,8 @@ if [[ "$TASK_COUNT" -eq 0 ]]; then
   exit 1
 fi
 
-echo "Loaded ${TASK_COUNT} task(s) from ${MANIFEST}."
-echo "Status directory: ${STATUS_DIR}"
+log "INFO" "Loaded ${TASK_COUNT} task(s) from ${MANIFEST}"
+log "INFO" "Status directory: ${STATUS_DIR}"
 
 status_value() {
   local file="$1"
@@ -251,33 +273,37 @@ validate_task() {
   local err_file="${LOG_DIR}/masking_task_${job_id}.err"
 
   if [[ ! -f "$out_file" ]]; then
-    echo "Task ${task_index}: missing Slurm stdout log ${out_file}." >&2
+    log_error "Task ${task_index}: missing Slurm stdout log ${out_file}"
     return 1
   fi
   if [[ ! -f "$err_file" ]]; then
-    echo "Task ${task_index}: missing Slurm stderr log ${err_file}." >&2
+    log_error "Task ${task_index}: missing Slurm stderr log ${err_file}"
     return 1
   fi
   if grep -q "Could not lookup the current user" "$err_file"; then
-    echo "Task ${task_index}: transient user lookup failure in ${err_file}." >&2
+    log_error "Task ${task_index}: transient user lookup failure in ${err_file}"
     return 1
   fi
   if [[ ! -f "$status_file" ]]; then
-    echo "Task ${task_index}: missing status file ${status_file}." >&2
+    log_error "Task ${task_index}: missing status file ${status_file}"
     return 1
   fi
 
   local state
   state="$(status_value "$status_file" "state")"
   if [[ "$state" != "success" ]]; then
-    echo "Task ${task_index}: status file reports state=${state}." >&2
+    local message
+    local job_log
+    message="$(status_value "$status_file" "message")"
+    job_log="$(status_value "$status_file" "job_log")"
+    log_error "Task ${task_index}: status file reports state=${state}; message=${message}; job_log=${job_log}"
     return 1
   fi
 
   local run_dir
   run_dir="$(status_value "$status_file" "run_dir")"
   if ! expected_output_exists "$task_index" "$run_dir"; then
-    echo "Task ${task_index}: expected run outputs were not found under ${run_dir}." >&2
+    log_error "Task ${task_index}: expected run outputs were not found under ${run_dir}"
     return 1
   fi
 
@@ -297,6 +323,7 @@ submit_task() {
   local submit_try
 
   for ((submit_try = 1; submit_try <= SBATCH_SUBMIT_RETRIES; submit_try++)); do
+    log "INFO" "Submitting task ${task_index} try ${submit_try}/${SBATCH_SUBMIT_RETRIES}: group=${group} kind=${kind} config=${config} split=${split} attempt=${attempt}"
     output="$(sbatch "$JOB_SCRIPT" \
       --task-id "$task_index" \
       --group "$group" \
@@ -313,11 +340,11 @@ submit_task() {
     if [[ -n "$job_id" ]]; then
       TASK_STATES[$task_index]="running"
       TASK_JOB_IDS[$task_index]="$job_id"
-      echo "Submitted task ${task_index} (${group}, ${kind}, ${config}) as job ${job_id}, attempt ${attempt}."
+      log "INFO" "Submitted task ${task_index} (${group}, ${kind}, ${config}) as job ${job_id}, attempt ${attempt}"
       return 0
     fi
 
-    echo "Task ${task_index}: sbatch did not return a job id on submit try ${submit_try}: ${output}" >&2
+    log_error "Task ${task_index}: sbatch did not return a job id on submit try ${submit_try}: ${output}"
     sleep "$POLL_SECONDS"
   done
 
@@ -366,7 +393,7 @@ if [[ "$DRY_RUN" -eq 1 ]]; then
     printf 'task=%s group=%s kind=%s config=%s split=%s\n' \
       "$i" "${TASK_GROUPS[$i]}" "${TASK_KINDS[$i]}" "${TASK_CONFIGS[$i]}" "${TASK_SPLITS[$i]}"
   done
-  echo "Dry run complete. No Slurm jobs were submitted."
+  log "INFO" "Dry run complete. No Slurm jobs were submitted."
   exit 0
 fi
 
@@ -379,10 +406,10 @@ while has_pending_work || [[ "$(active_count)" -gt 0 ]]; do
     TASK_ATTEMPTS[$task_index]=$((TASK_ATTEMPTS[$task_index] + 1))
     if ! submit_task "$task_index"; then
       if [[ "${TASK_ATTEMPTS[$task_index]}" -le "$MAX_RETRIES" ]]; then
-        echo "Task ${task_index}: will retry after sbatch submission failure." >&2
+        log_error "Task ${task_index}: will retry after sbatch submission failure"
         TASK_STATES[$task_index]="pending"
       else
-        echo "Task ${task_index}: permanent failure after sbatch submission failures." >&2
+        log_error "Task ${task_index}: permanent failure after sbatch submission failures"
         TASK_STATES[$task_index]="failed"
         permanent_failures=$((permanent_failures + 1))
         if [[ "$FAIL_FAST" -eq 1 ]]; then
@@ -402,17 +429,17 @@ while has_pending_work || [[ "$(active_count)" -gt 0 ]]; do
       continue
     fi
 
-    echo "Job ${job_id} for task ${i} has left the Slurm queue; validating output."
+    log "INFO" "Job ${job_id} for task ${i} has left the Slurm queue; validating output"
     if validate_task "$i" "$job_id"; then
       TASK_STATES[$i]="done"
-      echo "Task ${i} completed successfully."
+      log "INFO" "Task ${i} completed successfully"
     else
       if [[ "${TASK_ATTEMPTS[$i]}" -le "$MAX_RETRIES" ]]; then
-        echo "Task ${i}: validation failed; re-queueing for retry." >&2
+        log_error "Task ${i}: validation failed; re-queueing for retry"
         TASK_STATES[$i]="pending"
         TASK_JOB_IDS[$i]=""
       else
-        echo "Task ${i}: permanent failure after ${TASK_ATTEMPTS[$i]} attempt(s)." >&2
+        log_error "Task ${i}: permanent failure after ${TASK_ATTEMPTS[$i]} attempt(s)"
         TASK_STATES[$i]="failed"
         TASK_JOB_IDS[$i]=""
         permanent_failures=$((permanent_failures + 1))
@@ -474,18 +501,18 @@ for group in "${GROUPS[@]}"; do
   done
 
   if [[ "${#run_dirs[@]}" -eq 0 ]]; then
-    echo "Skipping summary for ${group}; no successful runs."
+    log "INFO" "Skipping summary for ${group}; no successful runs"
     continue
   fi
 
   summary_output="${SUMMARY_DIR}/slurm_${MANIFEST_NAME}_${group}_summary.json"
-  echo "Writing summary for ${group} to ${summary_output}"
+  log "INFO" "Writing summary for ${group} to ${summary_output}"
   "$PYTHON_EXE" -m src.summarize --runs "${run_dirs[@]}" --output "$summary_output"
 done
 
 if [[ "$permanent_failures" -gt 0 ]]; then
-  echo "Completed with ${permanent_failures} permanent failure(s). See ${FAILED_REPORT}." >&2
+  log_error "Completed with ${permanent_failures} permanent failure(s). See ${FAILED_REPORT}"
   exit 1
 fi
 
-echo "All Slurm masking tasks completed successfully."
+log "INFO" "All Slurm masking tasks completed successfully"
