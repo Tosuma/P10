@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2025 <Hugin J. Zachariasen, Magnus H. Jensen, Tobias S. Madsen>.
 
-#SBATCH --job-name=eval_mami
+#SBATCH --job-name=pred_mami
 #SBATCH --output=logs/inference/pred_mami_%j.out
 #SBATCH --error=logs/inference/pred_mami_%j.err
 #SBATCH --nodes=1
