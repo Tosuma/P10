@@ -35,10 +35,16 @@ def main() -> None:
         grouped_paths[sample_id][suffix] = tif_path
 
     packed = 0
-    for sample_id, band_map in grouped_paths.items():
+    for i, (sample_id, band_map) in enumerate(grouped_paths.items()):
+        if (output_dir / f"{sample_id}.npy").exists():
+            print(f"Skipping: ${i+1}")
+            continue
+        
         missing = [band for band in MSI_SUFFIXES if band not in band_map]
         if missing:
             raise RuntimeError(f"Missing bands for {sample_id}: {missing}")
+            
+        print(f"Packing: {i+1}")
         stacked = np.stack([load_band(band_map[band]) for band in MSI_SUFFIXES], axis=-1).astype(np.float32)
         np.save(output_dir / f"{sample_id}.npy", stacked)
         packed += 1

@@ -57,12 +57,12 @@ fi
 
 export PYTHONPATH="${PWD}"
 
-# if [[ "$PACK_REAL_MSI" -eq 1 ]]; then
-#   echo "Packing real MSI TIFF bands into NPY files"
-#   "$PYTHON_EXE" -m src.pack_real_msi \
-#     --input-dir "${DATASET_ROOT}/Multispectral" \
-#     --output-dir "${DATASET_ROOT}/MultispectralNPY"
-# fi
+if [[ "$PACK_REAL_MSI" -eq 1 ]]; then
+  echo "Packing real MSI TIFF bands into NPY files"
+  "$PYTHON_EXE" -m src.pack_real_msi \
+    --input-dir "${DATASET_ROOT}/Multispectral" \
+    --output-dir "${DATASET_ROOT}/MultispectralNPY"
+fi
 
 echo "Creating split manifests"
 "$PYTHON_EXE" -m src.create_splits \
