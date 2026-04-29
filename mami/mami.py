@@ -478,6 +478,9 @@ class Stage:
             if self.start_epoch == 300:
                 self.start_epoch = 0
 
+            if str(config.pretrained_model_path).find(self.stage_id) == -1:
+                self.start_epoch = 0
+
             if self.is_main_process:
                 logger.info(f"[Resume] Resuming training from epoch {self.start_epoch}")
 
