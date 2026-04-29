@@ -12,9 +12,11 @@ from torch.optim.lr_scheduler import CosineAnnealingLR
 from data_carrier.base_dataset import DataCarrier
 
 # Reduce noisy OpenCV logging if present
-os.environ["OPENCV_LOG_LEVEL"] = "ERROR"
 
-# --- DDP environment (torchrun / Slurm) ---
+os.environ["OPENCV_LOG_LEVEL"] = "SILENT"
+import cv2
+cv2.utils.logging.setLogLevel(0)
+
 RANK = int(os.environ.get("RANK", "0"))
 WORLD_SIZE = int(os.environ.get("WORLD_SIZE", "1"))
 
@@ -82,7 +84,7 @@ class DDPContext:
         dist.broadcast_object_list(buf, src=0)
         return buf[0]
 
-def _get_dataset(data_type: DatasetType, root_dir: Path, non_resize_picture=False) -> DataCarrier:
+def _get_loader_function(data_type: DatasetType) -> DataCarrier:
     dataset: DataCarrier
     match data_type:
         case "Sri-Lanka":
@@ -147,6 +149,7 @@ def _make_dataloaders(
             batch_size=train_bs,
             shuffle=(train_sampler is None),
             sampler=train_sampler,
+            drop_last=True,
             **loader_kwargs,
         )
 
@@ -369,7 +372,7 @@ def init_ddp(cluster: bool) -> DDPContext:
 
     # init process group once
     if ddp_enabled and not dist.is_initialized():
-        dist.init_process_group(backend="nccl", init_method="env://")
+        dist.init_process_group(backend="nccl", init_method="env://", device_id=device)
         dist.barrier()
 
     return DDPContext(
@@ -473,6 +476,9 @@ class Stage:
             self.start_epoch = self.checkpoint_data["epoch"] + 1
             
             if self.start_epoch == 300:
+                self.start_epoch = 0
+
+            if str(config.pretrained_model_path).find(self.stage_id) == -1:
                 self.start_epoch = 0
 
             if self.is_main_process:

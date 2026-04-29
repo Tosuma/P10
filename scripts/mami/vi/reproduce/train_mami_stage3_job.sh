@@ -9,15 +9,13 @@
 #SBATCH --gres=gpu:4
 #SBATCH --time=12:00:00
 
-# -------------------------
-# Parse command-line args
-# -------------------------
 lr=""
 mrae=""
 ndvi=""
 ndre=""
 dir_name=""
 model_name=""
+train_model=""
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -27,6 +25,7 @@ while [[ $# -gt 0 ]]; do
         --loss_ndre_w)    ndre="$2"; shift 2 ;;
         --dir_name)       dir_name="$2"; shift 2 ;;
         --model_name)     model_name="$2"; shift 2 ;;
+        --train_model)    train_model="$2"; shift 2 ;;
         -*)
             echo "Unknown option: $1" >&2
             exit 2
@@ -38,42 +37,40 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Basic required-arg checks (optional but recommended)
 : "${lr:?Missing --lr}"
 : "${mrae:?Missing --loss_mrae_w}"
 : "${ndvi:?Missing --loss_ndvi_w}"
 : "${ndre:?Missing --loss_ndre_w}"
 : "${dir_name:?Missing --dir_name}"
 : "${model_name:?Missing --model_name}"
+: "${train_model:?Missing --train_model}"
 
 mkdir -p logs
 hostname
 date
 
-# Keep thread-heavy libs from oversubscribing CPU cores
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 
-# Torchrun needs to know how many processes to launch (one per GPU)
 GPUS=${SLURM_GPUS_ON_NODE:-${SLURM_GPUS_PER_NODE:-1}}
 
 singularity exec --nv \
     /ceph/container/pytorch/pytorch_26.02.sif \
-    /bin/bash -lc "source my_venv/bin/activate && \
+    /bin/bash -lc "source p10_venv/bin/activate && \
         python -u -m torch.distributed.run \
             --standalone \
             --nproc_per_node=${GPUS} \
             mami/mami.py \
-                --stage1_data_path data/East-Kaza \
-                --stage1_data_type Kazakhstan \
-                --stage1_epochs 300 \
-                --stage1_lr ${lr} \
-                --stage1_loss_mrae_w ${mrae} \
-                --stage1_loss_ndvi_w ${ndvi} \
-                --stage1_loss_ndre_w ${ndre} \
+                --stage3_model ${train_model} \
+                --stage3_data_path data/WeedyRice \
+                --stage3_data_type Weedy-Rice \
+                --stage3_epochs 300 \
+                --stage3_lr ${lr} \
+                --stage3_loss_mrae_w ${mrae} \
+                --stage3_loss_ndvi_w ${ndvi} \
+                --stage3_loss_ndre_w ${ndre} \
                 --dir_name ${dir_name} \
                 --model_name ${model_name} \
                 --cluster"
 
 date
-

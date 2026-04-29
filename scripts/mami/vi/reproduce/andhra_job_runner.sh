@@ -130,14 +130,11 @@ resolve_checkpoint() {
     exit 1
 }
 
-STAGE1_DIR="vi/reproduce/stage1/re_${NDRE}_vi_${NDVI}"
-STAGE1_MODEL="vi-kaz-re_${NDRE}-vi_${NDVI}"
-run_stage \
-    "stage1" \
-    "scripts/mami/vi/reproduce/train_mami_stage1_job.sh" \
-    "4e-4" \
-    "${STAGE1_DIR}" \
-    "${STAGE1_MODEL}"
+STAGE1_DIR="andhra/reproduce/stage1/re_${NDRE}_vi_${NDVI}"
+STAGE1_MODEL="vi-andh-re_${NDRE}-vi_${NDVI}"
+
+bash scripts/mami/vi/stage1/job_runner.sh
+
 STAGE1_CHECKPOINT="$(resolve_checkpoint "stage1" "${STAGE1_DIR}" "${STAGE1_MODEL}")"
 
 STAGE2_DIR="vi/reproduce/stage2/re_${NDRE}_vi_${NDVI}"

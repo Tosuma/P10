@@ -85,18 +85,49 @@ class WeedyRiceDataset(DataCarrier):
              data/Weedy_Rice/IMG_0001_NIR.TIF
     """
     def _load_data(self, root_path: Path):
+        """
+        Supports both:
+        1) Split layout:
+           - <root>/RGB/<id>.JPG
+           - <root>/Multispectral/<id>_<band>.TIF
+        2) Flat layout:
+           - <root>/<id>.JPG
+           - <root>/<id>_<band>.TIF
+        """
+        # Resolve RGB root first
+        if (root_path / "RGB").is_dir():
+            rgb_root = root_path / "RGB"
+        else:
+            rgb_root = root_path
+
+        # Resolve multispectral root for full dataset mode and single-file mode
+        if (root_path / "Multispectral").is_dir():
+            ms_root = root_path / "Multispectral"
+        elif root_path.name.lower() == "rgb" and (root_path.parent / "Multispectral").is_dir():
+            ms_root = root_path.parent / "Multispectral"
+        else:
+            ms_root = root_path
+
         # Weedy Rice RGB pictures have filenames like: <id>.JPG
-        rgb_path_list = sorted([f for f in root_path.rglob("*.JPG") if f.is_file()])
+        rgb_path_list = sorted([f for f in rgb_root.rglob("*") if f.is_file() and f.suffix.lower() == ".jpg"])
 
         band_order = ["G", "R", "RE", "NIR"]
 
         ms_path_list = []
         for path in rgb_path_list:
+            sid = path.stem
             for suffix in band_order:
-                ms_path = str(path).replace(".JPG", f"_{suffix}.TIF")
-                ms_path_list.append(Path(ms_path))
-            if len(ms_path_list) % 4 != 0:
-                raise ValueError(f"Number of MS bands is not divisible by 4. Failed at {path.name}")
+                if ms_root == path.parent:
+                    ms_path = path.with_name(f"{sid}_{suffix}.TIF")
+                else:
+                    ms_path = ms_root / f"{sid}_{suffix}.TIF"
+
+                if not ms_path.is_file():
+                    raise FileNotFoundError(
+                        f"Missing multispectral band '{suffix}' for '{sid}': {ms_path}"
+                    )
+
+                ms_path_list.append(ms_path)
 
         return rgb_path_list, ms_path_list
 
