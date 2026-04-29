@@ -130,7 +130,7 @@ Config layout:
 - `./configs/smoke/`: smoke-test configs
 - `./configs/base.yaml`: shared root defaults
 
-Training writes run artifacts under `outputs/runs/<run_name>/`, including `logs/execution.log` with entries formatted as `%(asctime)s [Trainer] :: %(message)s`. At the end of training, the best validation checkpoint is evaluated once on the configured test split. The resulting test summary is written to `metrics/test_summary.json`, and reconstructed test prediction masks are written to `metrics/test_masks/` as binary PNG files. Per-epoch training and validation do not save masks. Fuzzy-halo runs use the relaxed target as the primary training/evaluation target and also record additional `original_*` test metrics against the hard weed masks.
+Training writes run artifacts under `outputs/runs/<run_name>/`, including `logs/execution.log` with entries formatted as `%(asctime)s [Trainer] :: %(message)s`. At the end of training, the best validation checkpoint is evaluated once on the configured test split. The resulting test summary is written to `metrics/test_summary.json`, and reconstructed test prediction masks are written to `metrics/test_masks/` as binary PNG files. Per-epoch training and validation do not save masks. Every model is now test-scored against both the original hard mask and the matching fuzzy-halo mask, so `test_summary.json` contains explicit `original_*` and `fuzzy_*` metric sections alongside the compatibility aliases `patch_level`, `patch_summary`, and `image_level`.
 
 Additional supported multimodal runs:
 
@@ -185,16 +185,17 @@ bash ./scripts/slurm/run_masking_batch.sh --manifest scripts/slurm/workloads/bin
 bash ./scripts/slurm/run_masking_batch.sh --manifest scripts/slurm/workloads/fuzzy_baseline.json
 ```
 
-Evaluation writes artifacts under `outputs/runs/<run>/evaluation/<split>/`, including `overall_metrics.json`, per-patch and per-image CSV metrics, reconstructed predicted masks in `masks/`, limited preview panels in `visuals/`, and `execution.log` with entries formatted as `%(asctime)s [Evaluator] :: %(message)s`. Fuzzy-halo runs keep the primary CSV/JSON metrics on the relaxed target and add `original_*` metrics and companion CSV files for scoring against the hard masks.
+Evaluation writes artifacts under `outputs/runs/<run>/evaluation/<split>/`, including `overall_metrics.json`, per-patch and per-image CSV metrics, reconstructed predicted masks in `masks/`, limited preview panels in `visuals/`, and `execution.log` with entries formatted as `%(asctime)s [Evaluator] :: %(message)s`. Every evaluated model now produces both `original_*` and `fuzzy_*` metrics. Binary and baseline configs use the matching file in `configs/fuzzy/` as the fuzzy scoring reference, while fuzzy configs use their own halo settings.
 
 `overall_metrics.json` fields are interpreted as follows:
 
-- `patch_level`: one global metric set computed by pooling all evaluated patch pixels together first
-- `patch_summary`: average and median of the per-patch metrics, describing a typical patch rather than one pooled score
-- `image_level`: average and median of the per-image metrics after reconstructing full-image predictions from patches
-- `original_patch_level`, `original_patch_summary`, `original_image_level`: only present for `fuzzy_halo` runs; these are the same three views, but scored against the original hard weed mask instead of the relaxed fuzzy target
+- `original_patch_level`, `original_patch_summary`, `original_image_level`: pooled patch score, per-patch summary, and reconstructed-image summary against the original hard weed mask
+- `fuzzy_patch_level`, `fuzzy_patch_summary`, `fuzzy_image_level`: the same three views scored against the fuzzy-halo mask from the matching config in `configs/fuzzy/`
+- `patch_level`, `patch_summary`, `image_level`: compatibility aliases that point to the model's own target view
+  - binary and baseline runs alias to `original_*`
+  - fuzzy-halo runs alias to `fuzzy_*`
 
-In practice, `image_level` is usually the best headline full-scene result, `patch_level` is the pooled patch-wise score, and `patch_summary` is useful when you want the distribution across individual patches.
+In practice, `original_image_level` and `fuzzy_image_level` are the best headline full-scene comparisons, `patch_level` remains a convenient legacy alias for the model's own target view, and `patch_summary` is useful when you want the distribution across individual patches.
 
 Baseline evaluation writes the same evaluation artifacts into a baseline-named run directory under `outputs/runs/`, plus `config.yaml` and `run_metadata.json` with `run_kind: baseline`. It does not create checkpoints or training history.
 
@@ -204,7 +205,7 @@ Baseline evaluation writes the same evaluation artifacts into a baseline-named r
 python -m src.summarize --runs ./outputs/runs/<rgb_run> ./outputs/runs/<synth_run> ./outputs/runs/<real_run> --output ./outputs/metrics/final_comparison.json
 ```
 
-Summarization writes a JSON file to the requested `--output` path with two top-level sections: `runs` for per-run metrics and `aggregates` for per-model aggregate metrics. Each aggregate row now includes median, mean, and standard deviation fields for every tracked metric. Fuzzy-halo runs also include `original_test_*` metrics so the hard-mask scoring view is preserved alongside the relaxed target view. It also writes a companion log file next to it, for example `outputs/metrics/final_comparison.log`, with entries formatted as `%(asctime)s [Summarizer] :: %(message)s`.
+Summarization writes a JSON file to the requested `--output` path with two top-level sections: `runs` for per-run metrics and `aggregates` for per-model aggregate metrics. Each aggregate row now includes median, mean, and standard deviation fields for every tracked metric. All model families include both `original_test_*` and `fuzzy_test_*` metrics so hard-mask and fuzzy-mask scoring can be compared directly. It also writes a companion log file next to it, for example `outputs/metrics/final_comparison.log`, with entries formatted as `%(asctime)s [Summarizer] :: %(message)s`.
 
 Confidence-style metrics are also included in the summary. They are derived from the sigmoid output probabilities and indicate how certain the model was about its predicted mask values:
 

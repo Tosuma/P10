@@ -12,7 +12,7 @@ from src.datasets import build_dataloader, load_image_for_modality, load_mask
 from src.losses import BCEDiceLoss
 from src.metrics import ConfidenceTotals, ConfusionTotals
 from src.model import build_model, resolve_model_config
-from src.targets import resolve_target_config, target_views_from_hard_mask
+from src.targets import build_target_mask, resolve_fuzzy_evaluation_target_config, resolve_target_config, target_views_from_hard_mask
 from src.utils import (
     device_from_config,
     ensure_dir,
@@ -49,10 +49,11 @@ def load_checkpoint(checkpoint_path: str, device: torch.device):
 
 def evaluate_loader(model, loader, device: torch.device, threshold: float, config: dict[str, Any]):
     target_config = resolve_target_config(config)
-    primary_view = "relaxed" if target_config["mode"] == "fuzzy_halo" else "original"
-    totals_by_view = {view: ConfusionTotals() for view in ("original", "relaxed")}
+    primary_view = "fuzzy" if target_config["mode"] == "fuzzy_halo" else "original"
+    fuzzy_target_config = resolve_fuzzy_evaluation_target_config(config)
+    totals_by_view = {view: ConfusionTotals() for view in ("original", "fuzzy")}
     confidence_totals = ConfidenceTotals()
-    per_patch_rows_by_view = {view: [] for view in ("original", "relaxed")}
+    per_patch_rows_by_view = {view: [] for view in ("original", "fuzzy")}
     probabilities_by_sample = defaultdict(list)
     criterion = BCEDiceLoss()
     total_loss = 0.0
@@ -67,22 +68,30 @@ def evaluate_loader(model, loader, device: torch.device, threshold: float, confi
             loss = criterion(logits, target_masks)
             probs = torch.sigmoid(logits).cpu()
             preds = (probs >= threshold).float()
+            hard_masks_cpu = hard_masks.cpu()
+            fuzzy_masks_cpu = torch.stack(
+                [
+                    torch.from_numpy(build_target_mask(hard_masks_cpu[idx, 0].numpy(), fuzzy_target_config))
+                    for idx in range(hard_masks_cpu.shape[0])
+                ],
+                dim=0,
+            ).unsqueeze(1)
             total_loss += loss.item()
             total_batches += 1
-            totals_by_view["original"].update(preds, hard_masks.cpu())
-            totals_by_view["relaxed"].update(preds, target_masks.cpu())
+            totals_by_view["original"].update(preds, hard_masks_cpu)
+            totals_by_view["fuzzy"].update(preds, fuzzy_masks_cpu)
             confidence_totals.update(probs, threshold)
 
             for idx, metadata in enumerate(batch["metadata"]):
                 original_metrics = _compute_patch_metrics(
                     preds[idx : idx + 1],
-                    hard_masks[idx : idx + 1].cpu(),
+                    hard_masks_cpu[idx : idx + 1],
                     probs[idx : idx + 1],
                     threshold,
                 )
-                relaxed_metrics = _compute_patch_metrics(
+                fuzzy_metrics = _compute_patch_metrics(
                     preds[idx : idx + 1],
-                    target_masks[idx : idx + 1].cpu(),
+                    fuzzy_masks_cpu[idx : idx + 1],
                     probs[idx : idx + 1],
                     threshold,
                 )
@@ -100,10 +109,10 @@ def evaluate_loader(model, loader, device: torch.device, threshold: float, confi
                         **original_metrics,
                     }
                 )
-                per_patch_rows_by_view["relaxed"].append(
+                per_patch_rows_by_view["fuzzy"].append(
                     {
                         **base_row,
-                        **relaxed_metrics,
+                        **fuzzy_metrics,
                     }
                 )
                 probabilities_by_sample[metadata["sample_id"]].append(
@@ -121,7 +130,7 @@ def evaluate_loader(model, loader, device: torch.device, threshold: float, confi
                 },
                 "per_patch_rows": per_patch_rows_by_view[view],
             }
-            for view in ("original", "relaxed")
+            for view in ("original", "fuzzy")
         },
         "reconstruction_payload": probabilities_by_sample,
     }
@@ -130,8 +139,8 @@ def evaluate_loader(model, loader, device: torch.device, threshold: float, confi
 def reconstruct_image_metrics(sample_rows: list[dict[str, str]], probabilities_by_sample: dict, threshold: float, config: dict[str, Any]):
     sample_lookup = {row["sample_id"]: row for row in sample_rows}
     target_config = resolve_target_config(config)
-    primary_view = "relaxed" if target_config["mode"] == "fuzzy_halo" else "original"
-    per_image_rows_by_view = {"original": [], "relaxed": []}
+    primary_view = "fuzzy" if target_config["mode"] == "fuzzy_halo" else "original"
+    per_image_rows_by_view = {"original": [], "fuzzy": []}
     visuals = []
     for sample_id, patches in probabilities_by_sample.items():
         sample = sample_lookup[sample_id]
@@ -149,7 +158,7 @@ def reconstruct_image_metrics(sample_rows: list[dict[str, str]], probabilities_b
         confidence_totals = ConfidenceTotals()
         confidence_totals.update(torch.from_numpy(probability_map[None, None, ...]), threshold)
         confidence_metrics = confidence_totals.compute()
-        for view in ("original", "relaxed"):
+        for view in ("original", "fuzzy"):
             totals = ConfusionTotals()
             gt_mask = target_views[view]
             totals.update(torch.from_numpy(pred_mask[None, None, ...]), torch.from_numpy(gt_mask[None, None, ...]))
@@ -206,6 +215,28 @@ def mean_aliases(summary: dict[str, float]) -> dict[str, float]:
     return aliases
 
 
+def summarize_image_level(rows: list[dict[str, Any]]) -> dict[str, float]:
+    summary = summarize_metric_rows(rows)
+    return {**mean_aliases(summary), **summary}
+
+
+def build_overall_metrics_payload(results: dict[str, Any], image_results: dict[str, Any]) -> tuple[dict[str, Any], str]:
+    primary_view = results["primary_view"]
+    payload = {
+        "target_mode": results["target_mode"],
+        "original_patch_level": results["views"]["original"]["overall"],
+        "original_patch_summary": summarize_metric_rows(results["views"]["original"]["per_patch_rows"]),
+        "original_image_level": summarize_image_level(image_results["views"]["original"]),
+        "fuzzy_patch_level": results["views"]["fuzzy"]["overall"],
+        "fuzzy_patch_summary": summarize_metric_rows(results["views"]["fuzzy"]["per_patch_rows"]),
+        "fuzzy_image_level": summarize_image_level(image_results["views"]["fuzzy"]),
+    }
+    payload["patch_level"] = payload[f"{primary_view}_patch_level"]
+    payload["patch_summary"] = payload[f"{primary_view}_patch_summary"]
+    payload["image_level"] = payload[f"{primary_view}_image_level"]
+    return payload, primary_view
+
+
 def load_preview_image(sample: dict[str, str], modality: str) -> np.ndarray:
     return load_image_for_modality(sample, modality)
 
@@ -238,47 +269,33 @@ def run_split_evaluation(
     results = evaluate_loader(model, loader, device, threshold=threshold, config=config)
     sample_rows = read_csv_rows(config["paths"][f"{split}_manifest"])
     image_results = reconstruct_image_metrics(sample_rows, results["reconstruction_payload"], threshold, config=config)
-    primary_view = results["primary_view"]
-    secondary_view = "original" if primary_view == "relaxed" else None
+    overall_payload, primary_view = build_overall_metrics_payload(results, image_results)
     primary_patch_rows = results["views"][primary_view]["per_patch_rows"]
     primary_image_rows = image_results["views"][primary_view]
-    patch_summary = summarize_metric_rows(primary_patch_rows)
-    image_summary = summarize_metric_rows(primary_image_rows)
-
-    overall_payload = {
-        "target_mode": results["target_mode"],
-        "patch_level": results["views"][primary_view]["overall"],
-        "patch_summary": patch_summary,
-        "image_level": {**mean_aliases(image_summary), **image_summary},
-    }
-    if secondary_view is not None:
-        secondary_patch_rows = results["views"][secondary_view]["per_patch_rows"]
-        secondary_image_rows = image_results["views"][secondary_view]
-        secondary_patch_summary = summarize_metric_rows(secondary_patch_rows)
-        secondary_image_summary = summarize_metric_rows(secondary_image_rows)
-        overall_payload[f"{secondary_view}_patch_level"] = results["views"][secondary_view]["overall"]
-        overall_payload[f"{secondary_view}_patch_summary"] = secondary_patch_summary
-        overall_payload[f"{secondary_view}_image_level"] = {
-            **mean_aliases(secondary_image_summary),
-            **secondary_image_summary,
-        }
 
     write_json(output_dir / "overall_metrics.json", overall_payload)
     write_csv_rows(output_dir / "per_patch_metrics.csv", primary_patch_rows, list(primary_patch_rows[0].keys()) if primary_patch_rows else ["sample_id"])
     write_csv_rows(output_dir / "per_image_metrics.csv", primary_image_rows, list(primary_image_rows[0].keys()) if primary_image_rows else ["sample_id"])
-    if secondary_view is not None:
-        secondary_patch_rows = results["views"][secondary_view]["per_patch_rows"]
-        secondary_image_rows = image_results["views"][secondary_view]
-        write_csv_rows(
-            output_dir / f"{secondary_view}_per_patch_metrics.csv",
-            secondary_patch_rows,
-            list(secondary_patch_rows[0].keys()) if secondary_patch_rows else ["sample_id"],
-        )
-        write_csv_rows(
-            output_dir / f"{secondary_view}_per_image_metrics.csv",
-            secondary_image_rows,
-            list(secondary_image_rows[0].keys()) if secondary_image_rows else ["sample_id"],
-        )
+    write_csv_rows(
+        output_dir / "original_per_patch_metrics.csv",
+        results["views"]["original"]["per_patch_rows"],
+        list(results["views"]["original"]["per_patch_rows"][0].keys()) if results["views"]["original"]["per_patch_rows"] else ["sample_id"],
+    )
+    write_csv_rows(
+        output_dir / "original_per_image_metrics.csv",
+        image_results["views"]["original"],
+        list(image_results["views"]["original"][0].keys()) if image_results["views"]["original"] else ["sample_id"],
+    )
+    write_csv_rows(
+        output_dir / "fuzzy_per_patch_metrics.csv",
+        results["views"]["fuzzy"]["per_patch_rows"],
+        list(results["views"]["fuzzy"]["per_patch_rows"][0].keys()) if results["views"]["fuzzy"]["per_patch_rows"] else ["sample_id"],
+    )
+    write_csv_rows(
+        output_dir / "fuzzy_per_image_metrics.csv",
+        image_results["views"]["fuzzy"],
+        list(image_results["views"]["fuzzy"][0].keys()) if image_results["views"]["fuzzy"] else ["sample_id"],
+    )
     logger.info("Saved aggregate metrics to %s", output_dir / "overall_metrics.json")
     logger.info("Saved %s patch rows and %s image rows", len(primary_patch_rows), len(primary_image_rows))
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -23,6 +24,27 @@ def resolve_target_config(config: dict[str, Any] | None) -> dict[str, Any]:
         "halo_radius_px": halo_radius_px,
         "halo_min_value": halo_min_value,
     }
+
+
+def resolve_fuzzy_evaluation_target_config(config: dict[str, Any] | None) -> dict[str, Any]:
+    config = config or {}
+    config_path = config.get("_config_path")
+    if not config_path:
+        raise FileNotFoundError("Config must include _config_path to resolve the matching fuzzy evaluation target.")
+
+    config_path = Path(config_path).resolve()
+    if config_path.parent.name == "fuzzy":
+        fuzzy_config = config
+    else:
+        fuzzy_config_path = config_path.parents[1] / "fuzzy" / config_path.name
+        if not fuzzy_config_path.exists():
+            raise FileNotFoundError(
+                f"Matching fuzzy config was not found for {config_path}. Expected {fuzzy_config_path}."
+            )
+        from src.config import load_config
+
+        fuzzy_config = load_config(fuzzy_config_path)
+    return resolve_target_config(fuzzy_config)
 
 
 def _halo_value(distance_px: int, radius_px: int, halo_min_value: float) -> float:
@@ -59,9 +81,9 @@ def build_target_mask(hard_mask: np.ndarray, target_config: dict[str, Any]) -> n
 
 
 def target_views_from_hard_mask(hard_mask: np.ndarray, config: dict[str, Any] | None) -> dict[str, np.ndarray]:
-    target_config = resolve_target_config(config)
-    relaxed_mask = build_target_mask(hard_mask, target_config)
+    fuzzy_target_config = resolve_fuzzy_evaluation_target_config(config)
+    fuzzy_mask = build_target_mask(hard_mask, fuzzy_target_config)
     return {
         "original": (np.asarray(hard_mask, dtype=np.float32) > 0).astype(np.float32),
-        "relaxed": relaxed_mask,
+        "fuzzy": fuzzy_mask,
     }

@@ -12,7 +12,7 @@ from torch.optim.lr_scheduler import CosineAnnealingLR
 
 from src.config import dump_config, load_config
 from src.datasets import IMAGENET_MEAN, IMAGENET_STD, build_dataloader, compute_channel_stats
-from src.evaluate import evaluate_loader, load_checkpoint, reconstruct_image_metrics, summarize_metric_rows
+from src.evaluate import build_overall_metrics_payload, evaluate_loader, load_checkpoint, reconstruct_image_metrics
 from src.losses import BCEDiceLoss
 from src.metrics import ConfusionTotals, threshold_predictions
 from src.model import build_model, resolve_model_config
@@ -138,22 +138,17 @@ def evaluate_test_split(
     for visual in image_results["visuals"]:
         save_binary_mask(mask_dir / f"{visual['sample_id']}.png", visual["pred_mask"])
 
-    primary_view = results["primary_view"]
-    summary = {
+    summary, primary_view = build_overall_metrics_payload(results, image_results)
+    summary.update(
+        {
         "checkpoint": str(checkpoint_path.resolve()),
         "split": "test",
         "target_mode": target_config["mode"],
         "mask_dir": str(mask_dir.resolve()),
-        "patch_level": results["views"][primary_view]["overall"],
-        "patch_summary": summarize_metric_rows(results["views"][primary_view]["per_patch_rows"]),
-        "image_summary": summarize_metric_rows(image_results["views"][primary_view]),
         "num_patches": len(results["views"][primary_view]["per_patch_rows"]),
         "num_images": len(image_results["views"][primary_view]),
-    }
-    if target_config["mode"] == "fuzzy_halo":
-        summary["original_patch_level"] = results["views"]["original"]["overall"]
-        summary["original_patch_summary"] = summarize_metric_rows(results["views"]["original"]["per_patch_rows"])
-        summary["original_image_summary"] = summarize_metric_rows(image_results["views"]["original"])
+        }
+    )
     return summary
 
 

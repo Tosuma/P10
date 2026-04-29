@@ -50,6 +50,24 @@ AGGREGATE_METRICS = [
     "original_test_image_confidence",
     "original_test_image_positive_confidence",
     "original_test_image_negative_confidence",
+    "fuzzy_test_patch_iou",
+    "fuzzy_test_patch_dice",
+    "fuzzy_test_patch_precision",
+    "fuzzy_test_patch_recall",
+    "fuzzy_test_patch_accuracy",
+    "fuzzy_test_patch_specificity",
+    "fuzzy_test_patch_confidence",
+    "fuzzy_test_patch_positive_confidence",
+    "fuzzy_test_patch_negative_confidence",
+    "fuzzy_test_image_iou",
+    "fuzzy_test_image_dice",
+    "fuzzy_test_image_precision",
+    "fuzzy_test_image_recall",
+    "fuzzy_test_image_accuracy",
+    "fuzzy_test_image_specificity",
+    "fuzzy_test_image_confidence",
+    "fuzzy_test_image_positive_confidence",
+    "fuzzy_test_image_negative_confidence",
 ]
 
 
@@ -137,6 +155,8 @@ def main() -> None:
         target_config = config.get("target", {})
         original_patch_level = eval_metrics.get("original_patch_level", eval_metrics["patch_level"])
         original_image_level = eval_metrics.get("original_image_level", eval_metrics["image_level"])
+        fuzzy_patch_level = eval_metrics.get("fuzzy_patch_level", eval_metrics["patch_level"])
+        fuzzy_image_level = eval_metrics.get("fuzzy_image_level", eval_metrics["image_level"])
         rows.append(
             {
                 "run_kind": metadata.get("run_kind", "finetuned"),
@@ -191,6 +211,24 @@ def main() -> None:
                 "original_test_image_confidence": original_image_level.get("mean_confidence", 0.0),
                 "original_test_image_positive_confidence": original_image_level.get("mean_positive_confidence", 0.0),
                 "original_test_image_negative_confidence": original_image_level.get("mean_negative_confidence", 0.0),
+                "fuzzy_test_patch_iou": fuzzy_patch_level["iou"],
+                "fuzzy_test_patch_dice": fuzzy_patch_level["dice"],
+                "fuzzy_test_patch_precision": fuzzy_patch_level["precision"],
+                "fuzzy_test_patch_recall": fuzzy_patch_level["recall"],
+                "fuzzy_test_patch_accuracy": fuzzy_patch_level["accuracy"],
+                "fuzzy_test_patch_specificity": fuzzy_patch_level["specificity"],
+                "fuzzy_test_patch_confidence": fuzzy_patch_level.get("confidence_mean", 0.0),
+                "fuzzy_test_patch_positive_confidence": fuzzy_patch_level.get("positive_confidence_mean", 0.0),
+                "fuzzy_test_patch_negative_confidence": fuzzy_patch_level.get("negative_confidence_mean", 0.0),
+                "fuzzy_test_image_iou": fuzzy_image_level["mean_iou"],
+                "fuzzy_test_image_dice": fuzzy_image_level["mean_dice"],
+                "fuzzy_test_image_precision": fuzzy_image_level["mean_precision"],
+                "fuzzy_test_image_recall": fuzzy_image_level["mean_recall"],
+                "fuzzy_test_image_accuracy": fuzzy_image_level.get("mean_accuracy", 0.0),
+                "fuzzy_test_image_specificity": fuzzy_image_level.get("mean_specificity", 0.0),
+                "fuzzy_test_image_confidence": fuzzy_image_level.get("mean_confidence", 0.0),
+                "fuzzy_test_image_positive_confidence": fuzzy_image_level.get("mean_positive_confidence", 0.0),
+                "fuzzy_test_image_negative_confidence": fuzzy_image_level.get("mean_negative_confidence", 0.0),
             }
         )
     aggregate_rows = build_aggregate_rows(rows)

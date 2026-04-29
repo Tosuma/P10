@@ -253,4 +253,6 @@ Numeric fields may use normal decimal notation or scientific notation such as `1
 ### `num_visualizations`
 
 - Number of sample visualization panels to save during evaluation.
-- For `fuzzy_halo` runs, evaluation reports both the primary relaxed-target metrics and additional `original_*` metrics against the hard weed mask.
+- Evaluation now reports both `original_*` metrics against the hard weed mask and `fuzzy_*` metrics against the fuzzy-halo mask for every model family.
+- For binary and baseline configs, the fuzzy scoring mask is resolved from the matching config file in `configs\fuzzy\`.
+- The legacy `patch_level`, `patch_summary`, and `image_level` fields remain as aliases to the model's own target view.
