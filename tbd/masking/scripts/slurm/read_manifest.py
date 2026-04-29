@@ -36,6 +36,7 @@ def load_manifest(path: Path) -> list[dict[str, str]]:
             "kind": str(task["kind"]),
             "config": str(task["config"]),
             "split": str(task.get("split", "test")),
+            "seed": "" if task.get("seed") is None else str(task["seed"]),
         }
         if any("\t" in value or "\n" in value for value in row.values()):
             raise SystemExit(f"{path}: task {index} contains unsupported tab or newline characters.")
@@ -50,7 +51,7 @@ def main() -> None:
     args = parser.parse_args()
 
     for task in load_manifest(args.manifest):
-        print("\t".join([task["group"], task["kind"], task["config"], task["split"]]))
+        print("\t".join([task["group"], task["kind"], task["config"], task["split"], task["seed"]]))
 
 
 if __name__ == "__main__":

@@ -16,6 +16,7 @@ GROUP=""
 KIND=""
 CONFIG=""
 SPLIT="test"
+SEED=""
 ATTEMPT="1"
 STATUS_DIR=""
 PYTHON_EXE="python"
@@ -42,6 +43,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --split)
       SPLIT="$2"
+      shift 2
+      ;;
+    --seed)
+      SEED="$2"
       shift 2
       ;;
     --attempt)
@@ -101,6 +106,7 @@ write_status() {
     printf 'kind=%s\n' "$KIND"
     printf 'config=%s\n' "$CONFIG"
     printf 'split=%s\n' "$SPLIT"
+    printf 'seed=%s\n' "$SEED"
     printf 'attempt=%s\n' "$ATTEMPT"
     printf 'state=%s\n' "$state"
     printf 'exit_code=%s\n' "$EXIT_CODE"
@@ -134,7 +140,7 @@ log_job() {
 hostname
 date
 log_job "INFO" "Slurm masking job started"
-log_job "INFO" "task_id=${TASK_ID} group=${GROUP} kind=${KIND} config=${CONFIG} split=${SPLIT} attempt=${ATTEMPT}"
+log_job "INFO" "task_id=${TASK_ID} group=${GROUP} kind=${KIND} config=${CONFIG} split=${SPLIT} seed=${SEED:-none} attempt=${ATTEMPT}"
 log_job "INFO" "pwd=${PWD} host=$(hostname) slurm_job_id=${SLURM_JOB_ID:-} cuda_visible_devices=${CUDA_VISIBLE_DEVICES:-}"
 log_job "INFO" "python=${PYTHON_EXE} singularity_image=${SINGULARITY_IMAGE} venv_activate=${VENV_ACTIVATE}"
 log_job "INFO" "status_file=${STATUS_FILE}"
@@ -205,7 +211,11 @@ run_and_capture() {
 
 if [[ "$KIND" == "train" ]]; then
   echo "Training ${CONFIG}"
-  run_and_capture "train" "$PYTHON_EXE -u -m src.train --config '$CONFIG'"
+  train_command="$PYTHON_EXE -u -m src.train --config '$CONFIG'"
+  if [[ -n "$SEED" ]]; then
+    train_command="${train_command} --seed '$SEED'"
+  fi
+  run_and_capture "train" "$train_command"
   RUN_DIR="$(printf '%s\n' "$LAST_OUTPUT" | awk 'NF { last=$0 } END { print last }')"
   echo "Run directory: ${RUN_DIR}"
 

@@ -19,6 +19,7 @@ JOB_SCRIPT="scripts/slurm/masking_job.sh"
 DRY_RUN=0
 FAIL_FAST=0
 MANIFEST=""
+STATUS_DIR_OVERRIDE=""
 
 usage() {
   cat <<'EOF'
@@ -28,7 +29,7 @@ Usage:
 Options:
   --manifest PATH             JSON manifest with a top-level tasks list
   --max-parallel N            Number of active Slurm jobs to keep running (default: 6)
-  --max-retries N             Retries per task after validation failure (default: 50)
+  --max-retries N             Retries per task after validation failure (default: 3)
   --sbatch-submit-retries N   Retries when sbatch does not return a job id (default: 3)
   --poll-seconds N            Seconds between squeue polls (default: 10)
   --python PATH               Python executable inside the runtime environment
@@ -37,6 +38,7 @@ Options:
   --status-root PATH          Root directory for task status files
   --summary-dir PATH          Directory for final summary JSON files
   --job-script PATH           Slurm job script to submit
+  --status-dir PATH           Explicit status directory for this batch
   --dry-run                   Parse and print tasks without submitting jobs
   --fail-fast                 Stop submitting new work after the first permanent failure
 EOF
@@ -86,6 +88,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --job-script)
       JOB_SCRIPT="$2"
+      shift 2
+      ;;
+    --status-dir)
+      STATUS_DIR_OVERRIDE="$2"
       shift 2
       ;;
     --dry-run)
@@ -159,6 +165,9 @@ MANIFEST_NAME="$(basename "$MANIFEST")"
 MANIFEST_NAME="${MANIFEST_NAME%.*}"
 RUN_ID="$(date -u '+%Y%m%dT%H%M%SZ')"
 STATUS_DIR="${STATUS_ROOT}/${MANIFEST_NAME}_${RUN_ID}"
+if [[ -n "$STATUS_DIR_OVERRIDE" ]]; then
+  STATUS_DIR="$STATUS_DIR_OVERRIDE"
+fi
 FAILED_REPORT="${STATUS_DIR}/failed_tasks.tsv"
 CONTROLLER_LOG="${STATUS_DIR}/controller.log"
 LOCK_DIR="${STATUS_ROOT}/.masking_batch_controller.lock"
@@ -210,13 +219,14 @@ TASK_GROUPS=()
 TASK_KINDS=()
 TASK_CONFIGS=()
 TASK_SPLITS=()
+TASK_SEEDS=()
 TASK_ATTEMPTS=()
 TASK_STATES=()
 TASK_RUN_DIRS=()
 TASK_JOB_IDS=()
 TASK_COUNT=0
 
-while IFS=$'\t' read -r group kind config split extra; do
+while IFS=$'\t' read -r group kind config split seed extra; do
   if [[ "$kind" != "train" && "$kind" != "baseline" ]]; then
     echo "Unsupported task kind '${kind}' in ${MANIFEST}." >&2
     exit 2
@@ -228,6 +238,7 @@ while IFS=$'\t' read -r group kind config split extra; do
   TASK_KINDS+=("$kind")
   TASK_CONFIGS+=("$config")
   TASK_SPLITS+=("$split")
+  TASK_SEEDS+=("$seed")
   TASK_ATTEMPTS+=(0)
   TASK_STATES+=("pending")
   TASK_RUN_DIRS+=("")
@@ -294,9 +305,11 @@ validate_task() {
   if [[ "$state" != "success" ]]; then
     local message
     local job_log
+    local seed
     message="$(status_value "$status_file" "message")"
     job_log="$(status_value "$status_file" "job_log")"
-    log_error "Task ${task_index}: status file reports state=${state}; message=${message}; job_log=${job_log}"
+    seed="$(status_value "$status_file" "seed")"
+    log_error "Task ${task_index}: status file reports state=${state}; seed=${seed}; message=${message}; job_log=${job_log}"
     return 1
   fi
 
@@ -318,18 +331,20 @@ submit_task() {
   local kind="${TASK_KINDS[$task_index]}"
   local config="${TASK_CONFIGS[$task_index]}"
   local split="${TASK_SPLITS[$task_index]}"
+  local seed="${TASK_SEEDS[$task_index]}"
   local output
   local job_id
   local submit_try
 
   for ((submit_try = 1; submit_try <= SBATCH_SUBMIT_RETRIES; submit_try++)); do
-    log "INFO" "Submitting task ${task_index} try ${submit_try}/${SBATCH_SUBMIT_RETRIES}: group=${group} kind=${kind} config=${config} split=${split} attempt=${attempt}"
+    log "INFO" "Submitting task ${task_index} try ${submit_try}/${SBATCH_SUBMIT_RETRIES}: group=${group} kind=${kind} config=${config} split=${split} seed=${seed:-none} attempt=${attempt}"
     output="$(sbatch "$JOB_SCRIPT" \
       --task-id "$task_index" \
       --group "$group" \
       --kind "$kind" \
       --config "$config" \
       --split "$split" \
+      --seed "$seed" \
       --attempt "$attempt" \
       --status-dir "$STATUS_DIR" \
       --python "$PYTHON_EXE" \
@@ -340,7 +355,7 @@ submit_task() {
     if [[ -n "$job_id" ]]; then
       TASK_STATES[$task_index]="running"
       TASK_JOB_IDS[$task_index]="$job_id"
-      log "INFO" "Submitted task ${task_index} (${group}, ${kind}, ${config}) as job ${job_id}, attempt ${attempt}"
+      log "INFO" "Submitted task ${task_index} (${group}, ${kind}, ${config}, seed=${seed:-none}) as job ${job_id}, attempt ${attempt}"
       return 0
     fi
 
@@ -390,8 +405,8 @@ next_pending_task() {
 
 if [[ "$DRY_RUN" -eq 1 ]]; then
   for ((i = 0; i < TASK_COUNT; i++)); do
-    printf 'task=%s group=%s kind=%s config=%s split=%s\n' \
-      "$i" "${TASK_GROUPS[$i]}" "${TASK_KINDS[$i]}" "${TASK_CONFIGS[$i]}" "${TASK_SPLITS[$i]}"
+    printf 'task=%s group=%s kind=%s config=%s split=%s seed=%s\n' \
+      "$i" "${TASK_GROUPS[$i]}" "${TASK_KINDS[$i]}" "${TASK_CONFIGS[$i]}" "${TASK_SPLITS[$i]}" "${TASK_SEEDS[$i]:-}"
   done
   log "INFO" "Dry run complete. No Slurm jobs were submitted."
   exit 0
@@ -468,12 +483,12 @@ if [[ "$stop_submissions" -eq 1 ]]; then
 fi
 
 {
-  printf 'task_id\tgroup\tkind\tconfig\tsplit\tattempts\tstate\n'
+  printf 'task_id\tgroup\tkind\tconfig\tsplit\tseed\tattempts\tstate\n'
   for ((i = 0; i < TASK_COUNT; i++)); do
     if [[ "${TASK_STATES[$i]}" == "failed" || "${TASK_STATES[$i]}" == "skipped" ]]; then
-      printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+      printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
         "$i" "${TASK_GROUPS[$i]}" "${TASK_KINDS[$i]}" "${TASK_CONFIGS[$i]}" \
-        "${TASK_SPLITS[$i]}" "${TASK_ATTEMPTS[$i]}" "${TASK_STATES[$i]}"
+        "${TASK_SPLITS[$i]}" "${TASK_SEEDS[$i]}" "${TASK_ATTEMPTS[$i]}" "${TASK_STATES[$i]}"
     fi
   done
 } > "$FAILED_REPORT"
