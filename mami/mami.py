@@ -84,8 +84,7 @@ class DDPContext:
         dist.broadcast_object_list(buf, src=0)
         return buf[0]
 
-def _get_loader_function(data_type: DatasetType) -> DataCarrier:
-    dataset: DataCarrier
+def _get_loader_function(data_type: DatasetType) -> type[DataCarrier]:
     match data_type:
         case "Sri-Lanka":
             loader = SriLankaDataset 
@@ -100,7 +99,6 @@ def _get_loader_function(data_type: DatasetType) -> DataCarrier:
         case "Andhra-Aligned-Small":
             loader = AndhraAlignedSmallDataset
         case _:
-            loader = None
             raise ValueError(f"Unknown dataset type: {data_type}")
     return loader
 
