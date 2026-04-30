@@ -1,7 +1,7 @@
 # my_package/__init__.py
 
 from .base_dataset import DataCarrier
-from .datasets import SriLankaDataset, KazDataset, WeedyRiceDataset, AndhraDataset, WestBaddyDataset
+from .datasets import SriLankaDataset, KazDataset, WeedyRiceDataset, AndhraDataset, WestBaddyDataset, AndhraAligned, AndhraAlignedSmall
 
 # Optional: Define what is exported when using 'from my_package import *'
 __all__ = ["DataCarrier", 
@@ -9,5 +9,7 @@ __all__ = ["DataCarrier",
         "KazDataset", 
         "WeedyRiceDataset",
         "AndhraDataset",
-        "WestBaddyDataset"
+        "WestBaddyDataset",
+        "AndhraAligned",
+        "AndhraAlignedSmall"
         ]

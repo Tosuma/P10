@@ -214,3 +214,79 @@ Example:
         healthy_path_list = [f for f in root_path.rglob("Healthy/h_*.jpg")]
 
         return healthy_path_list, unhealthy_path_list
+
+class AndhraAligned(DataCarrier):
+    """
+    Data carrier for Andhra dataset.
+
+    File naming convention:
+    - RGB: DJI_<timestamp>_<id>_D.JPG
+    - MS bands: DJI_<timestamp>_<id>_MS_<band>.TIF
+      where <band> is one of: G (Green), R (Red), RE (Red Edge), NIR (Near Infrared)
+
+    Example:
+        RGB: data/.../DJI_<yyyymmddhhmmss>_0001_D.JPG
+        MS:  data/.../DJI_<yyyymmddhhmmss>_0001_MS_G.TIF
+             data/.../DJI_<yyyymmddhhmmss>_0001_MS_R.TIF
+             data/.../DJI_<yyyymmddhhmmss>_0001_MS_RE.TIF
+             data/.../DJI_<yyyymmddhhmmss>_0001_MS_NIR.TIF
+    """
+    def _load_data(self, root_path: Path) -> tuple[list[Path], list[Path]]:
+        # Andhra RGB full pictures have filenames like: <id>_D.JPG
+        rgb_path_list = sorted([f for f in root_path.rglob("*_D.JPG") if f.is_file()])
+
+        # Andhra MS bands have filenames like: <id>_MS_<band>.TIF
+        # Define band naming
+        band_order = ["G", "R", "RE", "NIR"]
+        ms_path_list: list[Path] = []
+        for rgb_path in rgb_path_list:
+            rgb_str = str(rgb_path)
+            for suffix in band_order:
+                ms_str = rgb_str.replace("_D.JPG", f"_MS_{suffix}.TIF")
+                ms_path_list.append(Path(ms_str))
+            if len(ms_path_list) % 4 != 0:
+                raise ValueError(f"Number of MS bands is not divisible by 4. Failed at {root_path.name}")
+
+        return rgb_path_list, ms_path_list
+    
+class AndhraAlignedSmall(DataCarrier):
+    """
+    Data carrier for Andhra dataset.
+
+    File naming convention:
+    - RGB: DJI_<timestamp>_<id>_D.JPG
+    - MS bands: DJI_<timestamp>_<id>_MS_<band>.TIF
+      where <band> is one of: G (Green), R (Red), RE (Red Edge), NIR (Near Infrared)
+
+    Example:
+        RGB: data/.../DJI_<yyyymmddhhmmss>_0001_D.JPG
+        MS:  data/.../DJI_<yyyymmddhhmmss>_0001_MS_G.TIF
+             data/.../DJI_<yyyymmddhhmmss>_0001_MS_R.TIF
+             data/.../DJI_<yyyymmddhhmmss>_0001_MS_RE.TIF
+             data/.../DJI_<yyyymmddhhmmss>_0001_MS_NIR.TIF
+    """
+    def _load_data(self, root_path: Path) -> tuple[list[Path], list[Path]]:
+        # Andhra RGB full pictures have filenames like: <id>_D.JPG
+        rgb_path_list = sorted([f for f in root_path.rglob("*_D.JPG") if f.is_file()])
+
+        # Andhra MS bands have filenames like: <id>_MS_<band>.TIF
+        # Define band naming
+        copy_rgb_path_list = []
+        for i in range(len(rgb_path_list)):
+            if i % 2 == 0:
+                copy_rgb_path_list.append(rgb_path_list[i])
+
+        rgb_path_list = copy_rgb_path_list
+
+        band_order = ["G", "R", "RE", "NIR"]
+        ms_path_list: list[Path] = []
+        for rgb_path in rgb_path_list:
+            rgb_str = str(rgb_path)
+            for suffix in band_order:
+                ms_str = rgb_str.replace("_D.JPG", f"_MS_{suffix}.TIF")
+                ms_path_list.append(Path(ms_str))
+            if len(ms_path_list) % 4 != 0:
+                raise ValueError(f"Number of MS bands is not divisible by 4. Failed at {root_path.name}")
+
+        
+        return rgb_path_list, ms_path_list

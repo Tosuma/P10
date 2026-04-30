@@ -49,9 +49,9 @@ import argparse
 
 from utils import Loss_MRAE, Loss_PSNR, Loss_RMSE, Loss_NDVI, Loss_NDRE
 from mstpp.mstpp import MST_Plus_Plus
-from data_carrier import KazDataset, SriLankaDataset, WeedyRiceDataset, AndhraDataset, DataCarrier
+from data_carrier import KazDataset, SriLankaDataset, WeedyRiceDataset, AndhraDataset, DataCarrier, AndhraAligned, AndhraAlignedSmall
 
-DatasetType = Literal["Sri-Lanka", "Kazakhstan", "Weedy-Rice", "Andhra"]
+DatasetType = Literal["Sri-Lanka", "Kazakhstan", "Weedy-Rice", "Andhra", "Andhra-Aligned", "Andhra-Aligned-Small"]
 
 @dataclass(frozen=True)
 class DatasetConfig:
@@ -95,6 +95,10 @@ def _get_loader_function(data_type: DatasetType) -> DataCarrier:
             loader = WeedyRiceDataset
         case "Andhra":
             loader = AndhraDataset
+        case "Andhra-Aligned":
+            loader = AndhraAligned
+        case "Andhra-Aligned-Small":
+            loader = AndhraAlignedSmall
         case _:
             loader = None
             raise ValueError(f"Unknown dataset type: {data_type}")
