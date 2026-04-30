@@ -215,7 +215,7 @@ Example:
 
         return healthy_path_list, unhealthy_path_list
 
-class AndhraAligned(DataCarrier):
+class AndhraAlignedDataset(DataCarrier):
     """
     Data carrier for Andhra dataset.
 
@@ -249,7 +249,7 @@ class AndhraAligned(DataCarrier):
 
         return rgb_path_list, ms_path_list
     
-class AndhraAlignedSmall(DataCarrier):
+class AndhraAlignedSmallDataset(DataCarrier):
     """
     Data carrier for Andhra dataset.
 
