@@ -10,6 +10,6 @@ __all__ = ["DataCarrier",
         "WeedyRiceDataset",
         "AndhraDataset",
         "WestBaddyDataset",
-        "AndhraAligned",
-        "AndhraAlignedSmall"
+        "AndhraAlignedDataset",
+        "AndhraAlignedSmallDataset"
         ]
