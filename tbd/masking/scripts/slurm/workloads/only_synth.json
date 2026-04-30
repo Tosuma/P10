@@ -1,0 +1,316 @@
+{
+  "tasks": [
+    {
+      "group": "binary_baseline",
+      "kind": "baseline",
+      "config": "configs/binary/synth_msi.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_baseline",
+      "kind": "baseline",
+      "config": "configs/binary/synth_msi_unetpp_resnet34.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_baseline",
+      "kind": "baseline",
+      "config": "configs/binary/synth_msi_unetpp_resnet50.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_baseline",
+      "kind": "baseline",
+      "config": "configs/binary/synth_msi_deeplabv3plus_resnet34.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_baseline",
+      "kind": "baseline",
+      "config": "configs/binary/synth_msi_deeplabv3plus_resnet50.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_baseline",
+      "kind": "baseline",
+      "config": "configs/binary/synth_msi_segformer_b0.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_baseline",
+      "kind": "baseline",
+      "config": "configs/binary/synth_msi_segformer_b1.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_baseline",
+      "kind": "baseline",
+      "config": "configs/binary/rgb_synth_msi.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_baseline",
+      "kind": "baseline",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet34.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_baseline",
+      "kind": "baseline",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet50.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_baseline",
+      "kind": "baseline",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_baseline",
+      "kind": "baseline",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_baseline",
+      "kind": "baseline",
+      "config": "configs/binary/rgb_synth_msi_segformer_b0.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_baseline",
+      "kind": "baseline",
+      "config": "configs/binary/rgb_synth_msi_segformer_b1.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_baseline",
+      "kind": "baseline",
+      "config": "configs/fuzzy/synth_msi.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_baseline",
+      "kind": "baseline",
+      "config": "configs/fuzzy/synth_msi_unetpp_resnet34.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_baseline",
+      "kind": "baseline",
+      "config": "configs/fuzzy/synth_msi_unetpp_resnet50.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_baseline",
+      "kind": "baseline",
+      "config": "configs/fuzzy/synth_msi_deeplabv3plus_resnet34.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_baseline",
+      "kind": "baseline",
+      "config": "configs/fuzzy/synth_msi_deeplabv3plus_resnet50.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_baseline",
+      "kind": "baseline",
+      "config": "configs/fuzzy/synth_msi_segformer_b0.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_baseline",
+      "kind": "baseline",
+      "config": "configs/fuzzy/synth_msi_segformer_b1.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_baseline",
+      "kind": "baseline",
+      "config": "configs/fuzzy/rgb_synth_msi.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_baseline",
+      "kind": "baseline",
+      "config": "configs/fuzzy/rgb_synth_msi_unetpp_resnet34.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_baseline",
+      "kind": "baseline",
+      "config": "configs/fuzzy/rgb_synth_msi_unetpp_resnet50.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_baseline",
+      "kind": "baseline",
+      "config": "configs/fuzzy/rgb_synth_msi_deeplabv3plus_resnet34.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_baseline",
+      "kind": "baseline",
+      "config": "configs/fuzzy/rgb_synth_msi_deeplabv3plus_resnet50.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_baseline",
+      "kind": "baseline",
+      "config": "configs/fuzzy/rgb_synth_msi_segformer_b0.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_baseline",
+      "kind": "baseline",
+      "config": "configs/fuzzy/rgb_synth_msi_segformer_b1.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_train",
+      "kind": "train",
+      "config": "configs/binary/synth_msi_unetpp_resnet34.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_train",
+      "kind": "train",
+      "config": "configs/binary/synth_msi_unetpp_resnet50.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_train",
+      "kind": "train",
+      "config": "configs/binary/synth_msi_deeplabv3plus_resnet34.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_train",
+      "kind": "train",
+      "config": "configs/binary/synth_msi_deeplabv3plus_resnet50.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_train",
+      "kind": "train",
+      "config": "configs/binary/synth_msi_segformer_b0.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_train",
+      "kind": "train",
+      "config": "configs/binary/synth_msi_segformer_b1.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_train",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet34.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_train",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet50.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_train",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_train",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_train",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_segformer_b0.yaml",
+      "split": "test"
+    },
+    {
+      "group": "binary_train",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_segformer_b1.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_train",
+      "kind": "train",
+      "config": "configs/fuzzy/synth_msi_unetpp_resnet34.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_train",
+      "kind": "train",
+      "config": "configs/fuzzy/synth_msi_unetpp_resnet50.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_train",
+      "kind": "train",
+      "config": "configs/fuzzy/synth_msi_deeplabv3plus_resnet34.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_train",
+      "kind": "train",
+      "config": "configs/fuzzy/synth_msi_deeplabv3plus_resnet50.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_train",
+      "kind": "train",
+      "config": "configs/fuzzy/synth_msi_segformer_b0.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_train",
+      "kind": "train",
+      "config": "configs/fuzzy/synth_msi_segformer_b1.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_train",
+      "kind": "train",
+      "config": "configs/fuzzy/rgb_synth_msi_unetpp_resnet34.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_train",
+      "kind": "train",
+      "config": "configs/fuzzy/rgb_synth_msi_unetpp_resnet50.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_train",
+      "kind": "train",
+      "config": "configs/fuzzy/rgb_synth_msi_deeplabv3plus_resnet34.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_train",
+      "kind": "train",
+      "config": "configs/fuzzy/rgb_synth_msi_deeplabv3plus_resnet50.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_train",
+      "kind": "train",
+      "config": "configs/fuzzy/rgb_synth_msi_segformer_b0.yaml",
+      "split": "test"
+    },
+    {
+      "group": "fuzzy_train",
+      "kind": "train",
+      "config": "configs/fuzzy/rgb_synth_msi_segformer_b1.yaml",
+      "split": "test"
+    }
+  ]
+}
