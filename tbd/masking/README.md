@@ -26,6 +26,7 @@ Convenience scripts are available if you want one command for setup or training:
 - `bash ./scripts/shared/train_configs.sh --config ...`
 - `bash ./scripts/binary/train_rgb_architectures.sh`
 - `bash ./scripts/shared/run_multi_seed.sh --config ...`
+- `bash ./scripts/shared/run_multi_seed_baselines.sh --config ...`
 - `bash ./scripts/shared/evaluate_base_configs.sh --config ...`
 - `bash ./scripts/slurm/run_masking_batch.sh --manifest ...`
 - `bash ./scripts/slurm/run_multi_seed_batch.sh --config ...`
@@ -171,6 +172,22 @@ Evaluate all unfine-tuned fuzzy baselines:
 bash ./scripts/baseline/evaluate_all_fuzzy_baselines.sh
 ```
 
+Evaluate all unfine-tuned baselines across multiple seeds and summarize them:
+
+```bash
+bash ./scripts/baseline/evaluate_all_binary_baselines_multi_seed.sh \
+  --repeats 10 \
+  --base-seed 1000 \
+  --summary-output outputs/metrics/binary_baseline_multi_seed.json
+```
+
+The fuzzy and combined variants work the same way:
+
+```bash
+bash ./scripts/baseline/evaluate_all_fuzzy_baselines_multi_seed.sh --repeats 10 --base-seed 1000
+bash ./scripts/baseline/evaluate_all_baselines_multi_seed.sh --repeats 10 --base-seed 1000
+```
+
 Run the full binary, fuzzy, and unfine-tuned baseline workload through Slurm with up to six one-GPU jobs active at a time:
 
 ```bash
@@ -256,6 +273,17 @@ bash ./scripts/shared/run_multi_seed.sh \
   --summary-output outputs/metrics/rgb_architectures_multi_seed.json
 ```
 
+Baseline-only multi-seed evaluation follows the same seed schedule, but uses `src.evaluate_base` instead of training:
+
+```bash
+bash ./scripts/shared/run_multi_seed_baselines.sh \
+  --config configs/binary/rgb.yaml \
+  --config configs/binary/real_msi.yaml \
+  --repeats 10 \
+  --base-seed 1000 \
+  --summary-output outputs/metrics/baseline_multi_seed.json
+```
+
 To spread models across different shells, launch the same script in each shell with a different config list.
 
 The script:
@@ -266,18 +294,29 @@ The script:
 - writes a JSON summary with per-run metrics
 - includes aggregate per-model mean and standard deviation across runs
 
+The baseline multi-seed script:
+
+- uses the same deterministic seed schedule for every model
+- evaluates unfine-tuned base models with different random initialization seeds
+- writes the same style of summary JSON when run on the `test` split
+- skips summary on non-`test` splits because `src.summarize` reads `evaluation/test/overall_metrics.json`
+
 Single-run convenience scripts:
 
 - `scripts/setup/setup_data.sh`: packs real MSI `.TIF` bands, creates split manifests, and patchifies all five modality baselines
 - `scripts/smoke/run_smoke.sh`: patchifies the checked-in smoke split, trains the smoke config, runs test evaluation, and writes a one-run summary
 - `scripts/shared/train_configs.sh`: trains and evaluates any explicit list of config files once each
 - `scripts/shared/run_multi_seed.sh`: runs repeated training and evaluation across explicit config lists
+- `scripts/shared/run_multi_seed_baselines.sh`: runs repeated unfine-tuned baseline evaluation across explicit config lists
 - `scripts/shared/evaluate_base_configs.sh`: evaluates one or more unfine-tuned base models from config and can summarize the baseline run set
 - `scripts/binary/train_rgb_architectures.sh`: trains the six requested RGB architecture variants once each and summarizes them
 - `scripts/binary/train_all_binary.sh`: trains the full binary config family
 - `scripts/fuzzy/train_all_fuzzy.sh`: trains the full fuzzy config family
 - `scripts/baseline/evaluate_all_binary_baselines.sh`: evaluates the full unfine-tuned binary baseline family
 - `scripts/baseline/evaluate_all_fuzzy_baselines.sh`: evaluates the full unfine-tuned fuzzy baseline family
+- `scripts/baseline/evaluate_all_binary_baselines_multi_seed.sh`: evaluates the full binary baseline family across repeated seeds and summarizes it
+- `scripts/baseline/evaluate_all_fuzzy_baselines_multi_seed.sh`: evaluates the full fuzzy baseline family across repeated seeds and summarizes it
+- `scripts/baseline/evaluate_all_baselines_multi_seed.sh`: evaluates the combined binary and fuzzy baseline architecture families across repeated seeds and summarizes them
 - `scripts/slurm/run_masking_batch.sh`: runs a manifest through Slurm, keeping up to six one-GPU jobs active and validating each completed job before starting more work
 - `scripts/slurm/run_multi_seed_batch.sh`: expands repeated training into one Slurm job per seed, reuses the batch controller, and writes a combined multi-seed summary
 - `scripts/slurm/masking_job.sh`: the Slurm job submitted by the batch controller for one train or baseline task
