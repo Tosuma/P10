@@ -6,7 +6,7 @@ PYTHON_EXE="python"
 SUMMARY_OUTPUT="outputs/metrics/multi_seed_summary.json"
 REPEATS=3
 SKIP_EVALUATE=0
-BASE_SEED=12345
+BASE_SEED=42
 CONFIGS=()
 
 while [[ $# -gt 0 ]]; do
