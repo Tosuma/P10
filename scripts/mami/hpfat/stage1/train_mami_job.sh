@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=train_mami
-#SBATCH --output=logs/vi/train_mami_%j.out
-#SBATCH --error=logs/vi/train_mami_%j.err
+#SBATCH --output=logs/hpfat/train_mami_%j.out
+#SBATCH --error=logs/hpfat/train_mami_%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --mem=24G
@@ -58,13 +58,14 @@ export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 GPUS=${SLURM_GPUS_ON_NODE:-${SLURM_GPUS_PER_NODE:-1}}
 
 singularity exec --nv \
-    /ceph/container/pytorch/pytorch_26.02.sif \
+    -B /ceph/project/tbd/data/:/ceph/project/tbd/data \
+    /ceph/container/pytorch/pytorch_26.01.sif \
     /bin/bash -lc "source p10_venv/bin/activate && \
         python -u -m torch.distributed.run \
             --standalone \
             --nproc_per_node=${GPUS} \
             mami/mami.py \
-                --stage1_data_path data/Aligned-Andhra \
+                --stage1_data_path data/data/Aligned-Andhra \
                 --stage1_data_type Andhra-Aligned-Small \
                 --stage1_epochs 300 \
                 --stage1_lr ${lr} \
