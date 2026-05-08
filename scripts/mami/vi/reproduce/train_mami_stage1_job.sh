@@ -9,9 +9,6 @@
 #SBATCH --gres=gpu:4
 #SBATCH --time=12:00:00
 
-# -------------------------
-# Parse command-line args
-# -------------------------
 lr=""
 mrae=""
 ndvi=""
@@ -38,7 +35,6 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Basic required-arg checks (optional but recommended)
 : "${lr:?Missing --lr}"
 : "${mrae:?Missing --loss_mrae_w}"
 : "${ndvi:?Missing --loss_ndvi_w}"
@@ -50,16 +46,14 @@ mkdir -p logs
 hostname
 date
 
-# Keep thread-heavy libs from oversubscribing CPU cores
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 
-# Torchrun needs to know how many processes to launch (one per GPU)
 GPUS=${SLURM_GPUS_ON_NODE:-${SLURM_GPUS_PER_NODE:-1}}
 
 singularity exec --nv \
     /ceph/container/pytorch/pytorch_26.02.sif \
-    /bin/bash -lc "source my_venv/bin/activate && \
+    /bin/bash -lc "source p10_venv/bin/activate && \
         python -u -m torch.distributed.run \
             --standalone \
             --nproc_per_node=${GPUS} \
@@ -76,4 +70,3 @@ singularity exec --nv \
                 --cluster"
 
 date
-

@@ -25,6 +25,8 @@ logger = logging.getLogger(__name__)
 device = "cuda" if torch.cuda.is_available() else "cpu"
 # device = "cpu" # Recommended when running full pictures to avoid OOM errors
 
+print(f"Using '{device}' for computation")
+
 def run(root_dir="data/",
         data_type="Sri-Lanka",
         save_dir="results",
