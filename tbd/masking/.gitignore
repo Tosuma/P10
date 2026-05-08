@@ -1,4 +1,3 @@
-outputs
 outputs/cache
 outputs/runs/*/checkpoints
 outputs/runs/*/evaluation/test/masks
