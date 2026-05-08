@@ -12,10 +12,11 @@ from torch.optim.lr_scheduler import CosineAnnealingLR
 
 from src.config import dump_config, load_config
 from src.datasets import IMAGENET_MEAN, IMAGENET_STD, build_dataloader, compute_channel_stats
-from src.evaluate import evaluate_loader, load_checkpoint, reconstruct_image_metrics, summarize_metric_rows
+from src.evaluate import build_overall_metrics_payload, evaluate_loader, load_checkpoint, reconstruct_image_metrics
 from src.losses import BCEDiceLoss
 from src.metrics import ConfusionTotals, threshold_predictions
 from src.model import build_model, resolve_model_config
+from src.targets import resolve_target_config
 from src.utils import (
     device_from_config,
     ensure_dir,
@@ -116,6 +117,7 @@ def evaluate_test_split(
     device: torch.device,
     threshold: float,
 ) -> dict[str, Any]:
+    target_config = resolve_target_config(config)
     model, _, _ = load_checkpoint(str(checkpoint_path), device)
     test_loader = build_dataloader(
         sample_manifest_path=config["paths"]["test_manifest"],
@@ -129,23 +131,25 @@ def evaluate_test_split(
         seed=config["seed"],
     )
 
-    results = evaluate_loader(model, test_loader, device, threshold=threshold)
+    results = evaluate_loader(model, test_loader, device, threshold=threshold, config=config)
     sample_rows = read_csv_rows(config["paths"]["test_manifest"])
-    per_image_rows, visuals = reconstruct_image_metrics(sample_rows, results["reconstruction_payload"], threshold)
+    image_results = reconstruct_image_metrics(sample_rows, results["reconstruction_payload"], threshold, config=config)
     mask_dir = ensure_dir(checkpoint_path.parents[1] / "metrics" / "test_masks")
-    for visual in visuals:
+    for visual in image_results["visuals"]:
         save_binary_mask(mask_dir / f"{visual['sample_id']}.png", visual["pred_mask"])
 
-    return {
+    summary, primary_view = build_overall_metrics_payload(results, image_results)
+    summary.update(
+        {
         "checkpoint": str(checkpoint_path.resolve()),
         "split": "test",
+        "target_mode": target_config["mode"],
         "mask_dir": str(mask_dir.resolve()),
-        "patch_level": results["overall"],
-        "patch_summary": summarize_metric_rows(results["per_patch_rows"]),
-        "image_summary": summarize_metric_rows(per_image_rows),
-        "num_patches": len(results["per_patch_rows"]),
-        "num_images": len(per_image_rows),
-    }
+        "num_patches": len(results["views"][primary_view]["per_patch_rows"]),
+        "num_images": len(image_results["views"][primary_view]),
+        }
+    )
+    return summary
 
 
 def save_checkpoint(path: Path, model, optimizer, scheduler, epoch: int, best_val_iou: float, config: dict[str, Any]) -> None:
@@ -196,6 +200,7 @@ def main() -> None:
         "git_commit": get_git_commit(),
         "seed": config["seed"],
         "packages": package_versions(["torch", "numpy", "PIL"]),
+        "run_kind": "finetuned",
     }
     write_json(run_dir / "run_metadata.json", metadata)
     logger.info("Training run initialized at %s", run_dir.resolve())

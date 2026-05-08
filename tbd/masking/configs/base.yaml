@@ -30,14 +30,18 @@ augmentations:
 loss:
   bce_weight: 0.5
   dice_weight: 0.5
+target:
+  mode: binary
+  halo_radius_px: 0
+  halo_min_value: 0.35
 training:
-  batch_size: 8
+  batch_size: 24
   num_workers: 0
   lr: 1e-4
   weight_decay: 1e-4
   epochs: 300
   grad_clip: 1.0
-  early_stopping_patience: 300
+  early_stopping_patience: 60
   freeze_encoder_epochs: 0
   scheduler:
     t_max: 300

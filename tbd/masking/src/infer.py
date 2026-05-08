@@ -44,9 +44,10 @@ def main() -> None:
             probability = torch.sigmoid(logits)[0, 0].cpu().numpy()
             predictions_by_sample.setdefault(sample["sample_id"], []).append({"coords": [left, top, width, height], "probability": probability})
 
-    per_image_rows, visuals = reconstruct_image_metrics(sample_rows, predictions_by_sample, threshold)
-    write_json(output_dir / "summary.json", {"samples": len(per_image_rows)})
-    for visual in visuals:
+    image_results = reconstruct_image_metrics(sample_rows, predictions_by_sample, threshold, config=config)
+    primary_view = image_results["primary_view"]
+    write_json(output_dir / "summary.json", {"samples": len(image_results["views"][primary_view])})
+    for visual in image_results["visuals"]:
         sample = sample_lookup[visual["sample_id"]]
         image = load_preview_image(sample, config["modality"])
         save_prediction_panel(

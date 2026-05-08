@@ -8,6 +8,7 @@ import torch
 from PIL import Image
 from torch.utils.data import DataLoader, Dataset
 
+from src.targets import build_target_mask, resolve_target_config
 from src.transforms import build_transforms
 from src.utils import read_csv_rows
 
@@ -103,6 +104,7 @@ class WeedSegmentationDataset(Dataset):
         self.modality = modality
         self.normalization = normalization
         self.transforms = build_transforms(transform_config, is_train=is_train, seed=seed)
+        self.target_config = resolve_target_config(transform_config)
 
     def __len__(self) -> int:
         return len(self.patches)
@@ -117,15 +119,18 @@ class WeedSegmentationDataset(Dataset):
         width, height = int(patch["width"]), int(patch["height"])
 
         image = crop_hw(self._load_image(sample), left, top, width, height)
-        mask = crop_hw(load_mask(sample["mask_path"])[..., None], left, top, width, height)[..., 0]
-        image, mask = self.transforms(image, mask, self.modality)
+        hard_mask = crop_hw(load_mask(sample["mask_path"])[..., None], left, top, width, height)[..., 0]
+        image, hard_mask = self.transforms(image, hard_mask, self.modality)
+        mask = build_target_mask(hard_mask, self.target_config)
         image = normalize_image(image, self.modality, self.normalization)
 
         image_tensor = torch.from_numpy(np.moveaxis(image, -1, 0)).float()
         mask_tensor = torch.from_numpy(mask).float()
+        hard_mask_tensor = torch.from_numpy(hard_mask).float()
         return {
             "image": image_tensor,
             "mask": mask_tensor,
+            "hard_mask": hard_mask_tensor,
             "metadata": {
                 "sample_id": sample["sample_id"],
                 "patch_id": patch["patch_id"],
@@ -139,8 +144,9 @@ class WeedSegmentationDataset(Dataset):
 def collate_fn(batch: list[dict[str, Any]]) -> dict[str, Any]:
     images = torch.stack([item["image"] for item in batch], dim=0)
     masks = torch.stack([item["mask"] for item in batch], dim=0)
+    hard_masks = torch.stack([item["hard_mask"] for item in batch], dim=0)
     metadata = [item["metadata"] for item in batch]
-    return {"image": images, "mask": masks, "metadata": metadata}
+    return {"image": images, "mask": masks, "hard_mask": hard_masks, "metadata": metadata}
 
 
 def compute_channel_stats(sample_manifest_path: str, patch_manifest_path: str, modality: str) -> dict[str, Any]:

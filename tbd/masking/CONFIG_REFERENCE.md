@@ -2,11 +2,21 @@
 
 This document explains the fields used by the YAML config files in `tbd\masking\configs`.
 
+Config directories are organized by purpose:
+
+- `configs\binary\`: standard hard-mask training configs
+- `configs\fuzzy\`: fuzzy-halo variants that mirror the binary config names
+- `configs\smoke\`: smoke-test configs
+- `configs\base.yaml`: shared root defaults
+
 Numeric fields may use normal decimal notation or scientific notation such as `1e-4` and `1e-6`.
 
 ## How config inheritance works
 
-- A config can declare `base_config: base.yaml`.
+- A config can declare `base_config: ...` using a path relative to the config file itself.
+- Examples:
+  - `configs\binary\rgb.yaml` uses `base_config: ../base.yaml`
+  - `configs\fuzzy\rgb.yaml` uses `base_config: ../binary/rgb.yaml`
 - When present, the child config overrides only the fields it redefines.
 - Effective runtime config is written into each run directory as `config.yaml`.
 
@@ -157,6 +167,34 @@ Numeric fields may use normal decimal notation or scientific notation such as `1
 
 - Weight of the Dice loss term in the segmentation loss.
 
+## `target`
+
+### `mode`
+
+- Training/evaluation target style.
+- Supported values:
+  - `binary`: current hard weed mask
+  - `fuzzy_halo`: keep the labeled weed pixels at `1.0` and add a soft halo outside the weed boundary
+
+### `halo_radius_px`
+
+- Only used for `fuzzy_halo`.
+- Number of pixels outside the hard weed mask where the relaxed target remains positive.
+- `0` disables the halo and makes the target equivalent to the original binary mask.
+- Must be greater than or equal to `0`.
+
+### `halo_min_value`
+
+- Only used for `fuzzy_halo`.
+- Lowest soft-target value used near the outer edge of the halo band.
+- Valid range is `0.0` to `1.0`.
+- The original labeled weed pixels stay at `1.0`.
+- Halo pixels between the weed boundary and the outer edge are assigned values interpolated between just below `1.0` near the boundary and `halo_min_value` at the outer edge.
+- Example:
+  - with `halo_radius_px: 12` and `halo_min_value: 0.35`, the farthest halo ring gets target value `0.35`
+  - halo rings closer to the weed boundary get progressively higher target values
+  - pixels outside the halo stay at `0.0`
+
 ## `training`
 
 ### `batch_size`
@@ -215,3 +253,6 @@ Numeric fields may use normal decimal notation or scientific notation such as `1
 ### `num_visualizations`
 
 - Number of sample visualization panels to save during evaluation.
+- Evaluation now reports both `original_*` metrics against the hard weed mask and `fuzzy_*` metrics against the fuzzy-halo mask for every model family.
+- For binary and baseline configs, the fuzzy scoring mask is resolved from the matching config file in `configs\fuzzy\`.
+- The legacy `patch_level`, `patch_summary`, and `image_level` fields remain as aliases to the model's own target view.
