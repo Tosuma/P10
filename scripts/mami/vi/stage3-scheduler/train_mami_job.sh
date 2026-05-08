@@ -7,7 +7,7 @@
 #SBATCH --mem=24G
 #SBATCH --cpus-per-task=15
 #SBATCH --gres=gpu:4
-#SBATCH --time=12:00:00
+#SBATCH --time=4:00:00
 
 # -------------------------
 # Parse command-line args

@@ -15,7 +15,7 @@ mkdir -p logs/inference
 for ndre in $(seq -f "%.1f" 0.0 0.1 0.5); do
   for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
     dir_name="results/vi/stage3-scheduler---sri-lanka/re_${ndre}_vi_${ndvi}"
-    model_name="./checkpoints/vi/finals/stage3-scheduler/vi-weedy-re_${ndre}-vi_${ndvi}_stage3_best.pth"
+    model_name="./checkpoints/vi/finals/stage3-scheduler/vi-weedy-scheduler-re_${ndre}-vi_${ndvi}_stage3_best.pth"
 
     attempt=0
 
