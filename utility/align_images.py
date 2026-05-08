@@ -5,6 +5,9 @@ import cv2
 import numpy as np
 import os
 import glob
+from pathlib import Path
+
+cv2.utils.logging.setLogLevel(0)
 
 def read_and_preprocess(path, grayscale=True):
     if grayscale:
@@ -62,17 +65,31 @@ def crop_to_valid_overlap(images, extra_margin=0.05):
 
 def find_image_sets(input_folder):
     # Find all unique base names for image sets in the folder
-    pattern = os.path.join(input_folder, '*_MS_G.TIF')
-    green_files = glob.glob(pattern)
+    rgb_path_list = sorted(Path(input_folder).rglob("*_D.JPG"))
+    band_order = ["G", "R", "RE", "NIR"]
     sets = []
-    for green_path in green_files:
-        base = green_path.replace('_MS_G.TIF', '')
+
+    for rgb_path in rgb_path_list:
+        parts = rgb_path.stem.split('_')
+        image_number = parts[-2]
+        ms_path_list: list[Path] = []
+        for suffix in band_order:
+            search_pattern = f"*_{image_number}_MS_{suffix}.TIF"
+            matching_files = list(rgb_path.parent.rglob(search_pattern))
+            if not matching_files:
+                print("No matching files")
+            if len(matching_files) > 1:
+                print("Too many matching files")
+            ms_path_list.append(matching_files[0])
+
+        if len(ms_path_list) > 4:
+            print("Forgot to clear list")
         paths = {
-            'rgb': base.replace('_MS', '') + '_D.JPG',
-            'green': base + '_MS_G.TIF',
-            'red': base + '_MS_R.TIF',
-            'red_edge': base + '_MS_RE.TIF',
-            'nir': base + '_MS_NIR.TIF',
+            'rgb': str(rgb_path),
+            'green': str(ms_path_list[0]),
+            'red': str(ms_path_list[1]),
+            'red_edge': str(ms_path_list[2]),
+            'nir': str(ms_path_list[3]),
         }
         if all(os.path.exists(paths[k]) for k in paths):
             sets.append(paths)
@@ -89,6 +106,7 @@ if __name__ == '__main__':
     image_sets = find_image_sets(args.input_folder)
     print(f'Found {len(image_sets)} image sets.')
 
+    parent_path = ""
     for paths in image_sets:
         try:
             ref_img = read_and_preprocess(paths['green'], grayscale=True)
@@ -103,8 +121,10 @@ if __name__ == '__main__':
             cropped_images = crop_to_valid_overlap(images)
             # Save results
             base_name = os.path.basename(paths['green']).replace('_MS_G.TIF', '')
+            parent_dir = os.path.dirname(paths["green"]).split("/")[-1]
+            os.makedirs(f'{args.output_folder}/{parent_dir}', exist_ok=True)
             for i, band in enumerate(['_D.JPG', '_MS_G.TIF', '_MS_R.TIF', '_MS_RE.TIF', '_MS_NIR.TIF']):
-                out_path = os.path.join(args.output_folder, f'{base_name}_aligned_cropped{band}')
+                out_path = os.path.join(args.output_folder, f'{parent_dir}/{base_name}_aligned_cropped{band}')
                 cv2.imwrite(out_path, cropped_images[i])
             print(f'Processed {base_name}')
         except Exception as e:

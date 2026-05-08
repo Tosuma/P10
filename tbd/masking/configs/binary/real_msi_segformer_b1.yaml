@@ -1,0 +1,6 @@
+base_config: real_msi.yaml
+experiment_name: real_msi_segformer_b1
+model:
+  architecture: Segformer
+  encoder_name: mit_b1
+  encoder_weights: imagenet

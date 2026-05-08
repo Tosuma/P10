@@ -1,0 +1,10 @@
+outputs/cache
+outputs/runs/*/checkpoints
+outputs/runs/*/evaluation/test/masks
+outputs/runs/*/evaluation/test/visuals
+outputs/runs/*/evaluation/test/per_image_metrics.csv
+outputs/runs/*/evaluation/test/per_patch_metrics.csv
+outputs/runs/*/evaluation/test/original_per_image_metrics.csv
+outputs/runs/*/evaluation/test/original_per_patch_metrics.csv
+outputs/runs/*/metrics
+outputs/runs/*/run_metadata.json

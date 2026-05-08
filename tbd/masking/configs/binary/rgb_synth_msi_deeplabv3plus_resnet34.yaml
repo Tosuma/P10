@@ -1,0 +1,5 @@
+base_config: rgb_synth_msi.yaml
+experiment_name: rgb_synthetic_msi_deeplabv3plus_resnet34
+model:
+  architecture: DeepLabV3Plus
+  encoder_name: resnet34

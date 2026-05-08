@@ -1,0 +1,6 @@
+base_config: ../binary/rgb_synth_msi.yaml
+experiment_name: rgb_synthetic_msi_unet_resnet34_fuzzy_halo
+target:
+  mode: fuzzy_halo
+  halo_radius_px: 12
+  halo_min_value: 0.35
