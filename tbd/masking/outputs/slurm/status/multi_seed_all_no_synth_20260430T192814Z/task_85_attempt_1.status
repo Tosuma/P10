@@ -1,0 +1,14 @@
+task_id=85
+group=binary_train_multi_seed
+kind=train
+config=configs/binary/real_msi_deeplabv3plus_resnet34.yaml
+split=test
+seed=47
+attempt=1
+state=failed
+exit_code=1
+run_dir=
+message=train failed; see outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_85_attempt_1.log
+job_log=outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_85_attempt_1.log
+slurm_job_id=818781
+finished_at=2026-05-02T03:58:46Z

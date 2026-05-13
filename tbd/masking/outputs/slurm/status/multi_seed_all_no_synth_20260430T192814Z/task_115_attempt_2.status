@@ -1,0 +1,14 @@
+task_id=115
+group=binary_train_multi_seed
+kind=train
+config=configs/binary/real_msi_segformer_b1.yaml
+split=test
+seed=47
+attempt=2
+state=success
+exit_code=0
+run_dir=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/real_msi_segformer_b1_seed47_20260502T074613Z
+message=completed
+job_log=outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_115_attempt_2.log
+slurm_job_id=818903
+finished_at=2026-05-02T11:13:46Z

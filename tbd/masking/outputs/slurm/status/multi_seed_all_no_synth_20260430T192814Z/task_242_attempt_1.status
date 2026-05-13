@@ -1,0 +1,14 @@
+task_id=242
+group=fuzzy_train_multi_seed
+kind=train
+config=configs/fuzzy/real_msi_unetpp_resnet34.yaml
+split=test
+seed=44
+attempt=1
+state=success
+exit_code=0
+run_dir=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/real_msi_unetplusplus_resnet34_fuzzy_halo_seed44_20260507T023150Z
+message=completed
+job_log=outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_242_attempt_1.log
+slurm_job_id=824876
+finished_at=2026-05-07T09:56:25Z

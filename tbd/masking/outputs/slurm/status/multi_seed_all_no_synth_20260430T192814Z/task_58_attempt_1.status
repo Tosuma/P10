@@ -1,0 +1,14 @@
+task_id=58
+group=binary_train_multi_seed
+kind=train
+config=configs/binary/rgb_segformer_b1.yaml
+split=test
+seed=50
+attempt=1
+state=success
+exit_code=0
+run_dir=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_segformer_b1_seed50_20260502T011722Z
+message=completed
+job_log=outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_58_attempt_1.log
+slurm_job_id=818604
+finished_at=2026-05-02T05:19:21Z

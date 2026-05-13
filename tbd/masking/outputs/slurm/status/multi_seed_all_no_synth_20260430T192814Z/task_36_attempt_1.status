@@ -1,0 +1,14 @@
+task_id=36
+group=binary_train_multi_seed
+kind=train
+config=configs/binary/rgb_deeplabv3plus_resnet50.yaml
+split=test
+seed=48
+attempt=1
+state=failed
+exit_code=255
+run_dir=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_deeplabv3plus_resnet50_seed48_20260501T142525Z
+message=evaluate failed; see outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_36_attempt_1.log
+job_log=outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_36_attempt_1.log
+slurm_job_id=818318
+finished_at=2026-05-01T18:13:31Z

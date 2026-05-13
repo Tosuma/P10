@@ -1,0 +1,14 @@
+task_id=201
+group=fuzzy_train_multi_seed
+kind=train
+config=configs/fuzzy/rgb_deeplabv3plus_resnet34.yaml
+split=test
+seed=43
+attempt=1
+state=success
+exit_code=0
+run_dir=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_deeplabv3plus_resnet34_fuzzy_halo_seed43_20260504T174753Z
+message=completed
+job_log=outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_201_attempt_1.log
+slurm_job_id=820904
+finished_at=2026-05-05T00:11:23Z

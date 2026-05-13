@@ -1,0 +1,14 @@
+task_id=302
+group=fuzzy_train_multi_seed
+kind=train
+config=configs/fuzzy/rgb_real_msi_unetpp_resnet34.yaml
+split=test
+seed=44
+attempt=3
+state=failed
+exit_code=1
+run_dir=
+message=train failed; see outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_302_attempt_3.log
+job_log=outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_302_attempt_3.log
+slurm_job_id=830099
+finished_at=2026-05-09T22:15:22Z

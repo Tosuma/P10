@@ -1,0 +1,14 @@
+task_id=230
+group=fuzzy_train_multi_seed
+kind=train
+config=configs/fuzzy/rgb_segformer_b1.yaml
+split=test
+seed=42
+attempt=1
+state=failed
+exit_code=255
+run_dir=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_segformer_b1_fuzzy_halo_seed42_20260505T230143Z
+message=evaluate failed; see outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_230_attempt_1.log
+job_log=outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_230_attempt_1.log
+slurm_job_id=823499
+finished_at=2026-05-06T05:20:10Z

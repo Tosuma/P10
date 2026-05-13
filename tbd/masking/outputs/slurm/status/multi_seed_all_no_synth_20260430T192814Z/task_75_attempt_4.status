@@ -1,0 +1,14 @@
+task_id=75
+group=binary_train_multi_seed
+kind=train
+config=configs/binary/real_msi_unetpp_resnet50.yaml
+split=test
+seed=47
+attempt=4
+state=failed
+exit_code=1
+run_dir=
+message=train failed; see outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_75_attempt_4.log
+job_log=outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_75_attempt_4.log
+slurm_job_id=818771
+finished_at=2026-05-02T03:53:46Z

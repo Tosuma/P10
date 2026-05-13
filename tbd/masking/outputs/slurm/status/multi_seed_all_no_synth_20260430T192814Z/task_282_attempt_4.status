@@ -1,0 +1,14 @@
+task_id=282
+group=fuzzy_train_multi_seed
+kind=train
+config=configs/fuzzy/real_msi_segformer_b0.yaml
+split=test
+seed=44
+attempt=4
+state=failed
+exit_code=1
+run_dir=
+message=train failed; see outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_282_attempt_4.log
+job_log=outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_282_attempt_4.log
+slurm_job_id=826795
+finished_at=2026-05-08T01:06:00Z

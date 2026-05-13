@@ -1,0 +1,14 @@
+task_id=140
+group=binary_train_multi_seed
+kind=train
+config=configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml
+split=test
+seed=42
+attempt=1
+state=success
+exit_code=0
+run_dir=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_real_msi_deeplabv3plus_resnet34_seed42_20260503T041236Z
+message=completed
+job_log=outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_140_attempt_1.log
+slurm_job_id=819263
+finished_at=2026-05-03T09:21:19Z

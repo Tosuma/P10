@@ -1,0 +1,14 @@
+task_id=198
+group=fuzzy_train_multi_seed
+kind=train
+config=configs/fuzzy/rgb_unetpp_resnet50.yaml
+split=test
+seed=50
+attempt=1
+state=success
+exit_code=0
+run_dir=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_unetplusplus_resnet50_fuzzy_halo_seed50_20260504T133959Z
+message=completed
+job_log=outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_198_attempt_1.log
+slurm_job_id=820859
+finished_at=2026-05-05T00:52:57Z
