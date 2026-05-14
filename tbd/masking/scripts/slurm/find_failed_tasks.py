@@ -194,7 +194,13 @@ def main() -> None:
         "--retry-manifest",
         type=Path,
         default=None,
-        help="Write a JSON manifest containing every non-successful task so it can be resubmitted.",
+        help="Write a JSON manifest containing tasks selected by --retry-status so they can be resubmitted.",
+    )
+    parser.add_argument(
+        "--retry-status",
+        choices=["permanent-failure", "non-success"],
+        default="permanent-failure",
+        help="Which tasks to include in --retry-manifest. Defaults to permanent failures only.",
     )
     parser.add_argument("--show-success", action="store_true", help="Include successful tasks in stdout and CSV output.")
     args = parser.parse_args()
@@ -242,7 +248,10 @@ def main() -> None:
         print(f"wrote_csv={args.output_csv}")
 
     if args.retry_manifest is not None:
-        retry_rows = [row for row in rows if row["status"] != "success"]
+        if args.retry_status == "permanent-failure":
+            retry_rows = [row for row in rows if row["status"] == "permanent_failure"]
+        else:
+            retry_rows = [row for row in rows if row["status"] != "success"]
         write_retry_manifest(args.retry_manifest, retry_rows)
         print(f"wrote_retry_manifest={args.retry_manifest}")
         print(f"retry_tasks={len(retry_rows)}")

@@ -352,6 +352,17 @@ The Slurm controller is intended to run from a login shell in `tbd/masking`. It 
 
 The multi-seed Slurm runner writes its expanded manifest under `outputs/slurm/manifests/`, reuses the same task validation and retry logic as `run_masking_batch.sh`, and writes a final combined summary JSON after collecting successful run directories from the batch status files. It still runs one training seed per Slurm job, so `--repeats 10` means ten separate jobs per config rather than one long job.
 
+To rerun a retry manifest, such as one produced by `scripts/slurm/find_failed_tasks.py`, use:
+
+```bash
+bash ./scripts/slurm/run_retry_manifest.sh \
+  --manifest retry-manifest.json \
+  --runs-root outputs/runs \
+  --summary-output outputs/metrics/all_no_synth_combined_after_retry.json
+```
+
+The retry wrapper submits the manifest through the normal Slurm controller without expanding seeds. After the controller finishes, it scans `outputs/runs` for completed runs with `config.yaml` and `evaluation/test/overall_metrics.json`, writes a combined summary, and writes a companion `*_runs.txt` file listing exactly which run directories were included. If some retry tasks still fail, the combined summary is still written from completed runs and the wrapper exits with the controller's nonzero status.
+
 Cluster defaults are editable near the top of `scripts/slurm/run_masking_batch.sh` and in the SBATCH header of `scripts/slurm/masking_job.sh`. Set `MAX_RETRIES=10` or `MAX_RETRIES=50` in the controller if you want more retries after bad logs or missing outputs; set `SBATCH_SUBMIT_RETRIES` separately for cases where `sbatch` does not return a job id. The default job settings request one GPU, 15 CPUs, 24 GB memory, and 12 hours, and run through `/ceph/container/pytorch/pytorch_26.02.sif`. The job script tries `p10_venv/bin/activate`, `../../p10_venv/bin/activate`, and `../../.venv/bin/activate` from `tbd/masking`; override `VENV_ACTIVATE` if the cluster venv lives elsewhere. Use `--dry-run` to verify manifest parsing without submitting jobs:
 
 ```bash
