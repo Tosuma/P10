@@ -2,7 +2,7 @@
 
 # Edit these defaults to match the cluster. The job script also contains the
 # SBATCH resource defaults so it can be submitted directly for debugging.
-MAX_PARALLEL=6
+MAX_PARALLEL=8
 # Number of times a task is retried after a submitted job finishes without
 # valid outputs. Set this to 10, 50, etc. if the cluster is flaky.
 MAX_RETRIES=3
