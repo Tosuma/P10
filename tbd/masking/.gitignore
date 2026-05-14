@@ -2,7 +2,10 @@ outputs/cache
 outputs/runs/*/checkpoints/*
 outputs/runs/*/metrics/*
 outputs/runs/*/run_metadata.json
-outputs/runs/*/evaluation/*
-!outputs/runs/*/evaluation/test/overall_metrics.json
 outputs/slurm/status/**/task*1.log
 outputs/slurm/status/**/task*1.status
+
+outputs/runs/*/evaluation/test/*
+!outputs/runs/*/evaluation/test/overall_metrics.json
+outputs/runs/*/evaluation/test/visuals/
+outputs/runs/*/evaluation/test/masks/
