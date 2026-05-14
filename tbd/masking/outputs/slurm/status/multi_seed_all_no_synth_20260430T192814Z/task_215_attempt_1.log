@@ -1,0 +1,13 @@
+2026-05-05T06:32:06Z [INFO] Slurm masking job started
+2026-05-05T06:32:06Z [INFO] task_id=215 group=fuzzy_train_multi_seed kind=train config=configs/fuzzy/rgb_deeplabv3plus_resnet50.yaml split=test seed=47 attempt=1
+2026-05-05T06:32:06Z [INFO] pwd=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking host=ailab-l4-08 slurm_job_id=822149 cuda_visible_devices=1
+2026-05-05T06:32:06Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-05-05T06:32:06Z [INFO] status_file=outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_215_attempt_1.status
+2026-05-05T06:32:06Z [INFO] PYTHONPATH=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking OMP_NUM_THREADS=15 MKL_NUM_THREADS=15
+2026-05-05T06:32:06Z [INFO] singularity=/usr/bin/singularity
+
+==== train ====
+started_at=2026-05-05T06:32:07Z
+command=python -u -m src.train --config 'configs/fuzzy/rgb_deeplabv3plus_resnet50.yaml' --seed '47'
+[33mWARNING:[0m Could not lookup the current user's information: user: unknown userid 225154
+[31mFATAL:  [0m Couldn't determine user account information: user: unknown userid 225154
