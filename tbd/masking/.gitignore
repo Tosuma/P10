@@ -4,6 +4,10 @@ outputs/runs/*/metrics/*
 outputs/runs/*/run_metadata.json
 outputs/slurm/status/**/task*1.log
 outputs/slurm/status/**/task*1.status
+outputs/slurm/status/**/task*2.log
+outputs/slurm/status/**/task*2.status
+outputs/slurm/status/**/task*3.log
+outputs/slurm/status/**/task*3.status
 
 outputs/runs/*/evaluation/test/*
 !outputs/runs/*/evaluation/test/overall_metrics.json
