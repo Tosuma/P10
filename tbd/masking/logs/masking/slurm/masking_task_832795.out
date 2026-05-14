@@ -1,0 +1,10 @@
+ailab-l4-03
+Mon May 11 15:06:13 CEST 2026
+2026-05-11T13:06:13Z [INFO] Slurm masking job started
+2026-05-11T13:06:13Z [INFO] task_id=324 group=fuzzy_train_multi_seed kind=train config=configs/fuzzy/rgb_real_msi_deeplabv3plus_resnet34.yaml split=test seed=46 attempt=3
+2026-05-11T13:06:13Z [INFO] pwd=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking host=ailab-l4-03 slurm_job_id=832795 cuda_visible_devices=1
+2026-05-11T13:06:13Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-05-11T13:06:13Z [INFO] status_file=outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_324_attempt_3.status
+2026-05-11T13:06:13Z [INFO] PYTHONPATH=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking OMP_NUM_THREADS=15 MKL_NUM_THREADS=15
+2026-05-11T13:06:13Z [INFO] singularity=/usr/bin/singularity
+Training configs/fuzzy/rgb_real_msi_deeplabv3plus_resnet34.yaml

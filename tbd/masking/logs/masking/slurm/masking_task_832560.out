@@ -1,0 +1,12 @@
+ailab-l4-03
+Mon May 11 04:38:13 CEST 2026
+2026-05-11T02:38:13Z [INFO] Slurm masking job started
+2026-05-11T02:38:13Z [INFO] task_id=359 group=fuzzy_train_multi_seed kind=train config=configs/fuzzy/rgb_real_msi_segformer_b1.yaml split=test seed=51 attempt=2
+2026-05-11T02:38:13Z [INFO] pwd=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking host=ailab-l4-03 slurm_job_id=832560 cuda_visible_devices=3
+2026-05-11T02:38:13Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-05-11T02:38:13Z [INFO] status_file=outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_359_attempt_2.status
+2026-05-11T02:38:13Z [INFO] PYTHONPATH=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking OMP_NUM_THREADS=15 MKL_NUM_THREADS=15
+2026-05-11T02:38:13Z [INFO] singularity=/usr/bin/singularity
+Training configs/fuzzy/rgb_real_msi_segformer_b1.yaml
+[33mWARNING:[0m Could not lookup the current user's information: user: unknown userid 225154
+[31mFATAL:  [0m Couldn't determine user account information: user: unknown userid 225154

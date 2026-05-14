@@ -13,3 +13,5 @@ outputs/runs/*/evaluation/test/*
 !outputs/runs/*/evaluation/test/overall_metrics.json
 outputs/runs/*/evaluation/test/visuals/
 outputs/runs/*/evaluation/test/masks/
+
+outputs/runs/*/logs/history.csv

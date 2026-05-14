@@ -1,0 +1,41 @@
+ailab-l4-04
+Thu May  7 16:01:16 CEST 2026
+2026-05-07T14:01:16Z [INFO] Slurm masking job started
+2026-05-07T14:01:16Z [INFO] task_id=253 group=fuzzy_train_multi_seed kind=train config=configs/fuzzy/real_msi_unetpp_resnet50.yaml split=test seed=45 attempt=1
+2026-05-07T14:01:16Z [INFO] pwd=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking host=ailab-l4-04 slurm_job_id=825199 cuda_visible_devices=1
+2026-05-07T14:01:17Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-05-07T14:01:17Z [INFO] status_file=outputs/slurm/status/multi_seed_all_no_synth_20260430T192814Z/task_253_attempt_1.status
+2026-05-07T14:01:17Z [INFO] PYTHONPATH=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking OMP_NUM_THREADS=15 MKL_NUM_THREADS=15
+2026-05-07T14:01:17Z [INFO] singularity=/usr/bin/singularity
+Training configs/fuzzy/real_msi_unetpp_resnet50.yaml
+container_pwd=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking
+container_python_before_venv=/usr/bin/python
+using_venv=../../p10_venv/bin/activate
+container_python_after_venv=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/bin/python
+python_executable=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/bin/python
+python_version=3.12.3
+pythonpath=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/src/train.py", line 379, in <module>
+    main()
+  File "/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/src/train.py", line 295, in main
+    train_metrics = run_epoch(
+                    ^^^^^^^^^^
+  File "/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/src/train.py", line 100, in run_epoch
+    scaler.step(optimizer)
+  File "/usr/local/lib/python3.12/dist-packages/torch/amp/grad_scaler.py", line 478, in step
+    retval = self._maybe_opt_step(optimizer, optimizer_state, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/amp/grad_scaler.py", line 371, in _maybe_opt_step
+    if not sum(v.item() for v in optimizer_state["found_inf_per_device"].values()):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/amp/grad_scaler.py", line 371, in <genexpr>
+    if not sum(v.item() for v in optimizer_state["found_inf_per_device"].values()):
+               ^^^^^^^^
+torch.AcceleratorError: CUDA error: uncorrectable ECC error encountered
+Search for `cudaErrorECCUncorrectable' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.

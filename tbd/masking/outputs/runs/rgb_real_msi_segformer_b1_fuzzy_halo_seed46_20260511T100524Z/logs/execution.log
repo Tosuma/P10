@@ -1,0 +1,303 @@
+2026-05-11 12:05:25,624 [Trainer] :: Training run initialized at /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_real_msi_segformer_b1_fuzzy_halo_seed46_20260511T100524Z
+2026-05-11 12:05:25,624 [Trainer] :: Loaded config from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/configs/fuzzy/rgb_real_msi_segformer_b1.yaml
+2026-05-11 12:05:25,624 [Trainer] :: Using seed=46 and device=None
+2026-05-11 12:05:25,624 [Trainer] :: Using model architecture=Segformer encoder=mit_b1 encoder_weights=imagenet
+2026-05-11 12:05:25,840 [Trainer] :: Resolved runtime device to cuda
+2026-05-11 12:05:25,840 [Trainer] :: Prepared normalization from source=train_split_patch_stats
+2026-05-11 12:05:29,840 [Trainer] :: Built dataloaders with batch_size=16, num_workers=0
+2026-05-11 12:05:29,841 [Trainer] :: Starting epoch 1
+2026-05-11 12:11:48,490 [Trainer] :: Completed epoch 1: train_loss=0.330356 train_iou=0.720339 val_loss=0.356504 val_iou=0.584057 lr=0.00010000
+2026-05-11 12:11:48,736 [Trainer] :: Updated latest checkpoint at epoch 1
+2026-05-11 12:11:48,961 [Trainer] :: New best checkpoint saved with val_iou=0.584057
+2026-05-11 12:11:48,961 [Trainer] :: Starting epoch 2
+2026-05-11 12:17:58,321 [Trainer] :: Completed epoch 2: train_loss=0.267016 train_iou=0.777770 val_loss=0.348064 val_iou=0.596861 lr=0.00009999
+2026-05-11 12:17:58,812 [Trainer] :: Updated latest checkpoint at epoch 2
+2026-05-11 12:17:59,659 [Trainer] :: New best checkpoint saved with val_iou=0.596861
+2026-05-11 12:17:59,660 [Trainer] :: Starting epoch 3
+2026-05-11 12:24:16,527 [Trainer] :: Completed epoch 3: train_loss=0.255047 train_iou=0.785747 val_loss=0.300911 val_iou=0.569477 lr=0.00009998
+2026-05-11 12:24:16,826 [Trainer] :: Updated latest checkpoint at epoch 3
+2026-05-11 12:24:16,826 [Trainer] :: No validation IoU improvement for 1 epoch(s)
+2026-05-11 12:24:16,826 [Trainer] :: Starting epoch 4
+2026-05-11 12:30:42,947 [Trainer] :: Completed epoch 4: train_loss=0.237860 train_iou=0.799981 val_loss=0.321419 val_iou=0.531574 lr=0.00009996
+2026-05-11 12:30:43,187 [Trainer] :: Updated latest checkpoint at epoch 4
+2026-05-11 12:30:43,188 [Trainer] :: No validation IoU improvement for 2 epoch(s)
+2026-05-11 12:30:43,188 [Trainer] :: Starting epoch 5
+2026-05-11 12:37:13,734 [Trainer] :: Completed epoch 5: train_loss=0.225621 train_iou=0.811250 val_loss=0.302558 val_iou=0.549459 lr=0.00009993
+2026-05-11 12:37:14,116 [Trainer] :: Updated latest checkpoint at epoch 5
+2026-05-11 12:37:14,116 [Trainer] :: No validation IoU improvement for 3 epoch(s)
+2026-05-11 12:37:14,116 [Trainer] :: Starting epoch 6
+2026-05-11 12:43:27,660 [Trainer] :: Completed epoch 6: train_loss=0.221796 train_iou=0.814884 val_loss=0.283815 val_iou=0.604034 lr=0.00009990
+2026-05-11 12:43:27,864 [Trainer] :: Updated latest checkpoint at epoch 6
+2026-05-11 12:43:28,075 [Trainer] :: New best checkpoint saved with val_iou=0.604034
+2026-05-11 12:43:28,075 [Trainer] :: Starting epoch 7
+2026-05-11 12:49:40,580 [Trainer] :: Completed epoch 7: train_loss=0.213164 train_iou=0.822956 val_loss=0.295605 val_iou=0.564971 lr=0.00009987
+2026-05-11 12:49:40,792 [Trainer] :: Updated latest checkpoint at epoch 7
+2026-05-11 12:49:40,793 [Trainer] :: No validation IoU improvement for 1 epoch(s)
+2026-05-11 12:49:40,793 [Trainer] :: Starting epoch 8
+2026-05-11 12:55:43,307 [Trainer] :: Completed epoch 8: train_loss=0.204469 train_iou=0.829532 val_loss=0.310159 val_iou=0.637842 lr=0.00009983
+2026-05-11 12:55:43,510 [Trainer] :: Updated latest checkpoint at epoch 8
+2026-05-11 12:55:43,741 [Trainer] :: New best checkpoint saved with val_iou=0.637842
+2026-05-11 12:55:43,741 [Trainer] :: Starting epoch 9
+2026-05-11 13:01:40,075 [Trainer] :: Completed epoch 9: train_loss=0.201117 train_iou=0.833638 val_loss=0.275960 val_iou=0.651753 lr=0.00009978
+2026-05-11 13:01:40,375 [Trainer] :: Updated latest checkpoint at epoch 9
+2026-05-11 13:01:40,588 [Trainer] :: New best checkpoint saved with val_iou=0.651753
+2026-05-11 13:01:40,588 [Trainer] :: Starting epoch 10
+2026-05-11 13:07:35,161 [Trainer] :: Completed epoch 10: train_loss=0.195308 train_iou=0.834021 val_loss=0.262311 val_iou=0.632254 lr=0.00009973
+2026-05-11 13:07:35,374 [Trainer] :: Updated latest checkpoint at epoch 10
+2026-05-11 13:07:35,374 [Trainer] :: No validation IoU improvement for 1 epoch(s)
+2026-05-11 13:07:35,374 [Trainer] :: Starting epoch 11
+2026-05-11 13:13:50,214 [Trainer] :: Completed epoch 11: train_loss=0.186603 train_iou=0.838705 val_loss=0.269539 val_iou=0.658217 lr=0.00009967
+2026-05-11 13:13:50,433 [Trainer] :: Updated latest checkpoint at epoch 11
+2026-05-11 13:13:50,628 [Trainer] :: New best checkpoint saved with val_iou=0.658217
+2026-05-11 13:13:50,628 [Trainer] :: Starting epoch 12
+2026-05-11 13:20:03,847 [Trainer] :: Completed epoch 12: train_loss=0.180726 train_iou=0.841519 val_loss=0.332923 val_iou=0.538524 lr=0.00009961
+2026-05-11 13:20:04,065 [Trainer] :: Updated latest checkpoint at epoch 12
+2026-05-11 13:20:04,065 [Trainer] :: No validation IoU improvement for 1 epoch(s)
+2026-05-11 13:20:04,065 [Trainer] :: Starting epoch 13
+2026-05-11 13:26:00,741 [Trainer] :: Completed epoch 13: train_loss=0.183114 train_iou=0.837360 val_loss=0.259082 val_iou=0.689993 lr=0.00009954
+2026-05-11 13:26:00,934 [Trainer] :: Updated latest checkpoint at epoch 13
+2026-05-11 13:26:01,157 [Trainer] :: New best checkpoint saved with val_iou=0.689993
+2026-05-11 13:26:01,157 [Trainer] :: Starting epoch 14
+2026-05-11 13:31:57,411 [Trainer] :: Completed epoch 14: train_loss=0.167826 train_iou=0.849653 val_loss=0.287826 val_iou=0.592926 lr=0.00009947
+2026-05-11 13:31:57,820 [Trainer] :: Updated latest checkpoint at epoch 14
+2026-05-11 13:31:57,820 [Trainer] :: No validation IoU improvement for 1 epoch(s)
+2026-05-11 13:31:57,820 [Trainer] :: Starting epoch 15
+2026-05-11 13:37:47,522 [Trainer] :: Completed epoch 15: train_loss=0.170400 train_iou=0.846833 val_loss=0.278381 val_iou=0.627510 lr=0.00009939
+2026-05-11 13:37:48,105 [Trainer] :: Updated latest checkpoint at epoch 15
+2026-05-11 13:37:48,105 [Trainer] :: No validation IoU improvement for 2 epoch(s)
+2026-05-11 13:37:48,105 [Trainer] :: Starting epoch 16
+2026-05-11 13:43:44,099 [Trainer] :: Completed epoch 16: train_loss=0.161268 train_iou=0.854170 val_loss=0.259935 val_iou=0.678074 lr=0.00009931
+2026-05-11 13:43:44,740 [Trainer] :: Updated latest checkpoint at epoch 16
+2026-05-11 13:43:44,740 [Trainer] :: No validation IoU improvement for 3 epoch(s)
+2026-05-11 13:43:44,740 [Trainer] :: Starting epoch 17
+2026-05-11 13:49:44,478 [Trainer] :: Completed epoch 17: train_loss=0.163668 train_iou=0.847670 val_loss=0.265243 val_iou=0.647599 lr=0.00009922
+2026-05-11 13:49:44,702 [Trainer] :: Updated latest checkpoint at epoch 17
+2026-05-11 13:49:44,702 [Trainer] :: No validation IoU improvement for 4 epoch(s)
+2026-05-11 13:49:44,702 [Trainer] :: Starting epoch 18
+2026-05-11 13:55:53,040 [Trainer] :: Completed epoch 18: train_loss=0.157487 train_iou=0.853371 val_loss=0.263988 val_iou=0.672646 lr=0.00009912
+2026-05-11 13:55:53,288 [Trainer] :: Updated latest checkpoint at epoch 18
+2026-05-11 13:55:53,288 [Trainer] :: No validation IoU improvement for 5 epoch(s)
+2026-05-11 13:55:53,288 [Trainer] :: Starting epoch 19
+2026-05-11 14:01:49,281 [Trainer] :: Completed epoch 19: train_loss=0.155618 train_iou=0.857983 val_loss=0.284964 val_iou=0.661208 lr=0.00009902
+2026-05-11 14:01:49,565 [Trainer] :: Updated latest checkpoint at epoch 19
+2026-05-11 14:01:49,565 [Trainer] :: No validation IoU improvement for 6 epoch(s)
+2026-05-11 14:01:49,565 [Trainer] :: Starting epoch 20
+2026-05-11 14:07:40,449 [Trainer] :: Completed epoch 20: train_loss=0.154347 train_iou=0.858150 val_loss=0.262378 val_iou=0.650822 lr=0.00009892
+2026-05-11 14:07:40,649 [Trainer] :: Updated latest checkpoint at epoch 20
+2026-05-11 14:07:40,649 [Trainer] :: No validation IoU improvement for 7 epoch(s)
+2026-05-11 14:07:40,649 [Trainer] :: Starting epoch 21
+2026-05-11 14:13:37,244 [Trainer] :: Completed epoch 21: train_loss=0.150596 train_iou=0.860587 val_loss=0.260150 val_iou=0.658950 lr=0.00009881
+2026-05-11 14:13:37,469 [Trainer] :: Updated latest checkpoint at epoch 21
+2026-05-11 14:13:37,469 [Trainer] :: No validation IoU improvement for 8 epoch(s)
+2026-05-11 14:13:37,469 [Trainer] :: Starting epoch 22
+2026-05-11 14:19:41,743 [Trainer] :: Completed epoch 22: train_loss=0.151551 train_iou=0.859501 val_loss=0.269522 val_iou=0.646988 lr=0.00009869
+2026-05-11 14:19:41,935 [Trainer] :: Updated latest checkpoint at epoch 22
+2026-05-11 14:19:41,936 [Trainer] :: No validation IoU improvement for 9 epoch(s)
+2026-05-11 14:19:41,936 [Trainer] :: Starting epoch 23
+2026-05-11 14:25:29,078 [Trainer] :: Completed epoch 23: train_loss=0.145604 train_iou=0.863684 val_loss=0.267370 val_iou=0.654245 lr=0.00009857
+2026-05-11 14:25:29,421 [Trainer] :: Updated latest checkpoint at epoch 23
+2026-05-11 14:25:29,422 [Trainer] :: No validation IoU improvement for 10 epoch(s)
+2026-05-11 14:25:29,422 [Trainer] :: Starting epoch 24
+2026-05-11 14:31:16,714 [Trainer] :: Completed epoch 24: train_loss=0.138700 train_iou=0.869886 val_loss=0.257863 val_iou=0.674763 lr=0.00009844
+2026-05-11 14:31:16,975 [Trainer] :: Updated latest checkpoint at epoch 24
+2026-05-11 14:31:16,975 [Trainer] :: No validation IoU improvement for 11 epoch(s)
+2026-05-11 14:31:16,975 [Trainer] :: Starting epoch 25
+2026-05-11 14:37:14,190 [Trainer] :: Completed epoch 25: train_loss=0.137595 train_iou=0.872548 val_loss=0.271738 val_iou=0.651969 lr=0.00009831
+2026-05-11 14:37:14,428 [Trainer] :: Updated latest checkpoint at epoch 25
+2026-05-11 14:37:14,428 [Trainer] :: No validation IoU improvement for 12 epoch(s)
+2026-05-11 14:37:14,428 [Trainer] :: Starting epoch 26
+2026-05-11 14:43:16,177 [Trainer] :: Completed epoch 26: train_loss=0.135954 train_iou=0.871933 val_loss=0.271729 val_iou=0.628428 lr=0.00009818
+2026-05-11 14:43:16,440 [Trainer] :: Updated latest checkpoint at epoch 26
+2026-05-11 14:43:16,441 [Trainer] :: No validation IoU improvement for 13 epoch(s)
+2026-05-11 14:43:16,441 [Trainer] :: Starting epoch 27
+2026-05-11 14:49:07,912 [Trainer] :: Completed epoch 27: train_loss=0.133166 train_iou=0.873165 val_loss=0.270004 val_iou=0.655021 lr=0.00009803
+2026-05-11 14:49:08,125 [Trainer] :: Updated latest checkpoint at epoch 27
+2026-05-11 14:49:08,125 [Trainer] :: No validation IoU improvement for 14 epoch(s)
+2026-05-11 14:49:08,125 [Trainer] :: Starting epoch 28
+2026-05-11 14:54:58,680 [Trainer] :: Completed epoch 28: train_loss=0.131489 train_iou=0.876662 val_loss=0.274358 val_iou=0.636850 lr=0.00009789
+2026-05-11 14:54:58,881 [Trainer] :: Updated latest checkpoint at epoch 28
+2026-05-11 14:54:58,881 [Trainer] :: No validation IoU improvement for 15 epoch(s)
+2026-05-11 14:54:58,881 [Trainer] :: Starting epoch 29
+2026-05-11 15:00:50,506 [Trainer] :: Completed epoch 29: train_loss=0.130205 train_iou=0.877647 val_loss=0.296073 val_iou=0.662359 lr=0.00009773
+2026-05-11 15:00:50,714 [Trainer] :: Updated latest checkpoint at epoch 29
+2026-05-11 15:00:50,714 [Trainer] :: No validation IoU improvement for 16 epoch(s)
+2026-05-11 15:00:50,714 [Trainer] :: Starting epoch 30
+2026-05-11 15:06:44,484 [Trainer] :: Completed epoch 30: train_loss=0.127795 train_iou=0.879990 val_loss=0.273019 val_iou=0.659368 lr=0.00009758
+2026-05-11 15:06:44,728 [Trainer] :: Updated latest checkpoint at epoch 30
+2026-05-11 15:06:44,728 [Trainer] :: No validation IoU improvement for 17 epoch(s)
+2026-05-11 15:06:44,729 [Trainer] :: Starting epoch 31
+2026-05-11 15:12:48,462 [Trainer] :: Completed epoch 31: train_loss=0.126399 train_iou=0.878152 val_loss=0.280157 val_iou=0.668221 lr=0.00009741
+2026-05-11 15:12:48,668 [Trainer] :: Updated latest checkpoint at epoch 31
+2026-05-11 15:12:48,668 [Trainer] :: No validation IoU improvement for 18 epoch(s)
+2026-05-11 15:12:48,668 [Trainer] :: Starting epoch 32
+2026-05-11 15:18:46,960 [Trainer] :: Completed epoch 32: train_loss=0.122480 train_iou=0.883780 val_loss=0.299197 val_iou=0.605156 lr=0.00009725
+2026-05-11 15:18:47,168 [Trainer] :: Updated latest checkpoint at epoch 32
+2026-05-11 15:18:47,168 [Trainer] :: No validation IoU improvement for 19 epoch(s)
+2026-05-11 15:18:47,168 [Trainer] :: Starting epoch 33
+2026-05-11 15:25:49,871 [Trainer] :: Completed epoch 33: train_loss=0.122851 train_iou=0.880890 val_loss=0.265809 val_iou=0.672716 lr=0.00009707
+2026-05-11 15:25:50,225 [Trainer] :: Updated latest checkpoint at epoch 33
+2026-05-11 15:25:50,225 [Trainer] :: No validation IoU improvement for 20 epoch(s)
+2026-05-11 15:25:50,225 [Trainer] :: Starting epoch 34
+2026-05-11 15:33:33,436 [Trainer] :: Completed epoch 34: train_loss=0.118186 train_iou=0.886437 val_loss=0.262294 val_iou=0.668563 lr=0.00009690
+2026-05-11 15:33:33,757 [Trainer] :: Updated latest checkpoint at epoch 34
+2026-05-11 15:33:33,757 [Trainer] :: No validation IoU improvement for 21 epoch(s)
+2026-05-11 15:33:33,757 [Trainer] :: Starting epoch 35
+2026-05-11 15:39:40,622 [Trainer] :: Completed epoch 35: train_loss=0.119501 train_iou=0.887428 val_loss=0.302275 val_iou=0.629862 lr=0.00009671
+2026-05-11 15:39:40,820 [Trainer] :: Updated latest checkpoint at epoch 35
+2026-05-11 15:39:40,820 [Trainer] :: No validation IoU improvement for 22 epoch(s)
+2026-05-11 15:39:40,820 [Trainer] :: Starting epoch 36
+2026-05-11 15:45:29,155 [Trainer] :: Completed epoch 36: train_loss=0.117336 train_iou=0.886284 val_loss=0.284176 val_iou=0.660701 lr=0.00009652
+2026-05-11 15:45:29,361 [Trainer] :: Updated latest checkpoint at epoch 36
+2026-05-11 15:45:29,361 [Trainer] :: No validation IoU improvement for 23 epoch(s)
+2026-05-11 15:45:29,361 [Trainer] :: Starting epoch 37
+2026-05-11 15:51:18,011 [Trainer] :: Completed epoch 37: train_loss=0.117128 train_iou=0.889618 val_loss=0.285747 val_iou=0.635766 lr=0.00009633
+2026-05-11 15:51:18,234 [Trainer] :: Updated latest checkpoint at epoch 37
+2026-05-11 15:51:18,234 [Trainer] :: No validation IoU improvement for 24 epoch(s)
+2026-05-11 15:51:18,235 [Trainer] :: Starting epoch 38
+2026-05-11 15:57:02,248 [Trainer] :: Completed epoch 38: train_loss=0.113769 train_iou=0.891386 val_loss=0.280652 val_iou=0.636623 lr=0.00009613
+2026-05-11 15:57:02,447 [Trainer] :: Updated latest checkpoint at epoch 38
+2026-05-11 15:57:02,448 [Trainer] :: No validation IoU improvement for 25 epoch(s)
+2026-05-11 15:57:02,448 [Trainer] :: Starting epoch 39
+2026-05-11 16:03:00,479 [Trainer] :: Completed epoch 39: train_loss=0.114899 train_iou=0.890073 val_loss=0.302642 val_iou=0.667471 lr=0.00009593
+2026-05-11 16:03:00,687 [Trainer] :: Updated latest checkpoint at epoch 39
+2026-05-11 16:03:00,687 [Trainer] :: No validation IoU improvement for 26 epoch(s)
+2026-05-11 16:03:00,687 [Trainer] :: Starting epoch 40
+2026-05-11 16:08:56,776 [Trainer] :: Completed epoch 40: train_loss=0.111630 train_iou=0.892386 val_loss=0.315740 val_iou=0.607120 lr=0.00009572
+2026-05-11 16:08:57,046 [Trainer] :: Updated latest checkpoint at epoch 40
+2026-05-11 16:08:57,046 [Trainer] :: No validation IoU improvement for 27 epoch(s)
+2026-05-11 16:08:57,046 [Trainer] :: Starting epoch 41
+2026-05-11 16:15:06,855 [Trainer] :: Completed epoch 41: train_loss=0.108445 train_iou=0.896939 val_loss=0.280661 val_iou=0.643593 lr=0.00009551
+2026-05-11 16:15:07,197 [Trainer] :: Updated latest checkpoint at epoch 41
+2026-05-11 16:15:07,197 [Trainer] :: No validation IoU improvement for 28 epoch(s)
+2026-05-11 16:15:07,197 [Trainer] :: Starting epoch 42
+2026-05-11 16:21:48,902 [Trainer] :: Completed epoch 42: train_loss=0.109374 train_iou=0.896251 val_loss=0.351725 val_iou=0.575869 lr=0.00009529
+2026-05-11 16:21:49,410 [Trainer] :: Updated latest checkpoint at epoch 42
+2026-05-11 16:21:49,410 [Trainer] :: No validation IoU improvement for 29 epoch(s)
+2026-05-11 16:21:49,410 [Trainer] :: Starting epoch 43
+2026-05-11 16:28:13,527 [Trainer] :: Completed epoch 43: train_loss=0.107224 train_iou=0.898001 val_loss=0.297479 val_iou=0.659750 lr=0.00009507
+2026-05-11 16:28:13,810 [Trainer] :: Updated latest checkpoint at epoch 43
+2026-05-11 16:28:13,811 [Trainer] :: No validation IoU improvement for 30 epoch(s)
+2026-05-11 16:28:13,811 [Trainer] :: Starting epoch 44
+2026-05-11 16:35:36,395 [Trainer] :: Completed epoch 44: train_loss=0.111285 train_iou=0.893456 val_loss=0.287558 val_iou=0.651262 lr=0.00009484
+2026-05-11 16:35:36,791 [Trainer] :: Updated latest checkpoint at epoch 44
+2026-05-11 16:35:36,791 [Trainer] :: No validation IoU improvement for 31 epoch(s)
+2026-05-11 16:35:36,792 [Trainer] :: Starting epoch 45
+2026-05-11 16:42:55,593 [Trainer] :: Completed epoch 45: train_loss=0.104301 train_iou=0.900578 val_loss=0.274442 val_iou=0.662408 lr=0.00009460
+2026-05-11 16:42:55,840 [Trainer] :: Updated latest checkpoint at epoch 45
+2026-05-11 16:42:55,840 [Trainer] :: No validation IoU improvement for 32 epoch(s)
+2026-05-11 16:42:55,840 [Trainer] :: Starting epoch 46
+2026-05-11 16:50:21,613 [Trainer] :: Completed epoch 46: train_loss=0.108031 train_iou=0.898395 val_loss=0.293803 val_iou=0.653714 lr=0.00009437
+2026-05-11 16:50:21,851 [Trainer] :: Updated latest checkpoint at epoch 46
+2026-05-11 16:50:21,852 [Trainer] :: No validation IoU improvement for 33 epoch(s)
+2026-05-11 16:50:21,852 [Trainer] :: Starting epoch 47
+2026-05-11 16:57:46,705 [Trainer] :: Completed epoch 47: train_loss=0.103217 train_iou=0.901761 val_loss=0.293980 val_iou=0.643329 lr=0.00009412
+2026-05-11 16:57:46,948 [Trainer] :: Updated latest checkpoint at epoch 47
+2026-05-11 16:57:46,948 [Trainer] :: No validation IoU improvement for 34 epoch(s)
+2026-05-11 16:57:46,948 [Trainer] :: Starting epoch 48
+2026-05-11 17:05:28,216 [Trainer] :: Completed epoch 48: train_loss=0.102052 train_iou=0.901605 val_loss=0.299507 val_iou=0.622618 lr=0.00009388
+2026-05-11 17:05:28,427 [Trainer] :: Updated latest checkpoint at epoch 48
+2026-05-11 17:05:28,427 [Trainer] :: No validation IoU improvement for 35 epoch(s)
+2026-05-11 17:05:28,428 [Trainer] :: Starting epoch 49
+2026-05-11 17:12:56,846 [Trainer] :: Completed epoch 49: train_loss=0.098323 train_iou=0.904550 val_loss=0.309740 val_iou=0.632915 lr=0.00009363
+2026-05-11 17:12:57,106 [Trainer] :: Updated latest checkpoint at epoch 49
+2026-05-11 17:12:57,107 [Trainer] :: No validation IoU improvement for 36 epoch(s)
+2026-05-11 17:12:57,107 [Trainer] :: Starting epoch 50
+2026-05-11 17:20:24,536 [Trainer] :: Completed epoch 50: train_loss=0.097668 train_iou=0.904035 val_loss=0.281918 val_iou=0.663443 lr=0.00009337
+2026-05-11 17:20:24,859 [Trainer] :: Updated latest checkpoint at epoch 50
+2026-05-11 17:20:24,859 [Trainer] :: No validation IoU improvement for 37 epoch(s)
+2026-05-11 17:20:24,859 [Trainer] :: Starting epoch 51
+2026-05-11 17:27:45,372 [Trainer] :: Completed epoch 51: train_loss=0.097171 train_iou=0.906274 val_loss=0.287999 val_iou=0.652369 lr=0.00009311
+2026-05-11 17:27:45,640 [Trainer] :: Updated latest checkpoint at epoch 51
+2026-05-11 17:27:45,640 [Trainer] :: No validation IoU improvement for 38 epoch(s)
+2026-05-11 17:27:45,640 [Trainer] :: Starting epoch 52
+2026-05-11 17:35:09,415 [Trainer] :: Completed epoch 52: train_loss=0.098236 train_iou=0.907590 val_loss=0.293471 val_iou=0.659067 lr=0.00009284
+2026-05-11 17:35:09,706 [Trainer] :: Updated latest checkpoint at epoch 52
+2026-05-11 17:35:09,706 [Trainer] :: No validation IoU improvement for 39 epoch(s)
+2026-05-11 17:35:09,706 [Trainer] :: Starting epoch 53
+2026-05-11 17:42:29,835 [Trainer] :: Completed epoch 53: train_loss=0.097633 train_iou=0.907424 val_loss=0.303365 val_iou=0.615721 lr=0.00009257
+2026-05-11 17:42:30,168 [Trainer] :: Updated latest checkpoint at epoch 53
+2026-05-11 17:42:30,168 [Trainer] :: No validation IoU improvement for 40 epoch(s)
+2026-05-11 17:42:30,168 [Trainer] :: Starting epoch 54
+2026-05-11 17:50:55,281 [Trainer] :: Completed epoch 54: train_loss=0.095358 train_iou=0.907493 val_loss=0.311427 val_iou=0.632202 lr=0.00009229
+2026-05-11 17:50:55,515 [Trainer] :: Updated latest checkpoint at epoch 54
+2026-05-11 17:50:55,515 [Trainer] :: No validation IoU improvement for 41 epoch(s)
+2026-05-11 17:50:55,515 [Trainer] :: Starting epoch 55
+2026-05-11 17:59:31,126 [Trainer] :: Completed epoch 55: train_loss=0.094855 train_iou=0.908708 val_loss=0.277673 val_iou=0.675647 lr=0.00009201
+2026-05-11 17:59:31,458 [Trainer] :: Updated latest checkpoint at epoch 55
+2026-05-11 17:59:31,458 [Trainer] :: No validation IoU improvement for 42 epoch(s)
+2026-05-11 17:59:31,458 [Trainer] :: Starting epoch 56
+2026-05-11 18:07:00,424 [Trainer] :: Completed epoch 56: train_loss=0.092511 train_iou=0.910605 val_loss=0.302435 val_iou=0.626914 lr=0.00009173
+2026-05-11 18:07:00,709 [Trainer] :: Updated latest checkpoint at epoch 56
+2026-05-11 18:07:00,710 [Trainer] :: No validation IoU improvement for 43 epoch(s)
+2026-05-11 18:07:00,710 [Trainer] :: Starting epoch 57
+2026-05-11 18:14:24,494 [Trainer] :: Completed epoch 57: train_loss=0.093290 train_iou=0.910411 val_loss=0.295276 val_iou=0.652962 lr=0.00009144
+2026-05-11 18:14:24,747 [Trainer] :: Updated latest checkpoint at epoch 57
+2026-05-11 18:14:24,748 [Trainer] :: No validation IoU improvement for 44 epoch(s)
+2026-05-11 18:14:24,748 [Trainer] :: Starting epoch 58
+2026-05-11 18:21:51,025 [Trainer] :: Completed epoch 58: train_loss=0.094303 train_iou=0.910092 val_loss=0.295532 val_iou=0.657744 lr=0.00009115
+2026-05-11 18:21:51,287 [Trainer] :: Updated latest checkpoint at epoch 58
+2026-05-11 18:21:51,287 [Trainer] :: No validation IoU improvement for 45 epoch(s)
+2026-05-11 18:21:51,287 [Trainer] :: Starting epoch 59
+2026-05-11 18:28:49,747 [Trainer] :: Completed epoch 59: train_loss=0.097308 train_iou=0.906018 val_loss=0.355779 val_iou=0.595560 lr=0.00009085
+2026-05-11 18:28:49,998 [Trainer] :: Updated latest checkpoint at epoch 59
+2026-05-11 18:28:49,998 [Trainer] :: No validation IoU improvement for 46 epoch(s)
+2026-05-11 18:28:49,998 [Trainer] :: Starting epoch 60
+2026-05-11 18:36:29,239 [Trainer] :: Completed epoch 60: train_loss=0.091817 train_iou=0.911087 val_loss=0.303479 val_iou=0.635968 lr=0.00009055
+2026-05-11 18:36:29,624 [Trainer] :: Updated latest checkpoint at epoch 60
+2026-05-11 18:36:29,624 [Trainer] :: No validation IoU improvement for 47 epoch(s)
+2026-05-11 18:36:29,625 [Trainer] :: Starting epoch 61
+2026-05-11 18:43:32,996 [Trainer] :: Completed epoch 61: train_loss=0.092078 train_iou=0.910501 val_loss=0.317302 val_iou=0.634659 lr=0.00009024
+2026-05-11 18:43:33,302 [Trainer] :: Updated latest checkpoint at epoch 61
+2026-05-11 18:43:33,302 [Trainer] :: No validation IoU improvement for 48 epoch(s)
+2026-05-11 18:43:33,302 [Trainer] :: Starting epoch 62
+2026-05-11 18:51:03,025 [Trainer] :: Completed epoch 62: train_loss=0.088598 train_iou=0.914264 val_loss=0.300567 val_iou=0.661537 lr=0.00008993
+2026-05-11 18:51:03,287 [Trainer] :: Updated latest checkpoint at epoch 62
+2026-05-11 18:51:03,287 [Trainer] :: No validation IoU improvement for 49 epoch(s)
+2026-05-11 18:51:03,287 [Trainer] :: Starting epoch 63
+2026-05-11 18:58:33,779 [Trainer] :: Completed epoch 63: train_loss=0.089695 train_iou=0.913223 val_loss=0.300990 val_iou=0.645564 lr=0.00008961
+2026-05-11 18:58:34,117 [Trainer] :: Updated latest checkpoint at epoch 63
+2026-05-11 18:58:34,117 [Trainer] :: No validation IoU improvement for 50 epoch(s)
+2026-05-11 18:58:34,117 [Trainer] :: Starting epoch 64
+2026-05-11 19:06:06,372 [Trainer] :: Completed epoch 64: train_loss=0.088618 train_iou=0.914851 val_loss=0.311510 val_iou=0.638695 lr=0.00008929
+2026-05-11 19:06:06,599 [Trainer] :: Updated latest checkpoint at epoch 64
+2026-05-11 19:06:06,600 [Trainer] :: No validation IoU improvement for 51 epoch(s)
+2026-05-11 19:06:06,600 [Trainer] :: Starting epoch 65
+2026-05-11 19:13:06,148 [Trainer] :: Completed epoch 65: train_loss=0.091537 train_iou=0.914425 val_loss=0.293856 val_iou=0.653099 lr=0.00008897
+2026-05-11 19:13:06,679 [Trainer] :: Updated latest checkpoint at epoch 65
+2026-05-11 19:13:06,680 [Trainer] :: No validation IoU improvement for 52 epoch(s)
+2026-05-11 19:13:06,680 [Trainer] :: Starting epoch 66
+2026-05-11 19:20:09,500 [Trainer] :: Completed epoch 66: train_loss=0.087384 train_iou=0.915806 val_loss=0.303763 val_iou=0.649708 lr=0.00008864
+2026-05-11 19:20:09,800 [Trainer] :: Updated latest checkpoint at epoch 66
+2026-05-11 19:20:09,800 [Trainer] :: No validation IoU improvement for 53 epoch(s)
+2026-05-11 19:20:09,800 [Trainer] :: Starting epoch 67
+2026-05-11 19:27:48,656 [Trainer] :: Completed epoch 67: train_loss=0.086839 train_iou=0.916923 val_loss=0.315152 val_iou=0.646522 lr=0.00008831
+2026-05-11 19:27:48,928 [Trainer] :: Updated latest checkpoint at epoch 67
+2026-05-11 19:27:48,929 [Trainer] :: No validation IoU improvement for 54 epoch(s)
+2026-05-11 19:27:48,929 [Trainer] :: Starting epoch 68
+2026-05-11 19:36:37,457 [Trainer] :: Completed epoch 68: train_loss=0.087020 train_iou=0.916822 val_loss=0.305403 val_iou=0.650005 lr=0.00008797
+2026-05-11 19:36:37,707 [Trainer] :: Updated latest checkpoint at epoch 68
+2026-05-11 19:36:37,707 [Trainer] :: No validation IoU improvement for 55 epoch(s)
+2026-05-11 19:36:37,707 [Trainer] :: Starting epoch 69
+2026-05-11 19:44:00,119 [Trainer] :: Completed epoch 69: train_loss=0.087117 train_iou=0.916541 val_loss=0.321388 val_iou=0.623598 lr=0.00008763
+2026-05-11 19:44:00,384 [Trainer] :: Updated latest checkpoint at epoch 69
+2026-05-11 19:44:00,385 [Trainer] :: No validation IoU improvement for 56 epoch(s)
+2026-05-11 19:44:00,385 [Trainer] :: Starting epoch 70
+2026-05-11 19:50:45,785 [Trainer] :: Completed epoch 70: train_loss=0.084748 train_iou=0.919144 val_loss=0.333678 val_iou=0.614665 lr=0.00008729
+2026-05-11 19:50:46,092 [Trainer] :: Updated latest checkpoint at epoch 70
+2026-05-11 19:50:46,092 [Trainer] :: No validation IoU improvement for 57 epoch(s)
+2026-05-11 19:50:46,092 [Trainer] :: Starting epoch 71
+2026-05-11 19:57:26,862 [Trainer] :: Completed epoch 71: train_loss=0.084445 train_iou=0.918676 val_loss=0.320644 val_iou=0.633101 lr=0.00008694
+2026-05-11 19:57:27,141 [Trainer] :: Updated latest checkpoint at epoch 71
+2026-05-11 19:57:27,141 [Trainer] :: No validation IoU improvement for 58 epoch(s)
+2026-05-11 19:57:27,141 [Trainer] :: Starting epoch 72
+2026-05-11 20:04:04,279 [Trainer] :: Completed epoch 72: train_loss=0.083726 train_iou=0.919248 val_loss=0.293431 val_iou=0.656144 lr=0.00008658
+2026-05-11 20:04:04,612 [Trainer] :: Updated latest checkpoint at epoch 72
+2026-05-11 20:04:04,613 [Trainer] :: No validation IoU improvement for 59 epoch(s)
+2026-05-11 20:04:04,613 [Trainer] :: Starting epoch 73
+2026-05-11 20:10:40,874 [Trainer] :: Completed epoch 73: train_loss=0.084502 train_iou=0.918919 val_loss=0.316406 val_iou=0.654807 lr=0.00008623
+2026-05-11 20:10:41,210 [Trainer] :: Updated latest checkpoint at epoch 73
+2026-05-11 20:10:41,210 [Trainer] :: No validation IoU improvement for 60 epoch(s)
+2026-05-11 20:10:41,210 [Trainer] :: Early stopping triggered after 60 epoch(s) without improvement
+2026-05-11 20:16:25,111 [Trainer] :: Wrote training history to outputs/runs/rgb_real_msi_segformer_b1_fuzzy_halo_seed46_20260511T100524Z/metrics/history.json
+2026-05-11 20:16:25,116 [Trainer] :: Wrote test summary to outputs/runs/rgb_real_msi_segformer_b1_fuzzy_halo_seed46_20260511T100524Z/metrics/test_summary.json
+2026-05-11 20:16:25,116 [Trainer] :: Training completed

@@ -1,0 +1,16 @@
+2026-05-06 14:38:51,367 [Trainer] :: Training run initialized at /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_segformer_b1_fuzzy_halo_seed46_20260506T123851Z
+2026-05-06 14:38:51,367 [Trainer] :: Loaded config from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/configs/fuzzy/rgb_segformer_b1.yaml
+2026-05-06 14:38:51,367 [Trainer] :: Using seed=46 and device=None
+2026-05-06 14:38:51,367 [Trainer] :: Using model architecture=Segformer encoder=mit_b1 encoder_weights=imagenet
+2026-05-06 14:38:51,418 [Trainer] :: Resolved runtime device to cpu
+2026-05-06 14:38:51,418 [Trainer] :: Prepared normalization from source=imagenet
+2026-05-06 14:39:21,179 [Trainer] :: Built dataloaders with batch_size=16, num_workers=0
+2026-05-06 14:39:21,203 [Trainer] :: Starting epoch 1
+2026-05-06 19:09:38,294 [Trainer] :: Completed epoch 1: train_loss=0.330860 train_iou=0.717524 val_loss=0.366420 val_iou=0.572982 lr=0.00010000
+2026-05-06 19:09:39,571 [Trainer] :: Updated latest checkpoint at epoch 1
+2026-05-06 19:09:40,440 [Trainer] :: New best checkpoint saved with val_iou=0.572982
+2026-05-06 19:09:40,440 [Trainer] :: Starting epoch 2
+2026-05-06 23:47:48,969 [Trainer] :: Completed epoch 2: train_loss=0.267256 train_iou=0.778166 val_loss=0.352920 val_iou=0.598587 lr=0.00009999
+2026-05-06 23:47:50,241 [Trainer] :: Updated latest checkpoint at epoch 2
+2026-05-06 23:47:51,771 [Trainer] :: New best checkpoint saved with val_iou=0.598587
+2026-05-06 23:47:51,771 [Trainer] :: Starting epoch 3
