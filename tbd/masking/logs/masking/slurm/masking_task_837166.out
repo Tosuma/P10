@@ -1,0 +1,28 @@
+ailab-l4-04
+Thu May 14 14:13:06 CEST 2026
+2026-05-14T12:13:06Z [INFO] Slurm masking job started
+2026-05-14T12:13:06Z [INFO] task_id=0 group=binary_train_multi_seed kind=train config=configs/binary/rgb_segformer_b1.yaml split=test seed=51 attempt=2
+2026-05-14T12:13:06Z [INFO] pwd=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking host=ailab-l4-04 slurm_job_id=837166 cuda_visible_devices=7
+2026-05-14T12:13:06Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-05-14T12:13:06Z [INFO] status_file=outputs/slurm/status/retry-manifest_20260514T083657Z/task_0_attempt_2.status
+2026-05-14T12:13:06Z [INFO] PYTHONPATH=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking OMP_NUM_THREADS=15 MKL_NUM_THREADS=15
+2026-05-14T12:13:06Z [INFO] singularity=/usr/bin/singularity
+Training configs/binary/rgb_segformer_b1.yaml
+container_pwd=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking
+container_python_before_venv=/usr/bin/python
+using_venv=../../p10_venv/bin/activate
+container_python_after_venv=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/bin/python
+python_executable=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/bin/python
+python_version=3.12.3
+pythonpath=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking
+/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_segformer_b1_seed51_20260514T121331Z
+Run directory: /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_segformer_b1_seed51_20260514T121331Z
+Evaluating /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_segformer_b1_seed51_20260514T121331Z
+container_pwd=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking
+container_python_before_venv=/usr/bin/python
+using_venv=../../p10_venv/bin/activate
+container_python_after_venv=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/bin/python
+python_executable=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/bin/python
+python_version=3.12.3
+pythonpath=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking
+Thu May 14 18:10:39 CEST 2026

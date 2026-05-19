@@ -1,0 +1,74 @@
+ailab-l4-11
+Sat May 16 03:47:39 CEST 2026
+2026-05-16T01:47:39Z [INFO] Slurm masking job started
+2026-05-16T01:47:39Z [INFO] task_id=40 group=binary_train_multi_seed kind=train config=configs/binary/real_msi_segformer_b0.yaml split=test seed=47 attempt=1
+2026-05-16T01:47:39Z [INFO] pwd=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking host=ailab-l4-11 slurm_job_id=841681 cuda_visible_devices=0
+2026-05-16T01:47:39Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-05-16T01:47:39Z [INFO] status_file=outputs/slurm/status/retry-manifest_20260514T083657Z/task_40_attempt_1.status
+2026-05-16T01:47:39Z [INFO] PYTHONPATH=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking OMP_NUM_THREADS=15 MKL_NUM_THREADS=15
+2026-05-16T01:47:39Z [INFO] singularity=/usr/bin/singularity
+Training configs/binary/real_msi_segformer_b0.yaml
+container_pwd=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking
+container_python_before_venv=/usr/bin/python
+using_venv=../../p10_venv/bin/activate
+container_python_after_venv=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/bin/python
+python_executable=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/bin/python
+python_version=3.12.3
+pythonpath=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/src/train.py", line 379, in <module>
+    main()
+  File "/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/src/train.py", line 295, in main
+    train_metrics = run_epoch(
+                    ^^^^^^^^^^
+  File "/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/src/train.py", line 91, in run_epoch
+    logits = model(images)
+             ^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/lib/python3.12/site-packages/segmentation_models_pytorch/base/model.py", line 66, in forward
+    features = self.encoder(x)
+               ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/lib/python3.12/site-packages/segmentation_models_pytorch/encoders/mix_transformer.py", line 581, in forward
+    x = self.block4(x)
+        ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/container.py", line 253, in forward
+    input = module(input)
+            ^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/lib/python3.12/site-packages/segmentation_models_pytorch/encoders/mix_transformer.py", line 221, in forward
+    x = x + self.drop_path(self.attn(self.norm1(x), height, width))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/lib/python3.12/site-packages/segmentation_models_pytorch/encoders/mix_transformer.py", line 153, in forward
+    attn = (q @ k.transpose(-2, -1)) * self.scale
+            ~~^~~~~~~~~~~~~~~~~~~~~
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 12.00 MiB. GPU 0 has a total capacity of 22.04 GiB of which 7.69 MiB is free. Process 486714 has 3.71 GiB memory in use. Process 865913 has 12.38 GiB memory in use. Process 1976640 has 3.71 GiB memory in use. Including non-PyTorch memory, this process has 2.20 GiB memory in use. Of the allocated memory 1.95 GiB is allocated by PyTorch, and 19.17 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

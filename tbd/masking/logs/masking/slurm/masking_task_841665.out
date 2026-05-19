@@ -1,0 +1,28 @@
+ailab-l4-04
+Sat May 16 02:41:44 CEST 2026
+2026-05-16T00:41:44Z [INFO] Slurm masking job started
+2026-05-16T00:41:44Z [INFO] task_id=33 group=binary_train_multi_seed kind=train config=configs/binary/real_msi_deeplabv3plus_resnet50.yaml split=test seed=49 attempt=3
+2026-05-16T00:41:44Z [INFO] pwd=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking host=ailab-l4-04 slurm_job_id=841665 cuda_visible_devices=2
+2026-05-16T00:41:44Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-05-16T00:41:44Z [INFO] status_file=outputs/slurm/status/retry-manifest_20260514T083657Z/task_33_attempt_3.status
+2026-05-16T00:41:44Z [INFO] PYTHONPATH=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking OMP_NUM_THREADS=15 MKL_NUM_THREADS=15
+2026-05-16T00:41:44Z [INFO] singularity=/usr/bin/singularity
+Training configs/binary/real_msi_deeplabv3plus_resnet50.yaml
+container_pwd=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking
+container_python_before_venv=/usr/bin/python
+using_venv=../../p10_venv/bin/activate
+container_python_after_venv=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/bin/python
+python_executable=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/bin/python
+python_version=3.12.3
+pythonpath=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking
+/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/real_msi_deeplabv3plus_resnet50_seed49_20260516T004207Z
+Run directory: /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/real_msi_deeplabv3plus_resnet50_seed49_20260516T004207Z
+Evaluating /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/real_msi_deeplabv3plus_resnet50_seed49_20260516T004207Z
+container_pwd=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking
+container_python_before_venv=/usr/bin/python
+using_venv=../../p10_venv/bin/activate
+container_python_after_venv=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/bin/python
+python_executable=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/bin/python
+python_version=3.12.3
+pythonpath=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking
+Sat May 16 05:10:42 CEST 2026

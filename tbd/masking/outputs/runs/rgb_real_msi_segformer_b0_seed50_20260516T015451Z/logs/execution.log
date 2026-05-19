@@ -1,0 +1,8 @@
+2026-05-16 03:54:51,520 [Trainer] :: Training run initialized at /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_real_msi_segformer_b0_seed50_20260516T015451Z
+2026-05-16 03:54:51,520 [Trainer] :: Loaded config from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/configs/binary/rgb_real_msi_segformer_b0.yaml
+2026-05-16 03:54:51,520 [Trainer] :: Using seed=50 and device=None
+2026-05-16 03:54:51,520 [Trainer] :: Using model architecture=Segformer encoder=mit_b0 encoder_weights=imagenet
+2026-05-16 03:54:51,697 [Trainer] :: Resolved runtime device to cuda
+2026-05-16 03:54:51,698 [Trainer] :: Prepared normalization from source=train_split_patch_stats
+2026-05-16 03:54:56,390 [Trainer] :: Built dataloaders with batch_size=8, num_workers=0
+2026-05-16 03:54:56,391 [Trainer] :: Starting epoch 1
