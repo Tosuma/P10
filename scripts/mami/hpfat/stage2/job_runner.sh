@@ -71,6 +71,7 @@ EOF
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
+        --manifest)          MANIFEST="$2"; shift 2 ;;
         --chunk-size)        CHUNK_SIZE="$2"; shift 2 ;;
         --max-retries)       MAX_RETRIES="$2"; shift 2 ;;
         --poll-seconds)      POLL_SECONDS="$2"; shift 2 ;;
@@ -92,6 +93,8 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+: "${MANIFEST:?Missing --manifest}"
 
 if [[ ! -f "$MANIFEST" ]]; then
     echo "Manifest not found: $MANIFEST" >&2
