@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-MANIFEST="scripts/mami/hpfat/stage2/tasks_manifest.csv"
+MANIFEST=""
 CHUNK_SIZE=4
 MAX_RETRIES=50
 POLL_SECONDS=10
