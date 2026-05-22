@@ -106,11 +106,6 @@ if [[ ! -f "$SBATCH_SCRIPT" ]]; then
     exit 1
 fi
 
-if [[ "$CHUNK_SIZE" -lt 1 || "$CHUNK_SIZE" -gt 4 ]]; then
-    echo "--chunk-size must be between 1 and 4." >&2
-    exit 2
-fi
-
 if [[ "$MAX_RETRIES" -lt 0 ]]; then
     echo "--max-retries must be >= 0." >&2
     exit 2
