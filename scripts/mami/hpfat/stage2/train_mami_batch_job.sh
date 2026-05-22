@@ -261,6 +261,7 @@ for raw_task_id in "${TASK_IDS[@]}"; do
 
     set +e
     singularity exec --nv \
+        -B /ceph/project/tbd/data/:/ceph/project/tbd/data \
         "$SINGULARITY_IMAGE" \
         /bin/bash -lc "source '$VENV_ACTIVATE' && \
             python -u -m torch.distributed.run \
