@@ -19,8 +19,8 @@ TASK_LOG_DIR="logs/hpfat/stage2/tasks"
 LR="1e-5"
 LOSS_MRAE_W="1.0"
 STAGE2_EPOCHS="300"
-STAGE2_DATA_PATH="data/WeedyRice"
-STAGE2_DATA_TYPE="Weedy-Rice"
+STAGE2_DATA_PATH="data/sri-lanka-aligned"
+STAGE2_DATA_TYPE="Sri-Lanka"
 SINGULARITY_IMAGE="/ceph/container/pytorch/pytorch_26.02.sif"
 VENV_ACTIVATE="p10_venv/bin/activate"
 RETRY_TEXT="Could not lookup the current user"
@@ -261,6 +261,7 @@ for raw_task_id in "${TASK_IDS[@]}"; do
 
     set +e
     singularity exec --nv \
+        -B /ceph/project/tbd/data/:/ceph/project/tbd/data \
         "$SINGULARITY_IMAGE" \
         /bin/bash -lc "source '$VENV_ACTIVATE' && \
             python -u -m torch.distributed.run \
