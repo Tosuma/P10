@@ -3,7 +3,7 @@
 set -euo pipefail
 
 MANIFEST=""
-CHUNK_SIZE=4
+CHUNK_SIZE=12
 MAX_RETRIES=50
 POLL_SECONDS=10
 DRY_RUN=0
@@ -11,7 +11,7 @@ DRY_RUN=0
 LR="1e-5"
 LOSS_MRAE_W="1.0"
 STAGE2_EPOCHS="300"
-STAGE2_DATA_PATH="data/sri-lanka-aligned"
+STAGE2_DATA_PATH="data/data/sri-lanka-aligned"
 STAGE2_DATA_TYPE="Sri-Lanka"
 SINGULARITY_IMAGE="/ceph/container/pytorch/pytorch_26.02.sif"
 VENV_ACTIVATE="p10_venv/bin/activate"
