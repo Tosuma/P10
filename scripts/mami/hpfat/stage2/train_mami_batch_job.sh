@@ -19,7 +19,7 @@ TASK_LOG_DIR="logs/hpfat/stage2/tasks"
 LR="1e-5"
 LOSS_MRAE_W="1.0"
 STAGE2_EPOCHS="300"
-STAGE2_DATA_PATH="data/sri-lanka-aligned"
+STAGE2_DATA_PATH="data/data/sri-lanka-aligned"
 STAGE2_DATA_TYPE="Sri-Lanka"
 SINGULARITY_IMAGE="/ceph/container/pytorch/pytorch_26.02.sif"
 VENV_ACTIVATE="p10_venv/bin/activate"
@@ -100,11 +100,6 @@ IFS=',' read -r -a TASK_IDS <<< "$TASK_IDS_CSV"
 
 if [[ "${#TASK_IDS[@]}" -eq 0 ]]; then
     echo "No task IDs were provided in --task-ids." >&2
-    exit 2
-fi
-
-if [[ "${#TASK_IDS[@]}" -gt 4 ]]; then
-    echo "--task-ids can include at most 4 tasks. Got ${#TASK_IDS[@]}." >&2
     exit 2
 fi
 

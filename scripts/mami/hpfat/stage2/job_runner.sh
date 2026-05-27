@@ -3,7 +3,7 @@
 set -euo pipefail
 
 MANIFEST=""
-CHUNK_SIZE=4
+CHUNK_SIZE=12
 MAX_RETRIES=50
 POLL_SECONDS=10
 DRY_RUN=0
@@ -11,7 +11,7 @@ DRY_RUN=0
 LR="1e-5"
 LOSS_MRAE_W="1.0"
 STAGE2_EPOCHS="300"
-STAGE2_DATA_PATH="data/sri-lanka-aligned"
+STAGE2_DATA_PATH="data/data/sri-lanka-aligned"
 STAGE2_DATA_TYPE="Sri-Lanka"
 SINGULARITY_IMAGE="/ceph/container/pytorch/pytorch_26.02.sif"
 VENV_ACTIVATE="p10_venv/bin/activate"
@@ -104,11 +104,6 @@ fi
 if [[ ! -f "$SBATCH_SCRIPT" ]]; then
     echo "Batch script not found: $SBATCH_SCRIPT" >&2
     exit 1
-fi
-
-if [[ "$CHUNK_SIZE" -lt 1 || "$CHUNK_SIZE" -gt 4 ]]; then
-    echo "--chunk-size must be between 1 and 4." >&2
-    exit 2
 fi
 
 if [[ "$MAX_RETRIES" -lt 0 ]]; then
