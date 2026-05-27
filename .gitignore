@@ -220,6 +220,7 @@ results
 
 checkpoints/
 
+tbd/masking/outputs/
 
 **.venv**
 **venv**
