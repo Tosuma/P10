@@ -5,4 +5,5 @@ bash scripts/mami/hpfat/stage2/job_runner.sh \
   --manifest scripts/mami/hpfat/stage2/manifests/tasks_manifest_mhj_2.csv \
   --status-dir logs/hpfat/stage2/status/mhj_2 \
   --task-log-dir logs/hpfat/stage2/tasks/mhj_2 \
+  --singularity-image /ceph/container/pytorch/pytorch_26.01.sif \
   "$@"

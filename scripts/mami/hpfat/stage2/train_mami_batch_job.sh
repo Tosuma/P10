@@ -103,11 +103,6 @@ if [[ "${#TASK_IDS[@]}" -eq 0 ]]; then
     exit 2
 fi
 
-if [[ "${#TASK_IDS[@]}" -gt 4 ]]; then
-    echo "--task-ids can include at most 4 tasks. Got ${#TASK_IDS[@]}." >&2
-    exit 2
-fi
-
 declare -A ATTEMPT_BY_TASK=()
 if [[ -n "$ATTEMPT_MAP" ]]; then
     IFS=',' read -r -a attempt_items <<< "$ATTEMPT_MAP"
