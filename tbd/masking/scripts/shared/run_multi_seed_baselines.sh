@@ -5,7 +5,7 @@ set -euo pipefail
 PYTHON_EXE="python"
 SUMMARY_OUTPUT="outputs/metrics/baseline_multi_seed_summary.json"
 REPEATS=10
-BASE_SEED=12345
+BASE_SEED=42
 SPLIT="test"
 CONFIGS=()
 RUN_DIRS=()

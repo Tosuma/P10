@@ -37,7 +37,6 @@ def main() -> None:
     packed = 0
     for i, (sample_id, band_map) in enumerate(grouped_paths.items()):
         if (output_dir / f"{sample_id}.npy").exists():
-            print(f"Skipping: {i+1}")
             continue
         
         missing = [band for band in MSI_SUFFIXES if band not in band_map]
