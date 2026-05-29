@@ -4,7 +4,7 @@
 
 #SBATCH --job-name=eval_mami
 #SBATCH --output=logs/hpfat/inference/pred_mami_%j.out
-#SBATCH --error=logs/inference/pred_mami_%j.err
+#SBATCH --error=logs/hpfat/inference/pred_mami_%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --mem=24G
