@@ -9,8 +9,8 @@ weedy_path="./data/data/WeedyRice/"
 RETRY_TEXT="Could not lookup the current user"
 MAX_RETRIES=50
 
-mkdir -p logs/eval
-mkdir -p logs/inference
+mkdir -p logs/hpfat/eval
+mkdir -p logs/hpfat/inference
 
 for ndre in $(seq -f "%.1f" 0.0 0.1 1.0); do
   for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
