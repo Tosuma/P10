@@ -6,8 +6,7 @@ set -u
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../../../../.." && pwd)"
-PREDICT_JOB_SCRIPT="${PROJECT_ROOT}/scripts/mami/hpfat/stage1/eval/predict_job.sh"
-EVAL_JOB_SCRIPT="${PROJECT_ROOT}/scripts/mami/hpfat/stage1/eval/eval_job.sh"
+COMBINED_JOB_SCRIPT="${PROJECT_ROOT}/scripts/mami/hpfat/stage1/eval/predict_eval_job.sh"
 
 cd "${PROJECT_ROOT}" || exit 1
 
@@ -20,6 +19,7 @@ MAX_PARALLEL=8
 
 mkdir -p "${PROJECT_ROOT}/logs/hpfat/eval"
 mkdir -p "${PROJECT_ROOT}/logs/hpfat/inference"
+mkdir -p "${PROJECT_ROOT}/logs/hpfat/predict_eval"
 
 if ! command -v sbatch >/dev/null 2>&1; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') :: Error: 'sbatch' command not found."
@@ -53,15 +53,11 @@ process_pair() {
 
     mkdir -p "$dir_name"
 
-    ###########################################################################
-    # Predict
-    ###########################################################################
-
     attempt=0
 
     while true; do
         job_id=$(
-            sbatch "${PREDICT_JOB_SCRIPT}" \
+            sbatch "${COMBINED_JOB_SCRIPT}" \
                 --model_name "${model_name}" \
                 --dir_name "${dir_name}" \
                 --truth "${weedy_path}" \
@@ -70,10 +66,10 @@ process_pair() {
         )
 
         if [ -z "${job_id}" ]; then
-            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Failed to submit inference job for ndre=${ndre}, ndvi=${ndvi}"
+            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Failed to submit predict+eval job for ndre=${ndre}, ndvi=${ndvi}"
 
             if [ "$attempt" -ge "$MAX_RETRIES" ]; then
-                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries for inference submit. Stopping pair."
+                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries for predict+eval submit. Stopping pair."
                 return 1
             fi
 
@@ -82,19 +78,19 @@ process_pair() {
             continue
         fi
 
-        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Starting inference job ${job_id} ndre=${ndre}, ndvi=${ndvi}"
+        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Starting predict+eval job ${job_id} ndre=${ndre}, ndvi=${ndvi}"
 
         while squeue --me | grep -q "$job_id"; do
             sleep 10
         done
 
-        err_file="${PROJECT_ROOT}/logs/hpfat/inference/pred_mami_${job_id}.err"
+        err_file="${PROJECT_ROOT}/logs/hpfat/predict_eval/predict_eval_mami_${job_id}.err"
 
         if [ ! -f "$err_file" ]; then
-            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Err file $err_file did not appear. Retrying inference..."
+            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Err file $err_file did not appear. Retrying predict+eval..."
 
             if [ "$attempt" -ge "$MAX_RETRIES" ]; then
-                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries for inference ndre=${ndre}, ndvi=${ndvi}."
+                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries for predict+eval ndre=${ndre}, ndvi=${ndvi}."
                 return 1
             fi
 
@@ -106,79 +102,10 @@ process_pair() {
         first_line="$(head -n 1 "$err_file")"
 
         if grep -qF "$RETRY_TEXT" "$err_file"; then
-            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Inference job ${job_id} hit retryable error: '${first_line}'"
+            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Predict+eval job ${job_id} hit retryable error: '${first_line}'"
 
             if [ "$attempt" -ge "$MAX_RETRIES" ]; then
-                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries for inference ndre=${ndre}, ndvi=${ndvi}."
-                return 1
-            fi
-
-            attempt=$((attempt + 1))
-            sleep 60
-            continue
-        fi
-
-        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished inference job ${job_id} successfully for ndre=${ndre}, ndvi=${ndvi}"
-        break
-    done
-
-    ###########################################################################
-    # Evaluate
-    ###########################################################################
-
-    attempt=0
-
-    while true; do
-        job_id=$(
-            sbatch "${EVAL_JOB_SCRIPT}" \
-                --model_name "${model_name}" \
-                --dir_name "${dir_name}" \
-                --truth "${weedy_path}" \
-                --type "Weedy-Rice" \
-                | grep -o '[0-9]\+'
-        )
-
-        if [ -z "${job_id}" ]; then
-            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Failed to submit evaluation job for ndre=${ndre}, ndvi=${ndvi}"
-
-            if [ "$attempt" -ge "$MAX_RETRIES" ]; then
-                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries for evaluation submit. Stopping pair."
-                return 1
-            fi
-
-            attempt=$((attempt + 1))
-            sleep 60
-            continue
-        fi
-
-        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Starting evaluation job ${job_id} ndre=${ndre}, ndvi=${ndvi}"
-
-        while squeue --me | grep -q "$job_id"; do
-            sleep 10
-        done
-
-        err_file="${PROJECT_ROOT}/logs/hpfat/eval/eval_mami_${job_id}.err"
-
-        if [ ! -f "$err_file" ]; then
-            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Err file $err_file did not appear. Retrying evaluation..."
-
-            if [ "$attempt" -ge "$MAX_RETRIES" ]; then
-                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries for evaluation ndre=${ndre}, ndvi=${ndvi}."
-                return 1
-            fi
-
-            attempt=$((attempt + 1))
-            sleep 60
-            continue
-        fi
-
-        first_line="$(head -n 1 "$err_file")"
-
-        if grep -qF "$RETRY_TEXT" "$err_file"; then
-            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Evaluation job ${job_id} hit retryable error: '${first_line}'"
-
-            if [ "$attempt" -ge "$MAX_RETRIES" ]; then
-                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries for evaluation ndre=${ndre}, ndvi=${ndvi}."
+                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries for predict+eval ndre=${ndre}, ndvi=${ndvi}."
                 return 1
             fi
 
@@ -188,7 +115,7 @@ process_pair() {
         fi
 
         if [ ! -e "$results" ] || [ ! -e "$summary" ]; then
-            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Evaluation finished, but result files are missing for ndre=${ndre}, ndvi=${ndvi}"
+            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Predict+eval finished, but result files are missing for ndre=${ndre}, ndvi=${ndvi}"
             echo "$(date '+%Y-%m-%d %H:%M:%S') :: Expected:"
             echo "  $results"
             echo "  $summary"
@@ -203,7 +130,7 @@ process_pair() {
             continue
         fi
 
-        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished evaluation successfully for ndre=${ndre}, ndvi=${ndvi}"
+        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished predict+eval successfully for ndre=${ndre}, ndvi=${ndvi}"
         echo "$(date '+%Y-%m-%d %H:%M:%S') :: Produced result files:"
         echo "  $results"
         echo "  $summary"
