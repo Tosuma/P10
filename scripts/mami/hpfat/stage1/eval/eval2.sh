@@ -31,6 +31,31 @@ if ! command -v squeue >/dev/null 2>&1; then
     exit 1
 fi
 
+log_job_failure() {
+    job_id="$1"
+    out_file="$2"
+    err_file="$3"
+
+    job_state=""
+    if command -v sacct >/dev/null 2>&1; then
+        job_state="$(sacct -j "${job_id}" --format=State --noheader 2>/dev/null | head -n 1 | xargs)"
+    fi
+
+    if [ -n "${job_state}" ]; then
+        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Slurm state for job ${job_id}: ${job_state}"
+    fi
+
+    if [ -f "${err_file}" ]; then
+        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Last lines from ${err_file}:"
+        tail -n 40 "${err_file}"
+    fi
+
+    if [ -f "${out_file}" ]; then
+        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Last lines from ${out_file}:"
+        tail -n 40 "${out_file}"
+    fi
+}
+
 process_pair() {
     ndre="$1"
     ndvi="$2"
@@ -84,6 +109,7 @@ process_pair() {
             sleep 10
         done
 
+        out_file="${PROJECT_ROOT}/logs/hpfat/predict_eval/predict_eval_mami_${job_id}.out"
         err_file="${PROJECT_ROOT}/logs/hpfat/predict_eval/predict_eval_mami_${job_id}.err"
 
         if [ ! -f "$err_file" ]; then
@@ -119,15 +145,10 @@ process_pair() {
             echo "$(date '+%Y-%m-%d %H:%M:%S') :: Expected:"
             echo "  $results"
             echo "  $summary"
+            log_job_failure "${job_id}" "${out_file}" "${err_file}"
 
-            if [ "$attempt" -ge "$MAX_RETRIES" ]; then
-                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries waiting for result files."
-                return 1
-            fi
-
-            attempt=$((attempt + 1))
-            sleep 30
-            continue
+            # Do not blindly retry non-retryable failures; surface the root cause.
+            return 1
         fi
 
         echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished predict+eval successfully for ndre=${ndre}, ndvi=${ndvi}"

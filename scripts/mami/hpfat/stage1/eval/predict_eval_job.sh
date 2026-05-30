@@ -47,6 +47,9 @@ done
 mkdir -p "${dir_name}/data"
 
 echo "=== Beginning predictions and evaluation ==="
+echo "model: ${model_name}"
+echo "truth: ${truth}"
+echo "dir:   ${dir_name}"
 
 cd "${PROJECT_ROOT}" || exit 1
 
@@ -60,8 +63,13 @@ singularity exec --nv \
             --data_path '${truth}' \
             --data_type '${type}' \
             --save_path '${dir_name}/data' && \
+        npy_count=\$(find '${dir_name}/data' -type f -name '*.npy' | wc -l) && \
+        if [ \"\${npy_count}\" -eq 0 ]; then \
+            echo 'No prediction .npy files were produced. Check model/data path compatibility.' >&2; \
+            exit 1; \
+        fi && \
         python ./mami/evaluation.py \
-            --pred_path '${dir_name}/data' \
+            --pred_path '${dir_name}/data/' \
             --truth_path '${truth}' \
             --type '${type}' \
             --result_path '${dir_name}/results.json' \
