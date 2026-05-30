@@ -51,13 +51,28 @@ echo "model: ${model_name}"
 echo "truth: ${truth}"
 echo "dir:   ${dir_name}"
 
+venv_activate=""
+if [ -f "${PROJECT_ROOT}/p10_venv/bin/activate" ]; then
+    venv_activate="${PROJECT_ROOT}/p10_venv/bin/activate"
+elif [ -f "${PROJECT_ROOT}/.venv/bin/activate" ]; then
+    venv_activate="${PROJECT_ROOT}/.venv/bin/activate"
+else
+    echo "Could not find a virtualenv activate script." >&2
+    echo "Checked:" >&2
+    echo "  ${PROJECT_ROOT}/p10_venv/bin/activate" >&2
+    echo "  ${PROJECT_ROOT}/.venv/bin/activate" >&2
+    exit 1
+fi
+
 cd "${PROJECT_ROOT}" || exit 1
 
 singularity exec --nv \
     -B /ceph/project/tbd/data/:/ceph/project/tbd/data \
+    -B "${PROJECT_ROOT}:${PROJECT_ROOT}" \
     /ceph/container/pytorch/pytorch_26.02.sif \
     /bin/bash -lc "set -euo pipefail && \
-        source p10_venv/bin/activate && \
+        cd '${PROJECT_ROOT}' && \
+        source '${venv_activate}' && \
         python ./mami/inference.py \
             --model '${model_name}' \
             --data_path '${truth}' \

@@ -188,31 +188,30 @@ fi
 
 echo "$(date '+%Y-%m-%d %H:%M:%S') :: Found ${available_models} checkpoint(s) to evaluate."
 
-active_jobs=0
+job_pids=()
 failed=0
 
 for ndre in $(seq -f "%.1f" 0.0 0.1 1.0); do
     for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
 
         process_pair "$ndre" "$ndvi" &
+        job_pids+=("$!")
 
-        active_jobs=$((active_jobs + 1))
-
-        if [ "$active_jobs" -ge "$MAX_PARALLEL" ]; then
-            if ! wait -n; then
+        # Bash 3.x compatibility: avoid wait -n and wait on the oldest slot.
+        if [ "${#job_pids[@]}" -ge "$MAX_PARALLEL" ]; then
+            if ! wait "${job_pids[0]}"; then
                 failed=1
             fi
-            active_jobs=$((active_jobs - 1))
+            job_pids=("${job_pids[@]:1}")
         fi
 
     done
 done
 
-while [ "$active_jobs" -gt 0 ]; do
-    if ! wait -n; then
+for pid in "${job_pids[@]}"; do
+    if ! wait "$pid"; then
         failed=1
     fi
-    active_jobs=$((active_jobs - 1))
 done
 
 if [ "$failed" -ne 0 ]; then
