@@ -14,8 +14,10 @@ mkdir -p logs/hpfat/inference
 
 for ndre in $(seq -f "%.1f" 0.0 0.1 1.0); do
   for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
-    dir_name="results/hpfat/andhra-stage3---Weedy-Rice/re_${ndre}_vi_${ndvi}"
-    model_name="./checkpoints/hpfat/stage3/re_${ndre}_vi_${ndvi}/hpfat-andhra-stage3-re_${ndre}-vi_${ndvi}_stage3_best.pth"
+    ndvi_inv=$(echo "1.0 - $ndvi" | bc)
+    ndre_inv=$(echo "1.0 - $ndre" | bc)
+    dir_name="results/hpfat/andhra-stage3---Weedy-Rice/re_${ndre_inv}_vi_${ndvi_inv}"
+    model_name="./checkpoints/hpfat/stage3/re_${ndre_inv}_vi_${ndvi_inv}/hpfat-andhra-stage3-re_${ndre_inv}-vi_${ndvi_inv}_stage3_best.pth"
 
     if [ ! -f "$model_name" ]; then
         echo "$(date '+%Y-%m-%d %H:%M:%S') :: Model file does not exist: $model_name, skipping"
@@ -42,7 +44,7 @@ for ndre in $(seq -f "%.1f" 0.0 0.1 1.0); do
             | grep -o '[0-9]\+'
         )
 
-        echo "$(date '+%Y-%m-%d %H:%M:%d') :: Starting inference job ${job_id} ndre: ${ndre}, ndvi: ${ndvi}"
+        echo "$(date '+%Y-%m-%d %H:%M:%d') :: Starting inference job ${job_id} ndre: ${ndre_inv}, ndvi: ${ndvi_inv}"
 
         while squeue --me | grep -q "$job_id"; do
             # echo "Job $job_id still running... sleeping 5 minutes"
@@ -55,7 +57,7 @@ for ndre in $(seq -f "%.1f" 0.0 0.1 1.0); do
             echo "$(date '+%Y-%m-%d %H:%M:%S') :: Err file $err_file did not appear. Retrying..."
 
             if [ "$attempt" -ge "$MAX_RETRIES" ]; then
-                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries ($MAX_RETRIES) for ndre=$ndre, ndvi=$ndvi. Stopping."
+                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries ($MAX_RETRIES) for ndre=$ndre_inv, ndvi=$ndvi_inv. Stopping."
                 exit 1
             fi
 
@@ -69,17 +71,17 @@ for ndre in $(seq -f "%.1f" 0.0 0.1 1.0); do
             echo "$(date '+%Y-%m-%d %H:%M:%S') :: Job ${job_id} hit retryable error: '${first_line}'"
 
             if [ "${attempt}" -ge "${MAX_RETRIES}" ]; then
-                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries (${MAX_RETRIES}) for ndre=${ndre}, ndvi=${ndvi}. Stopping."
+                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries (${MAX_RETRIES}) for ndre=${ndre_inv}, ndvi=${ndvi_inv}. Stopping."
                 exit 1
             fi
 
             attempt=$((attempt + 1))
-            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Retrying ndre=${ndre}, ndvi=${ndvi}"
+            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Retrying ndre=${ndre_inv}, ndvi=${ndvi_inv}"
             sleep 60
             continue
         fi
 
-        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished inference job ${job_id} successfully for ndre=${ndre}, ndvi=${ndvi}"
+        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished inference job ${job_id} successfully for ndre=${ndre_inv}, ndvi=${ndvi_inv}"
 
         break # the retry loop
     done # retry loop
@@ -95,7 +97,7 @@ for ndre in $(seq -f "%.1f" 0.0 0.1 1.0); do
             | grep -o '[0-9]\+'
         )
 
-        echo "$(date '+%Y-%m-%d %H:%M:%d') :: Starting evaluation job ${job_id} ndre: ${ndre}, ndvi: ${ndvi}"
+        echo "$(date '+%Y-%m-%d %H:%M:%d') :: Starting evaluation job ${job_id} ndre: ${ndre_inv}, ndvi: ${ndvi_inv}"
 
         while squeue --me | grep -q "$job_id"; do
             # echo "Job $job_id still running... sleeping 5 minutes"
@@ -108,7 +110,7 @@ for ndre in $(seq -f "%.1f" 0.0 0.1 1.0); do
             echo "$(date '+%Y-%m-%d %H:%M:%S') :: Err file $err_file did not appear. Retrying..."
 
             if [ "$attempt" -ge "$MAX_RETRIES" ]; then
-                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries ($MAX_RETRIES) for ndre=$ndre, ndvi=$ndvi. Stopping."
+                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries ($MAX_RETRIES) for ndre=$ndre_inv, ndvi=$ndvi_inv. Stopping."
                 exit 1
             fi
 
@@ -122,17 +124,17 @@ for ndre in $(seq -f "%.1f" 0.0 0.1 1.0); do
             echo "$(date '+%Y-%m-%d %H:%M:%S') :: Job ${job_id} hit retryable error: '${first_line}'"
 
             if [ "${attempt}" -ge "${MAX_RETRIES}" ]; then
-                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries (${MAX_RETRIES}) for ndre=${ndre}, ndvi=${ndvi}. Stopping."
+                echo "$(date '+%Y-%m-%d %H:%M:%S') :: Reached max retries (${MAX_RETRIES}) for ndre=${ndre_inv}, ndvi=${ndvi_inv}. Stopping."
                 exit 1
             fi
 
             attempt=$((attempt + 1))
-            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Retrying ndre=${ndre}, ndvi=${ndvi}"
+            echo "$(date '+%Y-%m-%d %H:%M:%S') :: Retrying ndre=${ndre_inv}, ndvi=${ndvi_inv}"
             sleep 10
             continue
         fi
 
-        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished evaluation job ${job_id} successfully for ndre=${ndre}, ndvi=${ndvi}"
+        echo "$(date '+%Y-%m-%d %H:%M:%S') :: Finished evaluation job ${job_id} successfully for ndre=${ndre_inv}, ndvi=${ndvi_inv}"
 
         # delete data folder
         rm -r "${dir_name}/data"
