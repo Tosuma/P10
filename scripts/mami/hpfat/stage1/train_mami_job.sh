@@ -18,7 +18,7 @@ ndvi=""
 ndre=""
 dir_name=""
 model_name=""
-
+stage1_model=""
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --lr)             lr="$2"; shift 2 ;;
@@ -27,6 +27,7 @@ while [[ $# -gt 0 ]]; do
         --loss_ndre_w)    ndre="$2"; shift 2 ;;
         --dir_name)       dir_name="$2"; shift 2 ;;
         --model_name)     model_name="$2"; shift 2 ;;
+        --stage1_model)   stage1_model="$2"; shift 2 ;;
         -*)
             echo "Unknown option: $1" >&2
             exit 2
@@ -57,6 +58,11 @@ export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 # Torchrun needs to know how many processes to launch (one per GPU)
 GPUS=${SLURM_GPUS_ON_NODE:-${SLURM_GPUS_PER_NODE:-1}}
 
+stage1_model_arg=""
+if [ -n "${stage1_model}" ]; then
+    stage1_model_arg="--stage1_model ${stage1_model}"
+fi
+
 singularity exec --nv \
     -B /ceph/project/tbd/data/:/ceph/project/tbd/data \
     /ceph/container/pytorch/pytorch_26.01.sif \
@@ -74,6 +80,7 @@ singularity exec --nv \
                 --stage1_loss_ndre_w ${ndre} \
                 --dir_name ${dir_name} \
                 --model_name ${model_name} \
+                ${stage1_model_arg} \
                 --cluster"
 
 date
