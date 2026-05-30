@@ -89,6 +89,7 @@ run_eval() {
   echo "=== Beginning predictions ==="
 
   singularity exec --nv \
+    -B /ceph/project/tbd/data/:/ceph/project/tbd/data \
     /ceph/container/pytorch/pytorch_26.02.sif \
     /bin/bash -lc "source p10_venv/bin/activate && \
         python ./mami/inference.py \
