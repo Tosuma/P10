@@ -4,22 +4,39 @@
 
 set -u
 
-sri_path="./data/sri-lanka-aligned/"
-weedy_path="./data/data/WeedyRice/"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../../../../.." && pwd)"
+PREDICT_JOB_SCRIPT="${PROJECT_ROOT}/scripts/mami/hpfat/stage1/eval/predict_job.sh"
+EVAL_JOB_SCRIPT="${PROJECT_ROOT}/scripts/mami/hpfat/stage1/eval/eval_job.sh"
+
+cd "${PROJECT_ROOT}" || exit 1
+
+sri_path="${PROJECT_ROOT}/data/sri-lanka-aligned/"
+weedy_path="${PROJECT_ROOT}/data/data/WeedyRice/"
 
 RETRY_TEXT="Could not lookup the current user"
 MAX_RETRIES=50
 MAX_PARALLEL=8
 
-mkdir -p logs/hpfat/eval
-mkdir -p logs/hpfat/inference
+mkdir -p "${PROJECT_ROOT}/logs/hpfat/eval"
+mkdir -p "${PROJECT_ROOT}/logs/hpfat/inference"
+
+if ! command -v sbatch >/dev/null 2>&1; then
+    echo "$(date '+%Y-%m-%d %H:%M:%S') :: Error: 'sbatch' command not found."
+    exit 1
+fi
+
+if ! command -v squeue >/dev/null 2>&1; then
+    echo "$(date '+%Y-%m-%d %H:%M:%S') :: Error: 'squeue' command not found."
+    exit 1
+fi
 
 process_pair() {
     ndre="$1"
     ndvi="$2"
 
-    dir_name="results/hpfat/andhra-stage1---Weedy-Rice/re_${ndre}_vi_${ndvi}"
-    model_name="./checkpoints/hpfat/stage1/re_${ndre}_vi_${ndvi}/hpfat-andhra-re_${ndre}-vi_${ndvi}_stage1_best.pth"
+    dir_name="${PROJECT_ROOT}/results/hpfat/andhra-stage1---Weedy-Rice/re_${ndre}_vi_${ndvi}"
+    model_name="${PROJECT_ROOT}/checkpoints/hpfat/stage1/re_${ndre}_vi_${ndvi}/hpfat-andhra-re_${ndre}-vi_${ndvi}_stage1_best.pth"
 
     results="${dir_name}/results.json"
     summary="${dir_name}/summary.json"
@@ -44,7 +61,7 @@ process_pair() {
 
     while true; do
         job_id=$(
-            sbatch scripts/mami/hpfat/stage1/eval/predict_job.sh \
+            sbatch "${PREDICT_JOB_SCRIPT}" \
                 --model_name "${model_name}" \
                 --dir_name "${dir_name}" \
                 --truth "${weedy_path}" \
@@ -71,7 +88,7 @@ process_pair() {
             sleep 10
         done
 
-        err_file="logs/hpfat/inference/pred_mami_${job_id}.err"
+        err_file="${PROJECT_ROOT}/logs/hpfat/inference/pred_mami_${job_id}.err"
 
         if [ ! -f "$err_file" ]; then
             echo "$(date '+%Y-%m-%d %H:%M:%S') :: Err file $err_file did not appear. Retrying inference..."
@@ -113,7 +130,7 @@ process_pair() {
 
     while true; do
         job_id=$(
-            sbatch scripts/mami/hpfat/stage1/eval/eval_job.sh \
+            sbatch "${EVAL_JOB_SCRIPT}" \
                 --model_name "${model_name}" \
                 --dir_name "${dir_name}" \
                 --truth "${weedy_path}" \
@@ -140,7 +157,7 @@ process_pair() {
             sleep 10
         done
 
-        err_file="logs/hpfat/eval/eval_mami_${job_id}.err"
+        err_file="${PROJECT_ROOT}/logs/hpfat/eval/eval_mami_${job_id}.err"
 
         if [ ! -f "$err_file" ]; then
             echo "$(date '+%Y-%m-%d %H:%M:%S') :: Err file $err_file did not appear. Retrying evaluation..."
@@ -202,6 +219,26 @@ process_pair() {
 ###############################################################################
 # Run up to 8 ndre/ndvi pairs at once
 ###############################################################################
+
+available_models=0
+
+for ndre in $(seq -f "%.1f" 0.0 0.1 1.0); do
+    for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
+        model_name="${PROJECT_ROOT}/checkpoints/hpfat/stage1/re_${ndre}_vi_${ndvi}/hpfat-andhra-re_${ndre}-vi_${ndvi}_stage1_best.pth"
+        if [ -f "${model_name}" ]; then
+            available_models=$((available_models + 1))
+        fi
+    done
+done
+
+if [ "${available_models}" -eq 0 ]; then
+    echo "$(date '+%Y-%m-%d %H:%M:%S') :: Error: No model checkpoints found under ${PROJECT_ROOT}/checkpoints/hpfat/stage1/"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') :: Nothing to evaluate; expected files like:"
+    echo "  ${PROJECT_ROOT}/checkpoints/hpfat/stage1/re_0.0_vi_0.0/hpfat-andhra-re_0.0-vi_0.0_stage1_best.pth"
+    exit 1
+fi
+
+echo "$(date '+%Y-%m-%d %H:%M:%S') :: Found ${available_models} checkpoint(s) to evaluate."
 
 active_jobs=0
 failed=0
