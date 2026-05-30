@@ -15,7 +15,16 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../../../../.." && pwd)"
+PROJECT_ROOT=""
+
+# Under Slurm, BASH_SOURCE[0] can be a staged temporary copy. Prefer submit dir.
+if [ -n "${SLURM_SUBMIT_DIR:-}" ] && [ -d "${SLURM_SUBMIT_DIR}" ]; then
+    PROJECT_ROOT="${SLURM_SUBMIT_DIR}"
+elif [ -d "${PWD}" ] && [ -f "${PWD}/mami/inference.py" ]; then
+    PROJECT_ROOT="${PWD}"
+else
+    PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../../../../.." && pwd)"
+fi
 
 model_name=""
 dir_name=""
@@ -43,6 +52,13 @@ done
 : "${model_name:?Missing --model_name}"
 : "${type:?Missing --type}"
 : "${truth:?Missing --truth}"
+
+if [ ! -f "${PROJECT_ROOT}/mami/inference.py" ] || [ ! -f "${PROJECT_ROOT}/mami/evaluation.py" ]; then
+    echo "Could not resolve project root with mami scripts." >&2
+    echo "Resolved PROJECT_ROOT: ${PROJECT_ROOT}" >&2
+    echo "SLURM_SUBMIT_DIR: ${SLURM_SUBMIT_DIR:-<unset>}" >&2
+    exit 1
+fi
 
 mkdir -p "${dir_name}/data"
 
