@@ -225,13 +225,29 @@ To run repeated unfine-tuned baselines on Slurm, use the baseline multi-seed wra
 
 ```bash
 bash ./scripts/slurm/run_multi_seed_baseline_batch.sh \
-  --family binary \
+  --manifest scripts/slurm/workloads/binary_baseline.json \
   --repeats 10 \
   --base-seed 1000 \
   --max-parallel 16
 ```
 
-Use `--family fuzzy` instead for fuzzy baselines. For a custom baseline manifest, pass `--manifest PATH`.
+Use `scripts/slurm/workloads/fuzzy_baseline.json` instead for fuzzy baselines.
+
+To split binary baseline multi-seed runs into non-synthetic and synthetic-only batches, run them as two separate controller invocations:
+
+```bash
+bash ./scripts/slurm/run_multi_seed_baseline_batch.sh \
+  --manifest scripts/slurm/workloads/binary_baseline_no_synth.json \
+  --repeats 10 \
+  --base-seed 1000 \
+  --max-parallel 16
+
+bash ./scripts/slurm/run_multi_seed_baseline_batch.sh \
+  --manifest scripts/slurm/workloads/binary_baseline_only_synth.json \
+  --repeats 10 \
+  --base-seed 1000 \
+  --max-parallel 16
+```
 
 Evaluation writes artifacts under `outputs/runs/<run>/evaluation/<split>/`, including `overall_metrics.json`, per-patch and per-image CSV metrics, reconstructed predicted masks in `masks/`, limited preview panels in `visuals/`, and `execution.log` with entries formatted as `%(asctime)s [Evaluator] :: %(message)s`. Every evaluated model now produces both `original_*` and `fuzzy_*` metrics. Binary and baseline configs use the matching file in `configs/fuzzy/` as the fuzzy scoring reference, while fuzzy configs use their own halo settings.
 
@@ -331,7 +347,7 @@ Single-run convenience scripts:
 - `scripts/baseline/evaluate_all_baselines_multi_seed.sh`: evaluates the combined binary and fuzzy baseline architecture families across repeated seeds and summarizes them
 - `scripts/slurm/run_masking_batch.sh`: runs a manifest through Slurm, keeping up to six one-GPU jobs active and validating each completed job before starting more work
 - `scripts/slurm/run_multi_seed_batch.sh`: expands repeated training into one Slurm job per seed, reuses the batch controller, and writes a combined multi-seed summary
-- `scripts/slurm/run_multi_seed_baseline_batch.sh`: expands a binary or fuzzy baseline workload into one Slurm job per seed and reuses the batch controller
+- `scripts/slurm/run_multi_seed_baseline_batch.sh`: expands a baseline manifest into one Slurm job per seed and reuses the batch controller
 - `scripts/slurm/masking_job.sh`: the Slurm job submitted by the batch controller for one train or baseline task
 - `scripts/slurm/read_manifest.py`: validates JSON workload manifests and emits the normalized task rows consumed by the batch controller
 - `scripts/slurm/write_multi_seed_manifest.py`: expands configs, train manifests, or baseline manifests into one task per seed
@@ -343,6 +359,8 @@ Slurm workload manifests:
 - `scripts/slurm/workloads/binary_train.json`: the same configs as `scripts/binary/train_all_binary.sh`
 - `scripts/slurm/workloads/fuzzy_train.json`: the same configs as `scripts/fuzzy/train_all_fuzzy.sh`
 - `scripts/slurm/workloads/binary_baseline.json`: the same configs as `scripts/baseline/evaluate_all_binary_baselines.sh`
+- `scripts/slurm/workloads/binary_baseline_no_synth.json`: binary baseline configs without `synth` in the config path
+- `scripts/slurm/workloads/binary_baseline_only_synth.json`: binary baseline configs with synthetic data
 - `scripts/slurm/workloads/fuzzy_baseline.json`: the same configs as `scripts/baseline/evaluate_all_fuzzy_baselines.sh`
 
 The manifest format is JSON with a top-level `tasks` list. Each task has `group`, `kind`, `config`, and `split` fields, and may also include an optional `seed` for explicit per-run training or baseline tasks:
