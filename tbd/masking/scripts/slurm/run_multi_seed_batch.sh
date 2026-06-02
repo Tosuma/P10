@@ -29,14 +29,15 @@ usage() {
 Usage:
   bash ./scripts/slurm/run_multi_seed_batch.sh --config configs/binary/rgb.yaml
   bash ./scripts/slurm/run_multi_seed_batch.sh --manifest scripts/slurm/workloads/binary_train.json
+  bash ./scripts/slurm/run_multi_seed_batch.sh --manifest scripts/slurm/workloads/binary_baseline.json
 
 Options:
   --config PATH                  Training config to repeat; may be passed multiple times
-  --manifest PATH                JSON training manifest to expand into one task per seed
-  --repeats N                    Number of runs per config (default: 3)
-  --base-seed N                  First seed to use (default: 12345)
+  --manifest PATH                JSON train or baseline manifest to expand into one task per seed
+  --repeats N                    Number of runs per config (default: 10)
+  --base-seed N                  First seed to use (default: 42)
   --summary-output PATH          Final combined summary JSON path
-  --max-parallel N               Active Slurm jobs to keep running (default: 6)
+  --max-parallel N               Active Slurm jobs to keep running (default: 16)
   --max-retries N                Retries per task after validation failure
   --sbatch-submit-retries N      Retries when sbatch does not return a job id
   --poll-seconds N               Seconds between squeue polls
