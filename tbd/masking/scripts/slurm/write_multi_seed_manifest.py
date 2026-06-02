@@ -39,10 +39,10 @@ def build_tasks(
         ]
 
     tasks: list[dict[str, str | int]] = []
-    for task in source_tasks:
-        source_group = str(task["group"])
-        expanded_group = source_group if source_group.endswith("_multi_seed") else f"{source_group}_multi_seed"
-        for repeat_index in range(repeats):
+    for repeat_index in range(repeats):
+        for task in source_tasks:
+            source_group = str(task["group"])
+            expanded_group = source_group if source_group.endswith("_multi_seed") else f"{source_group}_multi_seed"
             tasks.append(
                 {
                     "group": expanded_group,
