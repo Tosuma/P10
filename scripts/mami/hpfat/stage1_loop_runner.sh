@@ -57,7 +57,7 @@ mkdir -p "${REPO_ROOT}/logs/hpfat"
 
 checkpoint_dir="${REPO_ROOT}/checkpoints/${dir_name}/all-models"
 final_model="${checkpoint_dir}/${model_name}_stage1_final.pth"
-best_model="${checkpoint_dir}/${model_name}_stage1_best.pth"
+best_model="${REPO_ROOT}/${model_name}_stage1_best.pth"
 
 attempt=0
 
