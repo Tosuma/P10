@@ -216,7 +216,9 @@ CLAUDE.md
 
 data/
 
-results
+results/*
+results/vi
+!results/hpfat
 
 checkpoints/
 
