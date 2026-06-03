@@ -11,7 +11,7 @@ MAX_RETRIES=50
 mkdir -p logs/hpfat/eval
 mkdir -p logs/hpfat/inference
 
-for ndre in $(seq -f "%.1f" 0.0 0.1 0.1); do
+for ndre in $(seq -f "%.1f" 1.0 0.1 1.0); do
   for ndvi in $(seq -f "%.1f" 0.0 0.1 1.0); do
     dir_name="results/hpfat/andhra-stage3---Weedy-Rice/re_${ndre}_vi_${ndvi}"
     model_name="./checkpoints/hpfat/stage3/re_${ndre}_vi_${ndvi}/hpfat-andhra-stage3-re_${ndre}-vi_${ndvi}_stage3_best.pth"
