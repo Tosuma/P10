@@ -15,7 +15,7 @@ weedy_path="${PROJECT_ROOT}/data/data/WeedyRice/"
 
 RETRY_TEXT="Could not lookup the current user"
 MAX_RETRIES=50
-MAX_PARALLEL=8
+MAX_PARALLEL=4
 
 mkdir -p "${PROJECT_ROOT}/logs/hpfat/eval"
 mkdir -p "${PROJECT_ROOT}/logs/hpfat/inference"

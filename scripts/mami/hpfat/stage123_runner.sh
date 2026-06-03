@@ -6,9 +6,9 @@ STAGE1_RUNNER="${REPO_ROOT}/scripts/mami/hpfat/stage1_loop_runner.sh"
 STAGE23_JOB_SCRIPT="${REPO_ROOT}/scripts/mami/hpfat/stage2_stage3_job.sh"
 
 STAGE1_LR="4e-4"
-STAGE1_MRAE="0.1"
-STAGE1_NDRE="0.5"
-STAGE1_NDVI="0.7"
+STAGE1_MRAE="1.0"
+STAGE1_NDRE="0.1"
+STAGE1_NDVI="0.5"
 STAGE1_DIR="hpfat/full/stage1"
 STAGE1_MODEL="hpfat-andhra-re_0.1-vi_0.5"
 
