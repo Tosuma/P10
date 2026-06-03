@@ -70,8 +70,8 @@ singularity exec --nv \
                 --stage3_data_type Sri-Lanka \
                 --stage3_lr 1e-7 \
                 --stage3_loss_mrae_w 1.0 \
-                --stage3_loss_ndvi_w 0.1 \
-                --stage3_loss_ndre_w 0.1 \
+                --stage3_loss_ndvi_w 0.0 \
+                --stage3_loss_ndre_w 0.0 \
                 --dir_name ${dir_name} \
                 --model_name ${model_name} \
                 --cluster"
