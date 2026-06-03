@@ -72,7 +72,7 @@ singularity exec --nv \
             --nproc_per_node=${GPUS} \
             mami/mami.py \
                 --stage1_data_path data/data/Aligned-Andhra \
-                --stage1_data_type Andhra-Aligned-Small \
+                --stage1_data_type Andhra-Aligned \
                 --stage1_epochs 300 \
                 --stage1_lr ${lr} \
                 --stage1_loss_mrae_w ${mrae} \
