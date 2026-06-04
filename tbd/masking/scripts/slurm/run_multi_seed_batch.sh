@@ -185,6 +185,7 @@ fi
 BATCH_NAME="multi_seed_${BASE_NAME}"
 STATUS_DIR="${STATUS_ROOT}/${BATCH_NAME}_${RUN_ID}"
 EXPANDED_MANIFEST="${MANIFEST_OUTPUT_ROOT}/${BATCH_NAME}_${RUN_ID}.json"
+FAILED_REPORT="${STATUS_DIR}/failed_tasks.tsv"
 
 if [[ -z "$SUMMARY_OUTPUT" ]]; then
   SUMMARY_OUTPUT="${SUMMARY_DIR}/slurm_${BATCH_NAME}_${RUN_ID}_summary.json"
@@ -204,6 +205,9 @@ for config in "${CONFIGS[@]}"; do
 done
 
 "$PYTHON_EXE" scripts/slurm/write_multi_seed_manifest.py "${manifest_args[@]}"
+
+echo "Expanded manifest: ${EXPANDED_MANIFEST}"
+echo "Status directory: ${STATUS_DIR}"
 
 controller_args=(
   --manifest "$EXPANDED_MANIFEST"
@@ -237,8 +241,15 @@ bash ./scripts/slurm/run_masking_batch.sh "${controller_args[@]}"
 controller_exit=$?
 set -e
 
+if [[ "$controller_exit" -ne 0 ]]; then
+  echo "Slurm batch controller exited with code ${controller_exit}." >&2
+  echo "Status directory: ${STATUS_DIR}" >&2
+  if [[ -f "$FAILED_REPORT" ]]; then
+    echo "Failed task report: ${FAILED_REPORT}" >&2
+  fi
+fi
+
 if [[ "$DRY_RUN" -eq 1 ]]; then
-  echo "Expanded manifest: ${EXPANDED_MANIFEST}"
   echo "Dry run complete."
   exit 0
 fi
