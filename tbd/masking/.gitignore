@@ -16,3 +16,8 @@ outputs/runs/*/evaluation/test/visuals/
 outputs/runs/*/evaluation/test/masks/
 
 outputs/runs/*/logs/history.csv
+
+outputs/**/*.png
+
+outputs/slurm
+

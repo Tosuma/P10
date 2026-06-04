@@ -1,6 +1,0 @@
-2026-05-02 06:37:12,521 [Trainer] :: Training run initialized at /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/real_msi_deeplabv3plus_resnet50_seed49_20260502T043712Z
-2026-05-02 06:37:12,522 [Trainer] :: Loaded config from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/configs/binary/real_msi_deeplabv3plus_resnet50.yaml
-2026-05-02 06:37:12,522 [Trainer] :: Using seed=49 and device=None
-2026-05-02 06:37:12,522 [Trainer] :: Using model architecture=DeepLabV3Plus encoder=resnet50 encoder_weights=imagenet
-2026-05-02 06:37:12,815 [Trainer] :: Resolved runtime device to cuda
-2026-05-02 06:37:12,816 [Trainer] :: Prepared normalization from source=train_split_patch_stats

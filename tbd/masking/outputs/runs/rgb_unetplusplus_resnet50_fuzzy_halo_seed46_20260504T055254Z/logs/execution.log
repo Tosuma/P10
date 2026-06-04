@@ -1,6 +1,0 @@
-2026-05-04 07:52:54,310 [Trainer] :: Training run initialized at /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_unetplusplus_resnet50_fuzzy_halo_seed46_20260504T055254Z
-2026-05-04 07:52:54,310 [Trainer] :: Loaded config from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/configs/fuzzy/rgb_unetpp_resnet50.yaml
-2026-05-04 07:52:54,310 [Trainer] :: Using seed=46 and device=None
-2026-05-04 07:52:54,310 [Trainer] :: Using model architecture=UnetPlusPlus encoder=resnet50 encoder_weights=imagenet
-2026-05-04 07:52:55,016 [Trainer] :: Resolved runtime device to cuda
-2026-05-04 07:52:55,016 [Trainer] :: Prepared normalization from source=imagenet
