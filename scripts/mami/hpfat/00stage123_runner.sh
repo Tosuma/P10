@@ -10,14 +10,14 @@ STAGE1_MRAE="1.0"
 STAGE1_NDRE="0.0"
 STAGE1_NDVI="0.0"
 STAGE1_DIR="hpfat/full/stage1"
-STAGE1_MODEL="hpfat-andhra-re_0.1-vi_0.5"
+STAGE1_MODEL="hpfat-andhra-re_0.0-vi_0.0"
 
 STAGE23_DIR="hpfat/full/stage23"
 STAGE23_MODEL="${STAGE1_MODEL}"
 
 STAGE2_MODEL="${REPO_ROOT}/checkpoints/${STAGE1_DIR}/${STAGE1_MODEL}_stage1_best.pth"
 
-mkdir -p "${REPO_ROOT}/logs/hpfat/stage23"
+mkdir -p "${REPO_ROOT}/logs/hpfat/00stage23"
 
 if [ ! -x "${STAGE1_RUNNER}" ]; then
   echo "Stage1 runner not found or not executable: ${STAGE1_RUNNER}" >&2
