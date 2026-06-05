@@ -1,0 +1,11 @@
+{
+  "git_commit": "50e7dd2f412527bcb2601be742eaccdc88a4f6e7",
+  "seed": 45,
+  "packages": {
+    "torch": "2.11.0a0+eb65b36914.nv26.02",
+    "numpy": "2.1.0",
+    "PIL": "12.1.1",
+    "python": "3.12.3 (main, Jan 22 2026, 20:57:42) [GCC 13.3.0]"
+  },
+  "run_kind": "finetuned"
+}

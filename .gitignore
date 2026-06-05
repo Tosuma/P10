@@ -222,8 +222,6 @@ results/vi
 
 checkpoints/
 
-tbd/masking/outputs/
-
 **.venv**
 **venv**
 ./logs/
