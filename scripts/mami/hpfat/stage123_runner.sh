@@ -29,36 +29,36 @@ if [ ! -x "${STAGE23_JOB_SCRIPT}" ]; then
   exit 1
 fi
 
-echo "$(date '+%Y-%m-%d %H:%M:%S') :: Starting Stage1 loop runner"
-"${STAGE1_RUNNER}" \
-  --lr "${STAGE1_LR}" \
-  --loss_mrae_w "${STAGE1_MRAE}" \
-  --loss_ndvi_w "${STAGE1_NDVI}" \
-  --loss_ndre_w "${STAGE1_NDRE}" \
-  --dir_name "${STAGE1_DIR}" \
-  --model_name "${STAGE1_MODEL}"
+#echo "$(date '+%Y-%m-%d %H:%M:%S') :: Starting Stage1 loop runner"
+#"${STAGE1_RUNNER}" \
+#  --lr "${STAGE1_LR}" \
+#  --loss_mrae_w "${STAGE1_MRAE}" \
+#  --loss_ndvi_w "${STAGE1_NDVI}" \
+#  --loss_ndre_w "${STAGE1_NDRE}" \
+#  --dir_name "${STAGE1_DIR}" \
+#  --model_name "${STAGE1_MODEL}"
 
-# if [ ! -f "${STAGE2_MODEL}" ]; then
-#   echo "Stage1 best model not found: ${STAGE2_MODEL}" >&2
-#   exit 1
-# fi
+if [ ! -f "${STAGE2_MODEL}" ]; then
+  echo "Stage1 best model not found: ${STAGE2_MODEL}" >&2
+  exit 1
+fi
 
-# echo "$(date '+%Y-%m-%d %H:%M:%S') :: Submitting Stage2+Stage3 job"
-# job_id=$(sbatch "${STAGE23_JOB_SCRIPT}" \
-#   --stage2_model "${STAGE2_MODEL}" \
-#   --dir_name "${STAGE23_DIR}" \
-#   --model_name "${STAGE23_MODEL}" \
-#   | grep -o '[0-9]\+')
+echo "$(date '+%Y-%m-%d %H:%M:%S') :: Submitting Stage2+Stage3 job"
+job_id=$(sbatch "${STAGE23_JOB_SCRIPT}" \
+  --stage2_model "${STAGE2_MODEL}" \
+  --dir_name "${STAGE23_DIR}" \
+  --model_name "${STAGE23_MODEL}" \
+ | grep -o '[0-9]\+')
 
-# if [ -z "${job_id}" ]; then
-#   echo "$(date '+%Y-%m-%d %H:%M:%S') :: Failed to submit Stage2+Stage3 job." >&2
-#   exit 1
-# fi
+if [ -z "${job_id}" ]; then
+  echo "$(date '+%Y-%m-%d %H:%M:%S') :: Failed to submit Stage2+Stage3 job." >&2
+  exit 1
+fi
 
-# echo "$(date '+%Y-%m-%d %H:%M:%S') :: Stage2+Stage3 job submitted: ${job_id}"
+echo "$(date '+%Y-%m-%d %H:%M:%S') :: Stage2+Stage3 job submitted: ${job_id}"
 
-# while squeue --me | grep -q "${job_id}"; do
-#   sleep 10
-# done
+while squeue --me | grep -q "${job_id}"; do
+  sleep 10
+done
 
-# echo "$(date '+%Y-%m-%d %H:%M:%S') :: Stage2+Stage3 job ${job_id} completed"
+echo "$(date '+%Y-%m-%d %H:%M:%S') :: Stage2+Stage3 job ${job_id} completed"
