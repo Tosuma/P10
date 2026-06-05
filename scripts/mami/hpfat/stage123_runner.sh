@@ -15,7 +15,7 @@ STAGE1_MODEL="hpfat-andhra-re_0.1-vi_0.5"
 STAGE23_DIR="hpfat/full/stage23"
 STAGE23_MODEL="${STAGE1_MODEL}"
 
-STAGE2_MODEL="${REPO_ROOT}/checkpoints/${STAGE1_DIR}/all-models/${STAGE1_MODEL}_stage1_best.pth"
+STAGE2_MODEL="${REPO_ROOT}/checkpoints/${STAGE1_DIR}/${STAGE1_MODEL}_stage1_best.pth"
 
 mkdir -p "${REPO_ROOT}/logs/hpfat/stage23"
 
