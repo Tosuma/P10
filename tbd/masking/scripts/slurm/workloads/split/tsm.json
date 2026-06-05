@@ -23,12 +23,6 @@
             "kind": "train",
             "config": "configs/binary/synth_msi_deeplabv3plus_resnet50.yaml",
             "split": "test"
-        },
-        {
-            "group": "binary_train",
-            "kind": "train",
-            "config": "configs/binary/synth_msi_segformer_b0.yaml",
-            "split": "test"
         }
     ]
 }
