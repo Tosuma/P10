@@ -273,7 +273,10 @@ def run_split_evaluation(
     primary_patch_rows = results["views"][primary_view]["per_patch_rows"]
     primary_image_rows = image_results["views"][primary_view]
 
-    write_json(output_dir / "overall_metrics.json", overall_payload)
+    overall_metrics_path = output_dir / "overall_metrics.json"
+    write_json(overall_metrics_path, overall_payload)
+    if not overall_metrics_path.is_file():
+        raise RuntimeError(f"Evaluation did not create expected metrics file: {overall_metrics_path}")
     write_csv_rows(output_dir / "per_patch_metrics.csv", primary_patch_rows, list(primary_patch_rows[0].keys()) if primary_patch_rows else ["sample_id"])
     write_csv_rows(output_dir / "per_image_metrics.csv", primary_image_rows, list(primary_image_rows[0].keys()) if primary_image_rows else ["sample_id"])
     write_csv_rows(
@@ -296,7 +299,7 @@ def run_split_evaluation(
         image_results["views"]["fuzzy"],
         list(image_results["views"]["fuzzy"][0].keys()) if image_results["views"]["fuzzy"] else ["sample_id"],
     )
-    logger.info("Saved aggregate metrics to %s", output_dir / "overall_metrics.json")
+    logger.info("Saved aggregate metrics to %s", overall_metrics_path)
     logger.info("Saved %s patch rows and %s image rows", len(primary_patch_rows), len(primary_image_rows))
 
     mask_dir = ensure_dir(output_dir / "masks")

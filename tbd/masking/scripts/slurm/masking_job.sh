@@ -236,7 +236,11 @@ if [[ "$KIND" == "train" ]]; then
   fi
 elif [[ "$KIND" == "baseline" ]]; then
   echo "Evaluating unfine-tuned base model ${CONFIG} on split ${SPLIT}"
-  run_and_capture "baseline" "$PYTHON_EXE -u -m src.evaluate_base --config '$CONFIG' --split '$SPLIT'"
+  baseline_command="$PYTHON_EXE -u -m src.evaluate_base --config '$CONFIG' --split '$SPLIT'"
+  if [[ -n "$SEED" ]]; then
+    baseline_command="${baseline_command} --seed '$SEED'"
+  fi
+  run_and_capture "baseline" "$baseline_command"
   RUN_DIR="$(printf '%s\n' "$LAST_OUTPUT" | awk 'NF { last=$0 } END { print last }')"
   echo "Run directory: ${RUN_DIR}"
 

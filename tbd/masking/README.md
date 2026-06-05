@@ -221,6 +221,34 @@ bash ./scripts/slurm/run_multi_seed_batch.sh \
   --base-seed 1000
 ```
 
+To run repeated unfine-tuned baselines on Slurm, use the baseline multi-seed wrapper. It expands the selected baseline workload into one task per seed, submits the expanded manifest through the same controller used for training, keeps up to `--max-parallel` Slurm jobs active, and starts new jobs as earlier ones complete:
+
+```bash
+bash ./scripts/slurm/run_multi_seed_baseline_batch.sh \
+  --manifest scripts/slurm/workloads/binary_baseline.json \
+  --repeats 10 \
+  --base-seed 1000 \
+  --max-parallel 16
+```
+
+Use `scripts/slurm/workloads/fuzzy_baseline.json` instead for fuzzy baselines.
+
+To split binary baseline multi-seed runs into non-synthetic and synthetic-only batches, run them as two separate controller invocations:
+
+```bash
+bash ./scripts/slurm/run_multi_seed_baseline_batch.sh \
+  --manifest scripts/slurm/workloads/binary_baseline_no_synth.json \
+  --repeats 10 \
+  --base-seed 1000 \
+  --max-parallel 16
+
+bash ./scripts/slurm/run_multi_seed_baseline_batch.sh \
+  --manifest scripts/slurm/workloads/binary_baseline_only_synth.json \
+  --repeats 10 \
+  --base-seed 1000 \
+  --max-parallel 16
+```
+
 Evaluation writes artifacts under `outputs/runs/<run>/evaluation/<split>/`, including `overall_metrics.json`, per-patch and per-image CSV metrics, reconstructed predicted masks in `masks/`, limited preview panels in `visuals/`, and `execution.log` with entries formatted as `%(asctime)s [Evaluator] :: %(message)s`. Every evaluated model now produces both `original_*` and `fuzzy_*` metrics. Binary and baseline configs use the matching file in `configs/fuzzy/` as the fuzzy scoring reference, while fuzzy configs use their own halo settings.
 
 `overall_metrics.json` fields are interpreted as follows:
@@ -319,9 +347,10 @@ Single-run convenience scripts:
 - `scripts/baseline/evaluate_all_baselines_multi_seed.sh`: evaluates the combined binary and fuzzy baseline architecture families across repeated seeds and summarizes them
 - `scripts/slurm/run_masking_batch.sh`: runs a manifest through Slurm, keeping up to six one-GPU jobs active and validating each completed job before starting more work
 - `scripts/slurm/run_multi_seed_batch.sh`: expands repeated training into one Slurm job per seed, reuses the batch controller, and writes a combined multi-seed summary
+- `scripts/slurm/run_multi_seed_baseline_batch.sh`: expands a baseline manifest into one Slurm job per seed and reuses the batch controller
 - `scripts/slurm/masking_job.sh`: the Slurm job submitted by the batch controller for one train or baseline task
 - `scripts/slurm/read_manifest.py`: validates JSON workload manifests and emits the normalized task rows consumed by the batch controller
-- `scripts/slurm/write_multi_seed_manifest.py`: expands configs or a train manifest into one training task per seed
+- `scripts/slurm/write_multi_seed_manifest.py`: expands configs, train manifests, or baseline manifests into one task per seed
 - `scripts/slurm/collect_successful_runs.py`: reads Slurm status files and emits successful run directories for final summary generation
 
 Slurm workload manifests:
@@ -330,9 +359,11 @@ Slurm workload manifests:
 - `scripts/slurm/workloads/binary_train.json`: the same configs as `scripts/binary/train_all_binary.sh`
 - `scripts/slurm/workloads/fuzzy_train.json`: the same configs as `scripts/fuzzy/train_all_fuzzy.sh`
 - `scripts/slurm/workloads/binary_baseline.json`: the same configs as `scripts/baseline/evaluate_all_binary_baselines.sh`
+- `scripts/slurm/workloads/binary_baseline_no_synth.json`: binary baseline configs without `synth` in the config path
+- `scripts/slurm/workloads/binary_baseline_only_synth.json`: binary baseline configs with synthetic data
 - `scripts/slurm/workloads/fuzzy_baseline.json`: the same configs as `scripts/baseline/evaluate_all_fuzzy_baselines.sh`
 
-The manifest format is JSON with a top-level `tasks` list. Each task has `group`, `kind`, `config`, and `split` fields, and may also include an optional `seed` for explicit per-run training tasks:
+The manifest format is JSON with a top-level `tasks` list. Each task has `group`, `kind`, `config`, and `split` fields, and may also include an optional `seed` for explicit per-run training or baseline tasks:
 
 ```json
 {
@@ -350,7 +381,18 @@ The manifest format is JSON with a top-level `tasks` list. Each task has `group`
 
 The Slurm controller is intended to run from a login shell in `tbd/masking`. It submits individual `sbatch` jobs, keeps `--max-parallel 6` jobs active by default, retries failed or suspicious tasks according to the `MAX_RETRIES` variable near the top of `scripts/slurm/run_masking_batch.sh`, and then writes per-group summaries to `outputs/metrics/slurm_<manifest>_<group>_summary.json`. Each batch status directory contains `controller.log`, per-task status files, per-attempt job logs referenced by `job_log=...`, and `failed_tasks.tsv` when failures occur. Slurm stdout/stderr still go under `logs/masking/slurm/`. It also creates an atomic controller lock under `outputs/slurm/status/.masking_batch_controller.lock` so two controllers are not accidentally started against the same GPU pool. You may optionally pass `--status-dir` when another wrapper, such as the multi-seed runner, needs a deterministic status directory.
 
-The multi-seed Slurm runner writes its expanded manifest under `outputs/slurm/manifests/`, reuses the same task validation and retry logic as `run_masking_batch.sh`, and writes a final combined summary JSON after collecting successful run directories from the batch status files. It still runs one training seed per Slurm job, so `--repeats 10` means ten separate jobs per config rather than one long job.
+The multi-seed Slurm runner writes its expanded manifest under `outputs/slurm/manifests/`, reuses the same task validation and retry logic as `run_masking_batch.sh`, and writes a final combined summary JSON after collecting successful run directories from the batch status files. It still runs one training seed per Slurm job, so `--repeats 10` means ten separate jobs per config rather than one long job. For baseline multi-seed runs, use `run_multi_seed_baseline_batch.sh`; it wraps the same manifest expansion and controller submission path.
+
+To rerun a retry manifest, such as one produced by `scripts/slurm/find_failed_tasks.py`, use:
+
+```bash
+bash ./scripts/slurm/run_retry_manifest.sh \
+  --manifest retry-manifest.json \
+  --runs-root outputs/runs \
+  --summary-output outputs/metrics/all_no_synth_combined_after_retry.json
+```
+
+The retry wrapper submits the manifest through the normal Slurm controller without expanding seeds. After the controller finishes, it scans `outputs/runs` for completed runs with `config.yaml` and `evaluation/test/overall_metrics.json`, writes a combined summary, and writes a companion `*_runs.txt` file listing exactly which run directories were included. If some retry tasks still fail, the combined summary is still written from completed runs and the wrapper exits with the controller's nonzero status.
 
 Cluster defaults are editable near the top of `scripts/slurm/run_masking_batch.sh` and in the SBATCH header of `scripts/slurm/masking_job.sh`. Set `MAX_RETRIES=10` or `MAX_RETRIES=50` in the controller if you want more retries after bad logs or missing outputs; set `SBATCH_SUBMIT_RETRIES` separately for cases where `sbatch` does not return a job id. The default job settings request one GPU, 15 CPUs, 24 GB memory, and 12 hours, and run through `/ceph/container/pytorch/pytorch_26.02.sif`. The job script tries `p10_venv/bin/activate`, `../../p10_venv/bin/activate`, and `../../.venv/bin/activate` from `tbd/masking`; override `VENV_ACTIVATE` if the cluster venv lives elsewhere. Use `--dry-run` to verify manifest parsing without submitting jobs:
 

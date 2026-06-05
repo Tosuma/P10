@@ -20,9 +20,9 @@ def build_tasks(
         if not source_tasks:
             raise SystemExit(f"{manifest_path}: manifest contains no tasks.")
         for index, task in enumerate(source_tasks):
-            if task["kind"] != "train":
+            if task["kind"] not in {"train", "baseline"}:
                 raise SystemExit(
-                    f"{manifest_path}: task {index} has kind={task['kind']!r}; multi-seed Slurm runs support train tasks only."
+                    f"{manifest_path}: task {index} has kind={task['kind']!r}; multi-seed Slurm runs support train and baseline tasks only."
                 )
     else:
         if not configs:
@@ -39,14 +39,14 @@ def build_tasks(
         ]
 
     tasks: list[dict[str, str | int]] = []
-    for task in source_tasks:
-        source_group = str(task["group"])
-        expanded_group = source_group if source_group.endswith("_multi_seed") else f"{source_group}_multi_seed"
-        for repeat_index in range(repeats):
+    for repeat_index in range(repeats):
+        for task in source_tasks:
+            source_group = str(task["group"])
+            expanded_group = source_group if source_group.endswith("_multi_seed") else f"{source_group}_multi_seed"
             tasks.append(
                 {
                     "group": expanded_group,
-                    "kind": "train",
+                    "kind": str(task["kind"]),
                     "config": str(task["config"]),
                     "split": str(task.get("split", "test") or "test"),
                     "seed": base_seed + repeat_index,
@@ -56,7 +56,7 @@ def build_tasks(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Expand one-run-per-seed Slurm training tasks into a JSON manifest.")
+    parser = argparse.ArgumentParser(description="Expand Slurm train or baseline tasks into one task per seed.")
     parser.add_argument("--config", action="append", default=[])
     parser.add_argument("--manifest", type=Path, default=None)
     parser.add_argument("--repeats", type=int, required=True)

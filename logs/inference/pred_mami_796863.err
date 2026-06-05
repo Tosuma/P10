@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/./mami/inference.py", line 11, in <module>
+    from data_carrier.datasets import KazDataset, SriLankaDataset, WeedyRiceDataset
+  File "/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/mami/data_carrier/__init__.py", line 3, in <module>
+    from .base_dataset import DataCarrier
+  File "/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/mami/data_carrier/base_dataset.py", line 2, in <module>
+    import cv2
+ModuleNotFoundError: No module named 'cv2'

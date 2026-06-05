@@ -72,6 +72,10 @@ def main() -> None:
     model = build_model(int(config["in_channels"]), config["model"]).to(device)
     model.eval()
     run_split_evaluation(model, config, args.split, evaluation_dir, device, logger)
+    overall_metrics_path = evaluation_dir / "overall_metrics.json"
+    if not overall_metrics_path.is_file():
+        raise RuntimeError(f"Baseline evaluation did not create expected metrics file: {overall_metrics_path}")
+    logger.info("Baseline overall metrics written to %s", overall_metrics_path)
     logger.info("Baseline evaluation completed")
     print(str(run_dir.resolve()))
 

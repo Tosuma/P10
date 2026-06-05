@@ -1,0 +1,28 @@
+{
+    "tasks": [
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_synth_msi_unetpp_resnet34.yaml",
+            "split": "test"
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_synth_msi_unetpp_resnet50.yaml",
+            "split": "test"
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml",
+            "split": "test"
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml",
+            "split": "test"
+        }
+    ]
+}
