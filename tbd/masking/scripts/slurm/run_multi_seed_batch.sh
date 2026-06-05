@@ -4,7 +4,7 @@ set -euo pipefail
 
 DEFAULT_REPEATS=10
 DEFAULT_BASE_SEED=42
-DEFAULT_MAX_PARALLEL=16
+DEFAULT_MAX_PARALLEL=8
 PYTHON_EXE="python"
 SINGULARITY_IMAGE="/ceph/container/pytorch/pytorch_26.02.sif"
 VENV_ACTIVATE="p10_venv/bin/activate"
