@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script to delete directories without 'overall_metrics.json' in their subtree
-# Usage: ./cleanup_dirs.sh /path/to/root
+# Usage: ./cleanup-dirs.sh /path/to/root
 
 if [ -z "$1" ]; then
     echo "Error: Please provide a root directory to search."
