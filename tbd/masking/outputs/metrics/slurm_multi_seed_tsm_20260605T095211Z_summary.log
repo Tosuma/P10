@@ -1,0 +1,42 @@
+2026-06-06 08:03:41,156 [Summarizer] :: Summary generation started
+2026-06-06 08:03:41,157 [Summarizer] :: Collecting metrics from 37 run(s)
+2026-06-06 08:03:41,158 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet34_seed42_20260605T095219Z
+2026-06-06 08:03:41,287 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet34_seed44_20260605T124838Z
+2026-06-06 08:03:41,383 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet50_seed44_20260605T125543Z
+2026-06-06 08:03:41,490 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet34_seed45_20260605T131639Z
+2026-06-06 08:03:41,643 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet50_seed45_20260605T131646Z
+2026-06-06 08:03:41,719 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet34_seed45_20260605T145701Z
+2026-06-06 08:03:41,826 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet50_seed45_20260605T151558Z
+2026-06-06 08:03:41,937 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet34_seed46_20260605T151710Z
+2026-06-06 08:03:42,028 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet50_seed46_20260605T152336Z
+2026-06-06 08:03:42,154 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet34_seed46_20260605T152428Z
+2026-06-06 08:03:42,283 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet50_seed46_20260605T174005Z
+2026-06-06 08:03:42,454 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet50_seed42_20260605T095220Z
+2026-06-06 08:03:42,624 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet34_seed47_20260605T175348Z
+2026-06-06 08:03:42,702 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet50_seed47_20260605T175400Z
+2026-06-06 08:03:42,774 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet34_seed47_20260605T181607Z
+2026-06-06 08:03:42,943 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet50_seed47_20260605T181820Z
+2026-06-06 08:03:43,013 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet34_seed48_20260605T185906Z
+2026-06-06 08:03:43,077 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet34_seed49_20260605T191522Z
+2026-06-06 08:03:43,184 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet50_seed49_20260605T201423Z
+2026-06-06 08:03:43,278 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet34_seed42_20260605T095220Z
+2026-06-06 08:03:43,386 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet34_seed49_20260605T203052Z
+2026-06-06 08:03:43,501 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet50_seed49_20260605T203446Z
+2026-06-06 08:03:43,569 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet34_seed50_20260605T205524Z
+2026-06-06 08:03:43,652 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet50_seed50_20260605T215522Z
+2026-06-06 08:03:43,728 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet34_seed50_20260605T224620Z
+2026-06-06 08:03:43,844 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet50_seed50_20260605T233606Z
+2026-06-06 08:03:43,960 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet34_seed51_20260605T235712Z
+2026-06-06 08:03:44,032 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet50_seed51_20260606T001334Z
+2026-06-06 08:03:44,100 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet34_seed51_20260606T004634Z
+2026-06-06 08:03:44,275 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet50_seed51_20260606T004950Z
+2026-06-06 08:03:44,432 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet50_seed42_20260605T095219Z
+2026-06-06 08:03:44,511 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet34_seed43_20260605T095220Z
+2026-06-06 08:03:44,691 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet50_seed43_20260605T095219Z
+2026-06-06 08:03:44,801 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet34_seed43_20260605T095219Z
+2026-06-06 08:03:44,892 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet50_seed43_20260605T095219Z
+2026-06-06 08:03:45,241 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet34_seed44_20260605T115046Z
+2026-06-06 08:03:45,337 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_unetplusplus_resnet50_seed44_20260605T121426Z
+2026-06-06 08:03:45,661 [Summarizer] :: Wrote 37 run summary item(s) to /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/metrics/slurm_multi_seed_tsm_20260605T095211Z_summary.json
+2026-06-06 08:03:45,662 [Summarizer] :: Wrote 4 aggregate summary item(s)
+2026-06-06 08:03:45,662 [Summarizer] :: Summary generation completed

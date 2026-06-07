@@ -1,0 +1,10 @@
+2026-05-16 10:29:30,552 [Evaluator] :: Evaluation started for checkpoint /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_real_msi_segformer_b1_seed48_20260516T023412Z/checkpoints/best.pt
+2026-05-16 10:29:30,552 [Evaluator] :: Writing evaluation artifacts to /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_real_msi_segformer_b1_seed48_20260516T023412Z/evaluation/test
+2026-05-16 10:29:30,552 [Evaluator] :: Using split=test and device=cuda
+2026-05-16 10:29:30,560 [Evaluator] :: Loaded normalization from data/processed/rgb_real_msi_normalization.json
+2026-05-16 10:29:30,560 [Evaluator] :: Running inference with threshold=0.5000
+2026-05-16 10:32:12,107 [Evaluator] :: Saved aggregate metrics to /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_real_msi_segformer_b1_seed48_20260516T023412Z/evaluation/test/overall_metrics.json
+2026-05-16 10:32:12,144 [Evaluator] :: Saved 733 patch rows and 186 image rows
+2026-05-16 10:32:14,918 [Evaluator] :: Saved 186 predicted mask(s) to /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_real_msi_segformer_b1_seed48_20260516T023412Z/evaluation/test/masks
+2026-05-16 10:32:19,530 [Evaluator] :: Saved 8 visualization panel(s) to /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_real_msi_segformer_b1_seed48_20260516T023412Z/evaluation/test/visuals
+2026-05-16 10:32:19,535 [Evaluator] :: Evaluation completed

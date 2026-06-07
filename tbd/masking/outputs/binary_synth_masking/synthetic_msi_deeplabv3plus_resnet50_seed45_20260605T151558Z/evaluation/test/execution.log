@@ -1,0 +1,10 @@
+2026-06-05 20:13:13,452 [Evaluator] :: Evaluation started for checkpoint /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet50_seed45_20260605T151558Z/checkpoints/best.pt
+2026-06-05 20:13:13,452 [Evaluator] :: Writing evaluation artifacts to /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet50_seed45_20260605T151558Z/evaluation/test
+2026-06-05 20:13:13,453 [Evaluator] :: Using split=test and device=cuda
+2026-06-05 20:13:13,460 [Evaluator] :: Loaded normalization from data/processed/synthetic_msi_normalization.json
+2026-06-05 20:13:13,460 [Evaluator] :: Running inference with threshold=0.5000
+2026-06-05 20:15:30,445 [Evaluator] :: Saved aggregate metrics to /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet50_seed45_20260605T151558Z/evaluation/test/overall_metrics.json
+2026-06-05 20:15:30,449 [Evaluator] :: Saved 733 patch rows and 186 image rows
+2026-06-05 20:15:33,265 [Evaluator] :: Saved 186 predicted mask(s) to /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet50_seed45_20260605T151558Z/evaluation/test/masks
+2026-06-05 20:15:37,085 [Evaluator] :: Saved 8 visualization panel(s) to /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/synthetic_msi_deeplabv3plus_resnet50_seed45_20260605T151558Z/evaluation/test/visuals
+2026-06-05 20:15:37,091 [Evaluator] :: Evaluation completed
