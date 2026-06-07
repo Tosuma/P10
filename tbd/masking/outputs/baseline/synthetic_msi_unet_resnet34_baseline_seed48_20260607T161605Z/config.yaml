@@ -1,0 +1,54 @@
+experiment_name: synthetic_msi_unet_resnet34
+modality: synthetic_msi
+in_channels: 4
+model:
+  architecture: Unet
+  encoder_name: resnet34
+  encoder_weights: imagenet
+  classes: 1
+seed: 48
+device: null
+paths:
+  run_root: outputs/runs
+  train_manifest: data/splits/train.csv
+  val_manifest: data/splits/val.csv
+  test_manifest: data/splits/test.csv
+  patch_manifest_dir: data/patches/synthetic_msi
+  train_patch_manifest: data/patches/synthetic_msi/train_patches.csv
+  val_patch_manifest: data/patches/synthetic_msi/val_patches.csv
+  test_patch_manifest: data/patches/synthetic_msi/test_patches.csv
+  normalization_stats: data/processed/synthetic_msi_normalization.json
+patch:
+  mode: fixed_grid
+  size:
+  - 640
+  - 480
+  patches_per_image: 8
+  keep_empty_probability: 0.25
+augmentations:
+  brightness: 0.0
+  contrast: 0.0
+  noise_std: 0.005
+loss:
+  bce_weight: 0.5
+  dice_weight: 0.5
+target:
+  mode: binary
+  halo_radius_px: 0
+  halo_min_value: 0.35
+training:
+  batch_size: 8
+  num_workers: 0
+  lr: 0.0001
+  weight_decay: 0.0001
+  epochs: 300
+  grad_clip: 1.0
+  early_stopping_patience: 60
+  freeze_encoder_epochs: 0
+  scheduler:
+    t_max: 300
+    eta_min: 1.0e-06
+evaluation:
+  threshold: 0.5
+  num_visualizations: 8
+_config_path: /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/configs/binary/synth_msi.yaml
