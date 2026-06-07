@@ -148,7 +148,9 @@ log_job "INFO" "status_file=${STATUS_FILE}"
 export PYTHONPATH="${PWD}"
 export OMP_NUM_THREADS="${SLURM_CPUS_PER_TASK:-1}"
 export MKL_NUM_THREADS="${SLURM_CPUS_PER_TASK:-1}"
-log_job "INFO" "PYTHONPATH=${PYTHONPATH} OMP_NUM_THREADS=${OMP_NUM_THREADS} MKL_NUM_THREADS=${MKL_NUM_THREADS}"
+export PYTHONUNBUFFERED=1
+export MASKING_LOG_TO_STDOUT=1
+log_job "INFO" "PYTHONPATH=${PYTHONPATH} OMP_NUM_THREADS=${OMP_NUM_THREADS} MKL_NUM_THREADS=${MKL_NUM_THREADS} PYTHONUNBUFFERED=${PYTHONUNBUFFERED} MASKING_LOG_TO_STDOUT=${MASKING_LOG_TO_STDOUT}"
 
 if command -v singularity >/dev/null 2>&1; then
   log_job "INFO" "singularity=$(command -v singularity)"
@@ -177,6 +179,8 @@ run_inside_container() {
         exit 1; \
       fi && \
       export PYTHONPATH='$PWD' && \
+      export PYTHONUNBUFFERED=1 && \
+      export MASKING_LOG_TO_STDOUT=1 && \
       echo container_python_after_venv=\$(command -v '$PYTHON_EXE' || true) && \
       '$PYTHON_EXE' -c \"import os, sys; print('python_executable=' + sys.executable); print('python_version=' + sys.version.split()[0]); print('pythonpath=' + os.environ.get('PYTHONPATH', ''))\" && \
       ${command}"
@@ -185,7 +189,7 @@ run_inside_container() {
 run_and_capture() {
   local label="$1"
   local command="$2"
-  local output
+  local output_file
   local code
 
   {
@@ -194,13 +198,15 @@ run_and_capture() {
     printf 'command=%s\n' "$command"
   } >> "$JOB_LOG"
 
+  output_file="$(mktemp "${STATUS_DIR}/task_${TASK_ID}_attempt_${ATTEMPT}_${label}.XXXXXX")"
+
   set +e
-  output="$(run_inside_container "$command" 2>&1)"
-  code=$?
+  run_inside_container "$command" 2>&1 | tee -a "$JOB_LOG" | tee "$output_file"
+  code="${PIPESTATUS[0]}"
   set -e
 
-  printf '%s\n' "$output" | tee -a "$JOB_LOG"
-  LAST_OUTPUT="$output"
+  LAST_OUTPUT="$(cat "$output_file")"
+  rm -f "$output_file"
 
   if [[ "$code" -ne 0 ]]; then
     EXIT_CODE="$code"
