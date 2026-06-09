@@ -134,6 +134,21 @@ Config layout:
 
 Training writes run artifacts under `outputs/runs/<run_name>/`, including `logs/execution.log` with entries formatted as `%(asctime)s [Trainer] :: %(message)s`. At the end of training, the best validation checkpoint is evaluated once on the configured test split. The resulting test summary is written to `metrics/test_summary.json`, and reconstructed test prediction masks are written to `metrics/test_masks/` as binary PNG files. Per-epoch training and validation do not save masks. Every model is now test-scored against both the original hard mask and the matching fuzzy-halo mask, so `test_summary.json` contains explicit `original_*` and `fuzzy_*` metric sections alongside the compatibility aliases `patch_level`, `patch_summary`, and `image_level`.
 
+Interrupted training can be resumed from the run's `latest.pt` checkpoint. Resume keeps writing into the original run directory, reloads model, optimizer, scheduler, and AMP scaler state, reconstructs early-stopping progress from `logs/history.csv`, and continues from the next epoch. Checkpoints also store `best_epoch`, `best_val_iou`, and the best history row, so `latest.pt` still knows which earlier epoch produced `best.pt`.
+
+```bash
+python -m src.train --resume-checkpoint ./outputs/runs/<run>/checkpoints/latest.pt
+```
+
+You can also keep the config explicit, which is useful on Slurm manifests:
+
+```bash
+python -m src.train \
+  --config ./configs/binary/rgb_synth_msi_unetpp_resnet50.yaml \
+  --seed 49 \
+  --resume-checkpoint ./outputs/runs/<run>/checkpoints/latest.pt
+```
+
 Additional supported multimodal runs:
 
 - `./configs/binary/rgb_synth_msi.yaml`: RGB concatenated with synthetic multispectral input, for a 7-channel model.
@@ -363,7 +378,7 @@ Slurm workload manifests:
 - `scripts/slurm/workloads/binary_baseline_only_synth.json`: binary baseline configs with synthetic data
 - `scripts/slurm/workloads/fuzzy_baseline.json`: the same configs as `scripts/baseline/evaluate_all_fuzzy_baselines.sh`
 
-The manifest format is JSON with a top-level `tasks` list. Each task has `group`, `kind`, `config`, and `split` fields, and may also include an optional `seed` for explicit per-run training or baseline tasks:
+The manifest format is JSON with a top-level `tasks` list. Each task has `group`, `kind`, `config`, and `split` fields, and may also include an optional `seed` for explicit per-run training or baseline tasks. Train tasks can also include `resume_checkpoint` or `resume_run_dir` to continue an interrupted run:
 
 ```json
 {
@@ -373,11 +388,14 @@ The manifest format is JSON with a top-level `tasks` list. Each task has `group`
       "kind": "train",
       "config": "configs/binary/rgb_unetpp_resnet34.yaml",
       "split": "test",
-      "seed": 12345
+      "seed": 12345,
+      "resume_checkpoint": "outputs/runs/<run>/checkpoints/latest.pt"
     }
   ]
 }
 ```
+
+Use `latest.pt` for resume, not `best.pt`, because `latest.pt` contains the most recent optimizer and scheduler state. If the resumed Slurm job also reaches the 12-hour limit, submit the same manifest again; the same `latest.pt` will have advanced to the last completed epoch.
 
 The Slurm controller is intended to run from a login shell in `tbd/masking`. It submits individual `sbatch` jobs, keeps `--max-parallel 6` jobs active by default, retries failed or suspicious tasks according to the `MAX_RETRIES` variable near the top of `scripts/slurm/run_masking_batch.sh`, and then writes per-group summaries to `outputs/metrics/slurm_<manifest>_<group>_summary.json`. Each batch status directory contains `controller.log`, per-task status files, per-attempt job logs referenced by `job_log=...`, and `failed_tasks.tsv` when failures occur. Slurm stdout/stderr still go under `logs/masking/slurm/`. It also creates an atomic controller lock under `outputs/slurm/status/.masking_batch_controller.lock` so two controllers are not accidentally started against the same GPU pool. You may optionally pass `--status-dir` when another wrapper, such as the multi-seed runner, needs a deterministic status directory.
 

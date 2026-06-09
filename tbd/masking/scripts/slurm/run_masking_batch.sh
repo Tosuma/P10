@@ -220,15 +220,33 @@ TASK_KINDS=()
 TASK_CONFIGS=()
 TASK_SPLITS=()
 TASK_SEEDS=()
+TASK_RESUME_CHECKPOINTS=()
 TASK_ATTEMPTS=()
 TASK_STATES=()
 TASK_RUN_DIRS=()
 TASK_JOB_IDS=()
 TASK_COUNT=0
+EMPTY_FIELD="__MASKING_EMPTY__"
 
-while IFS=$'\t' read -r group kind config split seed extra; do
+while IFS=$'\t' read -r group kind config split seed resume_checkpoint extra; do
+  group="${group%$'\r'}"
+  kind="${kind%$'\r'}"
+  config="${config%$'\r'}"
+  split="${split%$'\r'}"
+  seed="${seed%$'\r'}"
+  resume_checkpoint="${resume_checkpoint%$'\r'}"
+  if [[ "$seed" == "$EMPTY_FIELD" ]]; then
+    seed=""
+  fi
+  if [[ "$resume_checkpoint" == "$EMPTY_FIELD" ]]; then
+    resume_checkpoint=""
+  fi
   if [[ "$kind" != "train" && "$kind" != "baseline" ]]; then
     echo "Unsupported task kind '${kind}' in ${MANIFEST}." >&2
+    exit 2
+  fi
+  if [[ -n "$resume_checkpoint" && "$kind" != "train" ]]; then
+    echo "Task ${TASK_COUNT} has resume_checkpoint but kind is '${kind}', expected 'train'." >&2
     exit 2
   fi
   if [[ -z "$split" ]]; then
@@ -239,6 +257,7 @@ while IFS=$'\t' read -r group kind config split seed extra; do
   TASK_CONFIGS+=("$config")
   TASK_SPLITS+=("$split")
   TASK_SEEDS+=("$seed")
+  TASK_RESUME_CHECKPOINTS+=("$resume_checkpoint")
   TASK_ATTEMPTS+=(0)
   TASK_STATES+=("pending")
   TASK_RUN_DIRS+=("")
@@ -332,12 +351,13 @@ submit_task() {
   local config="${TASK_CONFIGS[$task_index]}"
   local split="${TASK_SPLITS[$task_index]}"
   local seed="${TASK_SEEDS[$task_index]}"
+  local resume_checkpoint="${TASK_RESUME_CHECKPOINTS[$task_index]}"
   local output
   local job_id
   local submit_try
 
   for ((submit_try = 1; submit_try <= SBATCH_SUBMIT_RETRIES; submit_try++)); do
-    log "INFO" "Submitting task ${task_index} try ${submit_try}/${SBATCH_SUBMIT_RETRIES}: group=${group} kind=${kind} config=${config} split=${split} seed=${seed:-none} attempt=${attempt}"
+    log "INFO" "Submitting task ${task_index} try ${submit_try}/${SBATCH_SUBMIT_RETRIES}: group=${group} kind=${kind} config=${config} split=${split} seed=${seed:-none} resume_checkpoint=${resume_checkpoint:-none} attempt=${attempt}"
     output="$(sbatch "$JOB_SCRIPT" \
       --task-id "$task_index" \
       --group "$group" \
@@ -345,6 +365,7 @@ submit_task() {
       --config "$config" \
       --split "$split" \
       --seed "$seed" \
+      --resume-checkpoint "$resume_checkpoint" \
       --attempt "$attempt" \
       --status-dir "$STATUS_DIR" \
       --python "$PYTHON_EXE" \
@@ -355,7 +376,7 @@ submit_task() {
     if [[ -n "$job_id" ]]; then
       TASK_STATES[$task_index]="running"
       TASK_JOB_IDS[$task_index]="$job_id"
-      log "INFO" "Submitted task ${task_index} (${group}, ${kind}, ${config}, seed=${seed:-none}) as job ${job_id}, attempt ${attempt}"
+      log "INFO" "Submitted task ${task_index} (${group}, ${kind}, ${config}, seed=${seed:-none}, resume_checkpoint=${resume_checkpoint:-none}) as job ${job_id}, attempt ${attempt}"
       return 0
     fi
 
@@ -405,8 +426,8 @@ next_pending_task() {
 
 if [[ "$DRY_RUN" -eq 1 ]]; then
   for ((i = 0; i < TASK_COUNT; i++)); do
-    printf 'task=%s group=%s kind=%s config=%s split=%s seed=%s\n' \
-      "$i" "${TASK_GROUPS[$i]}" "${TASK_KINDS[$i]}" "${TASK_CONFIGS[$i]}" "${TASK_SPLITS[$i]}" "${TASK_SEEDS[$i]:-}"
+    printf 'task=%s group=%s kind=%s config=%s split=%s seed=%s resume_checkpoint=%s\n' \
+      "$i" "${TASK_GROUPS[$i]}" "${TASK_KINDS[$i]}" "${TASK_CONFIGS[$i]}" "${TASK_SPLITS[$i]}" "${TASK_SEEDS[$i]:-}" "${TASK_RESUME_CHECKPOINTS[$i]:-}"
   done
   log "INFO" "Dry run complete. No Slurm jobs were submitted."
   exit 0

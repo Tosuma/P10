@@ -12,7 +12,8 @@ from typing import Any
 
 SUBMIT_RE = re.compile(
     r"Submitting task (?P<task_id>\d+) .*?: group=(?P<group>\S+) kind=(?P<kind>\S+) "
-    r"config=(?P<config>\S+) split=(?P<split>\S+) seed=(?P<seed>\S+) attempt=(?P<attempt>\d+)"
+    r"config=(?P<config>\S+) split=(?P<split>\S+) seed=(?P<seed>\S+) "
+    r"(?:resume_checkpoint=(?P<resume_checkpoint>\S+) )?attempt=(?P<attempt>\d+)"
 )
 SUCCESS_RE = re.compile(r"Task (?P<task_id>\d+) completed successfully")
 PERMANENT_RE = re.compile(r"Task (?P<task_id>\d+): permanent failure after (?P<attempts>\d+) attempt")
@@ -33,6 +34,10 @@ def read_manifest(path: Path) -> list[dict[str, Any]]:
     for index, task in enumerate(tasks):
         if not isinstance(task, dict):
             raise SystemExit(f"{path}: task {index} must be an object.")
+        resume_checkpoint = task.get("resume_checkpoint")
+        if task.get("resume_run_dir"):
+            resume_run_dir = str(task["resume_run_dir"]).rstrip("/\\")
+            resume_checkpoint = f"{resume_run_dir}/checkpoints/latest.pt"
         normalized.append(
             {
                 "task_id": index,
@@ -41,6 +46,7 @@ def read_manifest(path: Path) -> list[dict[str, Any]]:
                 "config": task.get("config", ""),
                 "split": task.get("split", "test"),
                 "seed": "" if task.get("seed") is None else str(task.get("seed")),
+                "resume_checkpoint": "" if resume_checkpoint is None else str(resume_checkpoint),
             }
         )
     return normalized
@@ -154,6 +160,7 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         "config",
         "split",
         "seed",
+        "resume_checkpoint",
         "submissions",
         "attempts",
         "permanent_attempts",
@@ -179,6 +186,8 @@ def write_retry_manifest(path: Path, rows: list[dict[str, Any]]) -> None:
         }
         if str(row.get("seed", "")) != "":
             task["seed"] = int(row["seed"]) if str(row["seed"]).isdigit() else row["seed"]
+        if str(row.get("resume_checkpoint", "")) != "":
+            task["resume_checkpoint"] = row["resume_checkpoint"]
         tasks.append(task)
 
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -226,7 +235,7 @@ def main() -> None:
 
     if report_rows:
         print()
-        print("task_id\tstatus\tconfig\tseed\tsplit\tattempts\tjob_logs")
+        print("task_id\tstatus\tconfig\tseed\tsplit\tresume_checkpoint\tattempts\tjob_logs")
         for row in report_rows:
             print(
                 "\t".join(
@@ -236,6 +245,7 @@ def main() -> None:
                         str(row["config"]),
                         str(row["seed"]),
                         str(row["split"]),
+                        str(row["resume_checkpoint"]),
                         str(row["attempts"]),
                         str(row["job_logs"]),
                     ]

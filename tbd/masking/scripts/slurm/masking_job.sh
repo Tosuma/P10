@@ -17,6 +17,7 @@ KIND=""
 CONFIG=""
 SPLIT="test"
 SEED=""
+RESUME_CHECKPOINT=""
 ATTEMPT="1"
 STATUS_DIR=""
 PYTHON_EXE="python"
@@ -47,6 +48,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --seed)
       SEED="$2"
+      shift 2
+      ;;
+    --resume-checkpoint)
+      RESUME_CHECKPOINT="$2"
       shift 2
       ;;
     --attempt)
@@ -107,6 +112,7 @@ write_status() {
     printf 'config=%s\n' "$CONFIG"
     printf 'split=%s\n' "$SPLIT"
     printf 'seed=%s\n' "$SEED"
+    printf 'resume_checkpoint=%s\n' "$RESUME_CHECKPOINT"
     printf 'attempt=%s\n' "$ATTEMPT"
     printf 'state=%s\n' "$state"
     printf 'exit_code=%s\n' "$EXIT_CODE"
@@ -140,7 +146,7 @@ log_job() {
 hostname
 date
 log_job "INFO" "Slurm masking job started"
-log_job "INFO" "task_id=${TASK_ID} group=${GROUP} kind=${KIND} config=${CONFIG} split=${SPLIT} seed=${SEED:-none} attempt=${ATTEMPT}"
+log_job "INFO" "task_id=${TASK_ID} group=${GROUP} kind=${KIND} config=${CONFIG} split=${SPLIT} seed=${SEED:-none} resume_checkpoint=${RESUME_CHECKPOINT:-none} attempt=${ATTEMPT}"
 log_job "INFO" "pwd=${PWD} host=$(hostname) slurm_job_id=${SLURM_JOB_ID:-} cuda_visible_devices=${CUDA_VISIBLE_DEVICES:-}"
 log_job "INFO" "python=${PYTHON_EXE} singularity_image=${SINGULARITY_IMAGE} venv_activate=${VENV_ACTIVATE}"
 log_job "INFO" "status_file=${STATUS_FILE}"
@@ -220,6 +226,9 @@ if [[ "$KIND" == "train" ]]; then
   train_command="$PYTHON_EXE -u -m src.train --config '$CONFIG'"
   if [[ -n "$SEED" ]]; then
     train_command="${train_command} --seed '$SEED'"
+  fi
+  if [[ -n "$RESUME_CHECKPOINT" ]]; then
+    train_command="${train_command} --resume-checkpoint '$RESUME_CHECKPOINT'"
   fi
   run_and_capture "train" "$train_command"
   RUN_DIR="$(printf '%s\n' "$LAST_OUTPUT" | awk 'NF { last=$0 } END { print last }')"
