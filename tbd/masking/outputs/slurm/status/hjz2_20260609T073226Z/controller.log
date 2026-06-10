@@ -1,0 +1,13 @@
+2026-06-09T07:32:26Z [INFO] Controller started
+2026-06-09T07:32:26Z [INFO] manifest=scripts/slurm/workloads/split/hjz2.json max_parallel=8 max_retries=3 sbatch_submit_retries=3 poll_seconds=10
+2026-06-09T07:32:26Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-09T07:32:26Z [INFO] status_dir=outputs/slurm/status/hjz2_20260609T073226Z summary_dir=outputs/metrics log_dir=logs/masking/slurm
+2026-06-09T07:32:26Z [INFO] Acquired controller lock outputs/slurm/status/.masking_batch_controller.lock
+2026-06-09T07:32:26Z [INFO] Loaded 3 task(s) from scripts/slurm/workloads/split/hjz2.json
+2026-06-09T07:32:26Z [INFO] Status directory: outputs/slurm/status/hjz2_20260609T073226Z
+2026-06-09T07:32:26Z [INFO] Submitting task 0 try 1/3: group=binary_train kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=69 attempt=1
+2026-06-09T07:32:26Z [INFO] Submitted task 0 (binary_train, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=69) as job 867982, attempt 1
+2026-06-09T07:32:26Z [INFO] Submitting task 1 try 1/3: group=binary_train kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=69 attempt=1
+2026-06-09T07:32:26Z [INFO] Submitted task 1 (binary_train, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=69) as job 867983, attempt 1
+2026-06-09T07:32:26Z [INFO] Submitting task 2 try 1/3: group=binary_train kind=train config=configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml split=test seed=69 attempt=1
+2026-06-09T07:32:26Z [INFO] Submitted task 2 (binary_train, train, configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml, seed=69) as job 867984, attempt 1

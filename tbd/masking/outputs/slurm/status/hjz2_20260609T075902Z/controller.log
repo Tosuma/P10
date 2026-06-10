@@ -1,0 +1,37 @@
+2026-06-09T07:59:02Z [INFO] Controller started
+2026-06-09T07:59:02Z [INFO] manifest=scripts/slurm/workloads/split/hjz2.json max_parallel=8 max_retries=3 sbatch_submit_retries=3 poll_seconds=10
+2026-06-09T07:59:02Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-09T07:59:02Z [INFO] status_dir=outputs/slurm/status/hjz2_20260609T075902Z summary_dir=outputs/metrics log_dir=logs/masking/slurm
+2026-06-09T07:59:02Z [INFO] Acquired controller lock outputs/slurm/status/.masking_batch_controller.lock
+2026-06-09T07:59:03Z [INFO] Loaded 6 task(s) from scripts/slurm/workloads/split/hjz2.json
+2026-06-09T07:59:03Z [INFO] Status directory: outputs/slurm/status/hjz2_20260609T075902Z
+2026-06-09T07:59:03Z [INFO] Submitting task 0 try 1/3: group=binary_train kind=train config=configs/binary/rgb_synth_msi_unetpp_resnet34.yaml split=test seed=69 attempt=1
+2026-06-09T07:59:03Z [INFO] Submitted task 0 (binary_train, train, configs/binary/rgb_synth_msi_unetpp_resnet34.yaml, seed=69) as job 868005, attempt 1
+2026-06-09T07:59:03Z [INFO] Submitting task 1 try 1/3: group=binary_train kind=train config=configs/binary/rgb_synth_msi_unetpp_resnet50.yaml split=test seed=69 attempt=1
+2026-06-09T07:59:03Z [INFO] Submitted task 1 (binary_train, train, configs/binary/rgb_synth_msi_unetpp_resnet50.yaml, seed=69) as job 868006, attempt 1
+2026-06-09T07:59:03Z [INFO] Submitting task 2 try 1/3: group=binary_train kind=train config=configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml split=test seed=69 attempt=1
+2026-06-09T07:59:03Z [INFO] Submitted task 2 (binary_train, train, configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml, seed=69) as job 868007, attempt 1
+2026-06-09T07:59:03Z [INFO] Submitting task 3 try 1/3: group=binary_train kind=train config=configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml split=test seed=69 attempt=1
+2026-06-09T07:59:03Z [INFO] Submitted task 3 (binary_train, train, configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml, seed=69) as job 868008, attempt 1
+2026-06-09T07:59:03Z [INFO] Submitting task 4 try 1/3: group=binary_train kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=69 attempt=1
+2026-06-09T07:59:03Z [INFO] Submitted task 4 (binary_train, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=69) as job 868009, attempt 1
+2026-06-09T07:59:03Z [INFO] Submitting task 5 try 1/3: group=binary_train kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=69 attempt=1
+2026-06-09T07:59:03Z [INFO] Submitted task 5 (binary_train, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=69) as job 868010, attempt 1
+2026-06-09T13:14:44Z [INFO] Job 868007 for task 2 has left the Slurm queue; validating output
+2026-06-09T13:14:45Z [INFO] Task 2 completed successfully
+2026-06-09T13:52:44Z [INFO] Job 868009 for task 4 has left the Slurm queue; validating output
+2026-06-09T13:52:45Z [INFO] Task 4 completed successfully
+2026-06-09T15:12:35Z [INFO] Job 868005 for task 0 has left the Slurm queue; validating output
+2026-06-09T15:12:36Z [INFO] Task 0 completed successfully
+2026-06-09T15:15:07Z [INFO] Job 868008 for task 3 has left the Slurm queue; validating output
+2026-06-09T15:15:07Z [INFO] Task 3 completed successfully
+2026-06-09T15:22:49Z [INFO] Job 868010 for task 5 has left the Slurm queue; validating output
+2026-06-09T15:22:50Z [INFO] Task 5 completed successfully
+2026-06-09T17:28:59Z [INFO] Job 868006 for task 1 has left the Slurm queue; validating output
+2026-06-09T17:28:59Z [INFO] Task 1 completed successfully
+2026-06-09T17:28:59Z [INFO] Skipping summary for 224316; no successful runs
+2026-06-09T17:28:59Z [INFO] Skipping summary for 141735; no successful runs
+2026-06-09T17:28:59Z [INFO] Skipping summary for 141732; no successful runs
+2026-06-09T17:28:59Z [INFO] Skipping summary for 412883; no successful runs
+2026-06-09T17:28:59Z [INFO] Skipping summary for 414915; no successful runs
+2026-06-09T17:28:59Z [INFO] All Slurm masking tasks completed successfully

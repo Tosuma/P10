@@ -1,0 +1,46 @@
+{
+    "tasks": [
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_synth_msi_unetpp_resnet34.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_synth_msi_unetpp_resnet50.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_synth_msi_segformer_b0.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_synth_msi_segformer_b1.yaml",
+            "split": "test",
+            "seed": 69
+        }
+    ]
+}
