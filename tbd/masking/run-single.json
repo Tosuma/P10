@@ -3,9 +3,9 @@
           {
             "group": "binary_train",
             "kind": "train",
-            "config": "configs/binary/rgb_synth_msi_unetpp_resnet50.yaml",
+            "config": "configs/binary/rgb_synth_msi_segformer_b0.yaml",
             "split": "test",
-            "seed": 49
+            "seed": 51
         }
   ]
 }

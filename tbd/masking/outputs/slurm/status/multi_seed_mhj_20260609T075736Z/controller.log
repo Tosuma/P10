@@ -1,0 +1,190 @@
+2026-06-09T07:57:36Z [INFO] Controller started
+2026-06-09T07:57:36Z [INFO] manifest=outputs/slurm/manifests/multi_seed_mhj_20260609T075736Z.json max_parallel=8 max_retries=3 sbatch_submit_retries=3 poll_seconds=10
+2026-06-09T07:57:36Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-09T07:57:36Z [INFO] status_dir=outputs/slurm/status/multi_seed_mhj_20260609T075736Z summary_dir=outputs/metrics log_dir=logs/masking/slurm
+2026-06-09T07:57:36Z [INFO] Acquired controller lock outputs/slurm/status/.masking_batch_controller.lock
+2026-06-09T07:57:36Z [INFO] Loaded 40 task(s) from outputs/slurm/manifests/multi_seed_mhj_20260609T075736Z.json
+2026-06-09T07:57:36Z [INFO] Status directory: outputs/slurm/status/multi_seed_mhj_20260609T075736Z
+2026-06-09T07:57:37Z [INFO] Submitting task 0 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b1.yaml split=test seed=42 resume_checkpoint=none attempt=1
+2026-06-09T07:57:37Z [INFO] Submitted task 0 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b1.yaml, seed=42, resume_checkpoint=none) as job 867997, attempt 1
+2026-06-09T07:57:37Z [INFO] Submitting task 1 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=42 resume_checkpoint=none attempt=1
+2026-06-09T07:57:37Z [INFO] Submitted task 1 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=42, resume_checkpoint=none) as job 867998, attempt 1
+2026-06-09T07:57:37Z [INFO] Submitting task 2 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=42 resume_checkpoint=none attempt=1
+2026-06-09T07:57:37Z [INFO] Submitted task 2 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=42, resume_checkpoint=none) as job 867999, attempt 1
+2026-06-09T07:57:37Z [INFO] Submitting task 3 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=42 resume_checkpoint=none attempt=1
+2026-06-09T07:57:37Z [INFO] Submitted task 3 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=42, resume_checkpoint=none) as job 868000, attempt 1
+2026-06-09T07:57:37Z [INFO] Submitting task 4 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b1.yaml split=test seed=43 resume_checkpoint=none attempt=1
+2026-06-09T07:57:37Z [INFO] Submitted task 4 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b1.yaml, seed=43, resume_checkpoint=none) as job 868001, attempt 1
+2026-06-09T07:57:37Z [INFO] Submitting task 5 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=43 resume_checkpoint=none attempt=1
+2026-06-09T07:57:37Z [INFO] Submitted task 5 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=43, resume_checkpoint=none) as job 868002, attempt 1
+2026-06-09T07:57:37Z [INFO] Submitting task 6 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=43 resume_checkpoint=none attempt=1
+2026-06-09T07:57:37Z [INFO] Submitted task 6 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=43, resume_checkpoint=none) as job 868003, attempt 1
+2026-06-09T07:57:37Z [INFO] Submitting task 7 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=43 resume_checkpoint=none attempt=1
+2026-06-09T07:57:37Z [INFO] Submitted task 7 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=43, resume_checkpoint=none) as job 868004, attempt 1
+2026-06-09T10:13:26Z [INFO] Job 868000 for task 3 has left the Slurm queue; validating output
+2026-06-09T10:13:27Z [INFO] Task 3 completed successfully
+2026-06-09T10:13:37Z [INFO] Submitting task 8 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b1.yaml split=test seed=44 resume_checkpoint=none attempt=1
+2026-06-09T10:13:37Z [INFO] Submitted task 8 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b1.yaml, seed=44, resume_checkpoint=none) as job 868074, attempt 1
+2026-06-09T10:57:23Z [INFO] Job 867997 for task 0 has left the Slurm queue; validating output
+2026-06-09T10:57:23Z [INFO] Task 0 completed successfully
+2026-06-09T10:57:33Z [INFO] Submitting task 9 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=44 resume_checkpoint=none attempt=1
+2026-06-09T10:57:33Z [INFO] Submitted task 9 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=44, resume_checkpoint=none) as job 868097, attempt 1
+2026-06-09T11:12:46Z [INFO] Job 868004 for task 7 has left the Slurm queue; validating output
+2026-06-09T11:12:46Z [INFO] Task 7 completed successfully
+2026-06-09T11:12:56Z [INFO] Submitting task 10 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=44 resume_checkpoint=none attempt=1
+2026-06-09T11:12:56Z [INFO] Submitted task 10 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=44, resume_checkpoint=none) as job 868106, attempt 1
+2026-06-09T11:23:13Z [INFO] Job 868001 for task 4 has left the Slurm queue; validating output
+2026-06-09T11:23:13Z [INFO] Task 4 completed successfully
+2026-06-09T11:23:23Z [INFO] Submitting task 11 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=44 resume_checkpoint=none attempt=1
+2026-06-09T11:23:24Z [INFO] Submitted task 11 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=44, resume_checkpoint=none) as job 868113, attempt 1
+2026-06-09T13:02:38Z [INFO] Job 868074 for task 8 has left the Slurm queue; validating output
+2026-06-09T13:02:39Z [INFO] Task 8 completed successfully
+2026-06-09T13:02:49Z [INFO] Submitting task 12 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b1.yaml split=test seed=45 resume_checkpoint=none attempt=1
+2026-06-09T13:02:49Z [INFO] Submitted task 12 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b1.yaml, seed=45, resume_checkpoint=none) as job 868163, attempt 1
+2026-06-09T14:02:57Z [INFO] Job 868002 for task 5 has left the Slurm queue; validating output
+2026-06-09T14:02:58Z [INFO] Task 5 completed successfully
+2026-06-09T14:03:08Z [INFO] Submitting task 13 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=45 resume_checkpoint=none attempt=1
+2026-06-09T14:03:08Z [INFO] Submitted task 13 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=45, resume_checkpoint=none) as job 868191, attempt 1
+2026-06-09T14:08:52Z [INFO] Job 868113 for task 11 has left the Slurm queue; validating output
+2026-06-09T14:08:52Z [INFO] Task 11 completed successfully
+2026-06-09T14:09:02Z [INFO] Submitting task 14 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=45 resume_checkpoint=none attempt=1
+2026-06-09T14:09:03Z [INFO] Submitted task 14 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=45, resume_checkpoint=none) as job 868192, attempt 1
+2026-06-09T14:14:40Z [INFO] Job 867999 for task 2 has left the Slurm queue; validating output
+2026-06-09T14:14:42Z [INFO] Task 2 completed successfully
+2026-06-09T14:14:52Z [INFO] Submitting task 15 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=45 resume_checkpoint=none attempt=1
+2026-06-09T14:14:52Z [INFO] Submitted task 15 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=45, resume_checkpoint=none) as job 868193, attempt 1
+2026-06-09T15:13:30Z [INFO] Job 868003 for task 6 has left the Slurm queue; validating output
+2026-06-09T15:13:30Z [INFO] Task 6 completed successfully
+2026-06-09T15:13:40Z [INFO] Submitting task 16 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b1.yaml split=test seed=46 resume_checkpoint=none attempt=1
+2026-06-09T15:13:40Z [INFO] Submitted task 16 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b1.yaml, seed=46, resume_checkpoint=none) as job 868218, attempt 1
+2026-06-09T15:21:57Z [INFO] Job 867998 for task 1 has left the Slurm queue; validating output
+2026-06-09T15:21:58Z [INFO] Task 1 completed successfully
+2026-06-09T15:22:08Z [INFO] Submitting task 17 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=46 resume_checkpoint=none attempt=1
+2026-06-09T15:22:08Z [INFO] Submitted task 17 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=46, resume_checkpoint=none) as job 868225, attempt 1
+2026-06-09T16:12:09Z [INFO] Job 868163 for task 12 has left the Slurm queue; validating output
+2026-06-09T16:12:10Z [INFO] Task 12 completed successfully
+2026-06-09T16:12:20Z [INFO] Submitting task 18 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=46 resume_checkpoint=none attempt=1
+2026-06-09T16:12:20Z [INFO] Submitted task 18 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=46, resume_checkpoint=none) as job 868245, attempt 1
+2026-06-09T16:50:01Z [INFO] Job 868106 for task 10 has left the Slurm queue; validating output
+2026-06-09T16:50:02Z [INFO] Task 10 completed successfully
+2026-06-09T16:50:12Z [INFO] Submitting task 19 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=46 resume_checkpoint=none attempt=1
+2026-06-09T16:50:12Z [INFO] Submitted task 19 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=46, resume_checkpoint=none) as job 868267, attempt 1
+2026-06-09T16:57:00Z [INFO] Job 868193 for task 15 has left the Slurm queue; validating output
+2026-06-09T16:57:01Z [INFO] Task 15 completed successfully
+2026-06-09T16:57:11Z [INFO] Submitting task 20 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b1.yaml split=test seed=47 resume_checkpoint=none attempt=1
+2026-06-09T16:57:11Z [INFO] Submitted task 20 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b1.yaml, seed=47, resume_checkpoint=none) as job 868268, attempt 1
+2026-06-09T17:17:50Z [INFO] Job 868097 for task 9 has left the Slurm queue; validating output
+2026-06-09T17:17:50Z [INFO] Task 9 completed successfully
+2026-06-09T17:18:00Z [INFO] Submitting task 21 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=47 resume_checkpoint=none attempt=1
+2026-06-09T17:18:00Z [INFO] Submitted task 21 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=47, resume_checkpoint=none) as job 868282, attempt 1
+2026-06-09T17:33:25Z [INFO] Job 868218 for task 16 has left the Slurm queue; validating output
+2026-06-09T17:33:25Z [INFO] Task 16 completed successfully
+2026-06-09T17:33:35Z [INFO] Submitting task 22 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=47 resume_checkpoint=none attempt=1
+2026-06-09T17:33:35Z [INFO] Submitted task 22 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=47, resume_checkpoint=none) as job 868289, attempt 1
+2026-06-09T19:19:23Z [INFO] Job 868268 for task 20 has left the Slurm queue; validating output
+2026-06-09T19:19:23Z [INFO] Task 20 completed successfully
+2026-06-09T19:19:33Z [INFO] Submitting task 23 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=47 resume_checkpoint=none attempt=1
+2026-06-09T19:19:33Z [INFO] Submitted task 23 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=47, resume_checkpoint=none) as job 868340, attempt 1
+2026-06-09T19:32:04Z [INFO] Job 868192 for task 14 has left the Slurm queue; validating output
+2026-06-09T19:32:04Z [INFO] Task 14 completed successfully
+2026-06-09T19:32:15Z [INFO] Submitting task 24 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b1.yaml split=test seed=48 resume_checkpoint=none attempt=1
+2026-06-09T19:32:15Z [INFO] Submitted task 24 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b1.yaml, seed=48, resume_checkpoint=none) as job 868347, attempt 1
+2026-06-09T19:46:26Z [INFO] Job 868267 for task 19 has left the Slurm queue; validating output
+2026-06-09T19:46:26Z [INFO] Task 19 completed successfully
+2026-06-09T19:46:36Z [INFO] Submitting task 25 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=48 resume_checkpoint=none attempt=1
+2026-06-09T19:46:36Z [INFO] Submitted task 25 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=48, resume_checkpoint=none) as job 868354, attempt 1
+2026-06-09T19:52:11Z [INFO] Job 868191 for task 13 has left the Slurm queue; validating output
+2026-06-09T19:52:12Z [INFO] Task 13 completed successfully
+2026-06-09T19:52:22Z [INFO] Submitting task 26 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=48 resume_checkpoint=none attempt=1
+2026-06-09T19:52:22Z [INFO] Submitted task 26 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=48, resume_checkpoint=none) as job 868355, attempt 1
+2026-06-09T20:36:26Z [INFO] Job 868245 for task 18 has left the Slurm queue; validating output
+2026-06-09T20:36:28Z [INFO] Task 18 completed successfully
+2026-06-09T20:36:38Z [INFO] Submitting task 27 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=48 resume_checkpoint=none attempt=1
+2026-06-09T20:36:38Z [INFO] Submitted task 27 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=48, resume_checkpoint=none) as job 868378, attempt 1
+2026-06-09T21:51:22Z [INFO] Job 868340 for task 23 has left the Slurm queue; validating output
+2026-06-09T21:51:23Z [INFO] Task 23 completed successfully
+2026-06-09T21:51:33Z [INFO] Submitting task 28 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b1.yaml split=test seed=49 resume_checkpoint=none attempt=1
+2026-06-09T21:51:33Z [INFO] Submitted task 28 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b1.yaml, seed=49, resume_checkpoint=none) as job 868412, attempt 1
+2026-06-09T21:59:51Z [INFO] Job 868225 for task 17 has left the Slurm queue; validating output
+2026-06-09T21:59:51Z [INFO] Task 17 completed successfully
+2026-06-09T22:00:01Z [INFO] Submitting task 29 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=49 resume_checkpoint=none attempt=1
+2026-06-09T22:00:01Z [INFO] Submitted task 29 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=49, resume_checkpoint=none) as job 868413, attempt 1
+2026-06-09T22:07:27Z [INFO] Job 868347 for task 24 has left the Slurm queue; validating output
+2026-06-09T22:07:27Z [INFO] Task 24 completed successfully
+2026-06-09T22:07:38Z [INFO] Submitting task 30 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=49 resume_checkpoint=none attempt=1
+2026-06-09T22:07:38Z [INFO] Submitted task 30 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=49, resume_checkpoint=none) as job 868421, attempt 1
+2026-06-09T22:54:42Z [INFO] Job 868289 for task 22 has left the Slurm queue; validating output
+2026-06-09T22:54:42Z [INFO] Task 22 completed successfully
+2026-06-09T22:54:52Z [INFO] Submitting task 31 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=49 resume_checkpoint=none attempt=1
+2026-06-09T22:54:52Z [INFO] Submitted task 31 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=49, resume_checkpoint=none) as job 868442, attempt 1
+2026-06-09T23:05:20Z [INFO] Job 868378 for task 27 has left the Slurm queue; validating output
+2026-06-09T23:05:21Z [INFO] Task 27 completed successfully
+2026-06-09T23:05:31Z [INFO] Submitting task 32 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b1.yaml split=test seed=50 resume_checkpoint=none attempt=1
+2026-06-09T23:05:31Z [INFO] Submitted task 32 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b1.yaml, seed=50, resume_checkpoint=none) as job 868449, attempt 1
+2026-06-10T00:02:58Z [INFO] Job 868282 for task 21 has left the Slurm queue; validating output
+2026-06-10T00:02:59Z [INFO] Task 21 completed successfully
+2026-06-10T00:03:09Z [INFO] Submitting task 33 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=50 resume_checkpoint=none attempt=1
+2026-06-10T00:03:09Z [INFO] Submitted task 33 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=50, resume_checkpoint=none) as job 868480, attempt 1
+2026-06-10T00:32:15Z [INFO] Job 868412 for task 28 has left the Slurm queue; validating output
+2026-06-10T00:32:17Z [INFO] Task 28 completed successfully
+2026-06-10T00:32:27Z [INFO] Submitting task 34 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=50 resume_checkpoint=none attempt=1
+2026-06-10T00:32:27Z [INFO] Submitted task 34 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=50, resume_checkpoint=none) as job 868494, attempt 1
+2026-06-10T00:47:49Z [INFO] Job 868354 for task 25 has left the Slurm queue; validating output
+2026-06-10T00:47:51Z [INFO] Task 25 completed successfully
+2026-06-10T00:48:01Z [INFO] Submitting task 35 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=50 resume_checkpoint=none attempt=1
+2026-06-10T00:48:01Z [INFO] Submitted task 35 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=50, resume_checkpoint=none) as job 868503, attempt 1
+2026-06-10T01:21:31Z [INFO] Job 868442 for task 31 has left the Slurm queue; validating output
+2026-06-10T01:21:33Z [INFO] Task 31 completed successfully
+2026-06-10T01:21:43Z [INFO] Submitting task 36 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b1.yaml split=test seed=51 resume_checkpoint=none attempt=1
+2026-06-10T01:21:43Z [INFO] Submitted task 36 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b1.yaml, seed=51, resume_checkpoint=none) as job 868519, attempt 1
+2026-06-10T01:42:22Z [INFO] Job 868355 for task 26 has left the Slurm queue; validating output
+2026-06-10T01:42:23Z [INFO] Task 26 completed successfully
+2026-06-10T01:42:33Z [INFO] Submitting task 37 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=51 resume_checkpoint=none attempt=1
+2026-06-10T01:42:34Z [INFO] Submitted task 37 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=51, resume_checkpoint=none) as job 868526, attempt 1
+2026-06-10T02:46:32Z [INFO] Job 868449 for task 32 has left the Slurm queue; validating output
+2026-06-10T02:46:32Z [INFO] Task 32 completed successfully
+2026-06-10T02:46:42Z [INFO] Submitting task 38 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=51 resume_checkpoint=none attempt=1
+2026-06-10T02:46:42Z [INFO] Submitted task 38 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=51, resume_checkpoint=none) as job 868558, attempt 1
+2026-06-10T03:25:27Z [INFO] Job 868503 for task 35 has left the Slurm queue; validating output
+2026-06-10T03:25:28Z [INFO] Task 35 completed successfully
+2026-06-10T03:25:38Z [INFO] Submitting task 39 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=51 resume_checkpoint=none attempt=1
+2026-06-10T03:25:38Z [INFO] Submitted task 39 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=51, resume_checkpoint=none) as job 868600, attempt 1
+2026-06-10T03:53:13Z [INFO] Job 868413 for task 29 has left the Slurm queue; validating output
+2026-06-10T03:53:13Z [INFO] Task 29 completed successfully
+2026-06-10T04:29:36Z [INFO] Job 868519 for task 36 has left the Slurm queue; validating output
+2026-06-10T04:29:37Z [INFO] Task 36 completed successfully
+2026-06-10T05:52:59Z [INFO] Job 868421 for task 30 has left the Slurm queue; validating output
+2026-06-10T05:52:59Z [INFO] Task 30 completed successfully
+2026-06-10T06:06:57Z [INFO] Job 868600 for task 39 has left the Slurm queue; validating output
+2026-06-10T06:06:58Z [INFO] Task 39 completed successfully
+2026-06-10T06:22:48Z [INFO] Job 868494 for task 34 has left the Slurm queue; validating output
+2026-06-10T06:22:49Z [INFO] Task 34 completed successfully
+2026-06-10T07:52:37Z [INFO] Job 868480 for task 33 has left the Slurm queue; validating output
+2026-06-10T07:52:39Z [INFO] Task 33 completed successfully
+2026-06-10T08:23:36Z [INFO] Job 868526 for task 37 has left the Slurm queue; validating output
+2026-06-10T08:23:39Z [INFO] Task 37 completed successfully
+2026-06-10T08:41:51Z [INFO] Job 868558 for task 38 has left the Slurm queue; validating output
+2026-06-10T08:41:52Z [ERROR] Task 38: status file reports state=failed; seed=51; message=evaluate failed; see outputs/slurm/status/multi_seed_mhj_20260609T075736Z/task_38_attempt_1.log; job_log=outputs/slurm/status/multi_seed_mhj_20260609T075736Z/task_38_attempt_1.log
+2026-06-10T08:41:52Z [ERROR] Task 38: validation failed; re-queueing for retry
+2026-06-10T08:42:02Z [INFO] Submitting task 38 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=51 resume_checkpoint=none attempt=2
+2026-06-10T08:42:02Z [INFO] Submitted task 38 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=51, resume_checkpoint=none) as job 868747, attempt 2
+2026-06-10T08:42:12Z [INFO] Job 868747 for task 38 has left the Slurm queue; validating output
+2026-06-10T08:42:12Z [ERROR] Task 38: status file reports state=failed; seed=51; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260609T075736Z/task_38_attempt_2.log; job_log=outputs/slurm/status/multi_seed_mhj_20260609T075736Z/task_38_attempt_2.log
+2026-06-10T08:42:12Z [ERROR] Task 38: validation failed; re-queueing for retry
+2026-06-10T08:42:22Z [INFO] Submitting task 38 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=51 resume_checkpoint=none attempt=3
+2026-06-10T08:42:22Z [INFO] Submitted task 38 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=51, resume_checkpoint=none) as job 868748, attempt 3
+2026-06-10T08:42:32Z [INFO] Job 868748 for task 38 has left the Slurm queue; validating output
+2026-06-10T08:42:33Z [ERROR] Task 38: status file reports state=failed; seed=51; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260609T075736Z/task_38_attempt_3.log; job_log=outputs/slurm/status/multi_seed_mhj_20260609T075736Z/task_38_attempt_3.log
+2026-06-10T08:42:33Z [ERROR] Task 38: validation failed; re-queueing for retry
+2026-06-10T08:42:43Z [INFO] Submitting task 38 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=51 resume_checkpoint=none attempt=4
+2026-06-10T08:42:43Z [INFO] Submitted task 38 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=51, resume_checkpoint=none) as job 868749, attempt 4
+2026-06-10T08:42:53Z [INFO] Job 868749 for task 38 has left the Slurm queue; validating output
+2026-06-10T08:42:53Z [ERROR] Task 38: status file reports state=failed; seed=51; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260609T075736Z/task_38_attempt_4.log; job_log=outputs/slurm/status/multi_seed_mhj_20260609T075736Z/task_38_attempt_4.log
+2026-06-10T08:42:53Z [ERROR] Task 38: permanent failure after 4 attempt(s)
+2026-06-10T08:42:53Z [INFO] Skipping summary for 225154; no successful runs
+2026-06-10T08:42:53Z [INFO] Skipping summary for 141735; no successful runs
+2026-06-10T08:42:53Z [INFO] Skipping summary for 141732; no successful runs
+2026-06-10T08:42:53Z [INFO] Skipping summary for 400722; no successful runs
+2026-06-10T08:42:53Z [INFO] Skipping summary for 412883; no successful runs
+2026-06-10T08:42:53Z [INFO] Skipping summary for 414915; no successful runs
+2026-06-10T08:42:53Z [ERROR] Completed with 1 permanent failure(s). See outputs/slurm/status/multi_seed_mhj_20260609T075736Z/failed_tasks.tsv

@@ -1,0 +1,6 @@
+2026-06-08T13:53:03Z [INFO] Controller started
+2026-06-08T13:53:03Z [INFO] manifest=outputs/slurm/manifests/multi_seed_mhj_20260608T135303Z.json max_parallel=8 max_retries=3 sbatch_submit_retries=3 poll_seconds=10
+2026-06-08T13:53:03Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-08T13:53:03Z [INFO] status_dir=outputs/slurm/status/multi_seed_mhj_20260608T135303Z summary_dir=outputs/metrics log_dir=logs/masking/slurm
+2026-06-08T13:53:03Z [ERROR] Another masking Slurm batch controller appears to be running: outputs/slurm/status/.masking_batch_controller.lock
+2026-06-08T13:53:03Z [ERROR] Remove the lock only after confirming no controller is active.

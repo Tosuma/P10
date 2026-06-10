@@ -1,0 +1,9 @@
+2026-06-09T06:48:04Z [INFO] Controller started
+2026-06-09T06:48:04Z [INFO] manifest=run-single.json max_parallel=1 max_retries=3 sbatch_submit_retries=3 poll_seconds=10
+2026-06-09T06:48:04Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-09T06:48:04Z [INFO] status_dir=outputs/slurm/status/run-single_20260609T064804Z summary_dir=outputs/metrics log_dir=logs/masking/slurm
+2026-06-09T06:48:04Z [INFO] Acquired controller lock outputs/slurm/status/.masking_batch_controller.lock
+2026-06-09T06:48:05Z [INFO] Loaded 1 task(s) from run-single.json
+2026-06-09T06:48:05Z [INFO] Status directory: outputs/slurm/status/run-single_20260609T064804Z
+2026-06-09T06:48:05Z [INFO] Submitting task 0 try 1/3: group=binary_train kind=train config=configs/binary/rgb_synth_msi_unetpp_resnet50.yaml split=test seed=49 attempt=1
+2026-06-09T06:48:05Z [INFO] Submitted task 0 (binary_train, train, configs/binary/rgb_synth_msi_unetpp_resnet50.yaml, seed=49) as job 867959, attempt 1

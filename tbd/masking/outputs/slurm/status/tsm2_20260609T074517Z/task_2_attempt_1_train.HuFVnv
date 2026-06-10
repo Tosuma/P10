@@ -1,0 +1,19 @@
+container_pwd=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking
+container_python_before_venv=/usr/bin/python
+using_venv=../../p10_venv/bin/activate
+container_python_after_venv=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/bin/python
+python_executable=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/bin/python
+python_version=3.12.3
+pythonpath=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking
+2026-06-09 09:45:49,768 [Trainer] :: Training run initialized at /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_synthetic_msi_deeplabv3plus_resnet50_seed69_20260609T074549Z
+2026-06-09 09:45:49,769 [Trainer] :: Loaded config from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml
+2026-06-09 09:45:49,769 [Trainer] :: Using seed=69 and device=None
+2026-06-09 09:45:49,769 [Trainer] :: Using model architecture=DeepLabV3Plus encoder=resnet50 encoder_weights=imagenet
+2026-06-09 09:45:50,119 [Trainer] :: Resolved runtime device to cuda
+2026-06-09 09:45:50,119 [Trainer] :: Prepared normalization from source=train_split_patch_stats
+2026-06-09 09:46:09,263 [Trainer] :: Built dataloaders with batch_size=16, num_workers=0
+2026-06-09 09:46:09,523 [Trainer] :: Starting epoch 1
+2026-06-09 09:55:58,932 [Trainer] :: Completed epoch 1: train_loss=0.383953 train_iou=0.676932 val_loss=0.352017 val_iou=0.559650 lr=0.00010000
+2026-06-09 09:55:59,537 [Trainer] :: New best checkpoint saved at epoch 1 with val_iou=0.559650
+2026-06-09 09:56:00,151 [Trainer] :: Updated latest checkpoint at epoch 1
+2026-06-09 09:56:00,151 [Trainer] :: Starting epoch 2
