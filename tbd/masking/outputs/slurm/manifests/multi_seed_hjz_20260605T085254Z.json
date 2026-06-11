@@ -1,0 +1,284 @@
+{
+  "tasks": [
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet34.yaml",
+      "split": "test",
+      "seed": 42
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet50.yaml",
+      "split": "test",
+      "seed": 42
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml",
+      "split": "test",
+      "seed": 42
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml",
+      "split": "test",
+      "seed": 42
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet34.yaml",
+      "split": "test",
+      "seed": 43
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet50.yaml",
+      "split": "test",
+      "seed": 43
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml",
+      "split": "test",
+      "seed": 43
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml",
+      "split": "test",
+      "seed": 43
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet34.yaml",
+      "split": "test",
+      "seed": 44
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet50.yaml",
+      "split": "test",
+      "seed": 44
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml",
+      "split": "test",
+      "seed": 44
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml",
+      "split": "test",
+      "seed": 44
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet34.yaml",
+      "split": "test",
+      "seed": 45
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet50.yaml",
+      "split": "test",
+      "seed": 45
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml",
+      "split": "test",
+      "seed": 45
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml",
+      "split": "test",
+      "seed": 45
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet34.yaml",
+      "split": "test",
+      "seed": 46
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet50.yaml",
+      "split": "test",
+      "seed": 46
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml",
+      "split": "test",
+      "seed": 46
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml",
+      "split": "test",
+      "seed": 46
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet34.yaml",
+      "split": "test",
+      "seed": 47
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet50.yaml",
+      "split": "test",
+      "seed": 47
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml",
+      "split": "test",
+      "seed": 47
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml",
+      "split": "test",
+      "seed": 47
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet34.yaml",
+      "split": "test",
+      "seed": 48
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet50.yaml",
+      "split": "test",
+      "seed": 48
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml",
+      "split": "test",
+      "seed": 48
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml",
+      "split": "test",
+      "seed": 48
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet34.yaml",
+      "split": "test",
+      "seed": 49
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet50.yaml",
+      "split": "test",
+      "seed": 49
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml",
+      "split": "test",
+      "seed": 49
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml",
+      "split": "test",
+      "seed": 49
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet34.yaml",
+      "split": "test",
+      "seed": 50
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet50.yaml",
+      "split": "test",
+      "seed": 50
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml",
+      "split": "test",
+      "seed": 50
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml",
+      "split": "test",
+      "seed": 50
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet34.yaml",
+      "split": "test",
+      "seed": 51
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_unetpp_resnet50.yaml",
+      "split": "test",
+      "seed": 51
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml",
+      "split": "test",
+      "seed": 51
+    },
+    {
+      "group": "binary_train_multi_seed",
+      "kind": "train",
+      "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml",
+      "split": "test",
+      "seed": 51
+    }
+  ]
+}

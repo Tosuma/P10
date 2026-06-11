@@ -224,7 +224,7 @@ checkpoints/
 
 **.venv**
 **venv**
-./logs/
+logs/
 
 model_best.pkl
 model_final.pkl
