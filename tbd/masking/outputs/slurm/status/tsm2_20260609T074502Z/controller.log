@@ -1,0 +1,5 @@
+2026-06-09T07:45:02Z [INFO] Controller started
+2026-06-09T07:45:02Z [INFO] manifest=scripts/slurm/workloads/split/tsm2.json max_parallel=8 max_retries=3 sbatch_submit_retries=3 poll_seconds=10
+2026-06-09T07:45:02Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-09T07:45:02Z [INFO] status_dir=outputs/slurm/status/tsm2_20260609T074502Z summary_dir=outputs/metrics log_dir=logs/masking/slurm
+2026-06-09T07:45:02Z [INFO] Acquired controller lock outputs/slurm/status/.masking_batch_controller.lock

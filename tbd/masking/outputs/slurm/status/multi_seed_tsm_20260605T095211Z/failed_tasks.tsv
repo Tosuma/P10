@@ -1,0 +1,4 @@
+task_id	group	kind	config	split	seed	attempts	state
+25	binary_train_multi_seed	train	configs/binary/synth_msi_unetpp_resnet50.yaml	test	48	4	failed
+26	binary_train_multi_seed	train	configs/binary/synth_msi_deeplabv3plus_resnet34.yaml	test	48	4	failed
+27	binary_train_multi_seed	train	configs/binary/synth_msi_deeplabv3plus_resnet50.yaml	test	48	4	failed

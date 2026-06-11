@@ -1,8 +1,5 @@
 logs
 outputs/cache
-outputs/runs/*/checkpoints/*
-outputs/runs/*/metrics/*
-outputs/runs/*/run_metadata.json
 outputs/slurm/status/**/task*1.log
 outputs/slurm/status/**/task*1.status
 outputs/slurm/status/**/task*2.log
@@ -11,12 +8,14 @@ outputs/slurm/status/**/task*3.log
 outputs/slurm/status/**/task*3.status
 outputs/slurm/status/**/task*4.status
 
-outputs/runs/*/evaluation/test/*
-!outputs/runs/*/evaluation/test/overall_metrics.json
-outputs/runs/*/evaluation/test/visuals/
-outputs/runs/*/evaluation/test/masks/
-
-outputs/runs/*/logs/history.csv
-
 outputs/**/*.png
+
+outputs/*/*/evaluation/test/*
+!outputs/*/*/evaluation/test/overall_metrics.json
+outputs/*/*/evaluation/test/visuals/
+outputs/*/*/evaluation/test/masks/
+outputs/*/*/logs/history.csv
+outputs/*/*/checkpoints/*
+outputs/*/*/metrics/*
+outputs/*/*/run_metadata.json
 
