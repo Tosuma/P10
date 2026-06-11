@@ -1,0 +1,14 @@
+2026-06-07T22:03:06Z [INFO] Controller started
+2026-06-07T22:03:06Z [INFO] manifest=run-single.json max_parallel=8 max_retries=3 sbatch_submit_retries=3 poll_seconds=10
+2026-06-07T22:03:06Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-07T22:03:06Z [INFO] status_dir=outputs/slurm/status/run-single_20260607T220306Z summary_dir=outputs/metrics log_dir=logs/masking/slurm
+2026-06-07T22:03:06Z [INFO] Acquired controller lock outputs/slurm/status/.masking_batch_controller.lock
+2026-06-07T22:03:06Z [INFO] Loaded 1 task(s) from run-single.json
+2026-06-07T22:03:06Z [INFO] Status directory: outputs/slurm/status/run-single_20260607T220306Z
+2026-06-07T22:03:06Z [INFO] Submitting task 0 try 1/3: group=binary_train kind=train config=configs/binary/rgb_synth_msi_unetpp_resnet50.yaml split=test seed=49 attempt=1
+2026-06-07T22:03:06Z [INFO] Submitted task 0 (binary_train, train, configs/binary/rgb_synth_msi_unetpp_resnet50.yaml, seed=49) as job 866861, attempt 1
+2026-06-07T22:04:06Z [INFO] Job 866861 for task 0 has left the Slurm queue; validating output
+2026-06-07T22:04:06Z [ERROR] Task 0: missing status file outputs/slurm/status/run-single_20260607T220306Z/task_0_attempt_1.status
+2026-06-07T22:04:06Z [ERROR] Task 0: validation failed; re-queueing for retry
+2026-06-07T22:04:16Z [INFO] Submitting task 0 try 1/3: group=binary_train kind=train config=configs/binary/rgb_synth_msi_unetpp_resnet50.yaml split=test seed=49 attempt=2
+2026-06-07T22:04:16Z [INFO] Submitted task 0 (binary_train, train, configs/binary/rgb_synth_msi_unetpp_resnet50.yaml, seed=49) as job 866863, attempt 2

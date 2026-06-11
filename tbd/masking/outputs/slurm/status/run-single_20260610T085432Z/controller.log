@@ -1,0 +1,18 @@
+2026-06-10T08:54:32Z [INFO] Controller started
+2026-06-10T08:54:32Z [INFO] manifest=run-single.json max_parallel=8 max_retries=3 sbatch_submit_retries=3 poll_seconds=10
+2026-06-10T08:54:32Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-10T08:54:32Z [INFO] status_dir=outputs/slurm/status/run-single_20260610T085432Z summary_dir=outputs/metrics log_dir=logs/masking/slurm
+2026-06-10T08:54:32Z [INFO] Acquired controller lock outputs/slurm/status/.masking_batch_controller.lock
+2026-06-10T08:54:32Z [INFO] Loaded 1 task(s) from run-single.json
+2026-06-10T08:54:32Z [INFO] Status directory: outputs/slurm/status/run-single_20260610T085432Z
+2026-06-10T08:54:32Z [INFO] Submitting task 0 try 1/3: group=binary_train kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=51 resume_checkpoint=none attempt=1
+2026-06-10T08:54:32Z [INFO] Submitted task 0 (binary_train, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=51, resume_checkpoint=none) as job 868756, attempt 1
+2026-06-10T13:49:19Z [INFO] Job 868756 for task 0 has left the Slurm queue; validating output
+2026-06-10T13:49:19Z [INFO] Task 0 completed successfully
+2026-06-10T13:49:19Z [INFO] Skipping summary for 225154; no successful runs
+2026-06-10T13:49:19Z [INFO] Skipping summary for 141735; no successful runs
+2026-06-10T13:49:19Z [INFO] Skipping summary for 141732; no successful runs
+2026-06-10T13:49:19Z [INFO] Skipping summary for 400722; no successful runs
+2026-06-10T13:49:19Z [INFO] Skipping summary for 412883; no successful runs
+2026-06-10T13:49:19Z [INFO] Skipping summary for 414915; no successful runs
+2026-06-10T13:49:19Z [INFO] All Slurm masking tasks completed successfully

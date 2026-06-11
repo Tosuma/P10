@@ -1,0 +1,13 @@
+2026-06-09T07:45:17Z [INFO] Controller started
+2026-06-09T07:45:17Z [INFO] manifest=scripts/slurm/workloads/split/tsm2.json max_parallel=8 max_retries=3 sbatch_submit_retries=3 poll_seconds=10
+2026-06-09T07:45:17Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-09T07:45:17Z [INFO] status_dir=outputs/slurm/status/tsm2_20260609T074517Z summary_dir=outputs/metrics log_dir=logs/masking/slurm
+2026-06-09T07:45:17Z [INFO] Acquired controller lock outputs/slurm/status/.masking_batch_controller.lock
+2026-06-09T07:45:17Z [INFO] Loaded 3 task(s) from scripts/slurm/workloads/split/tsm2.json
+2026-06-09T07:45:17Z [INFO] Status directory: outputs/slurm/status/tsm2_20260609T074517Z
+2026-06-09T07:45:17Z [INFO] Submitting task 0 try 1/3: group=binary_train kind=train config=configs/binary/rgb_synth_msi_unetpp_resnet34.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-09T07:45:17Z [INFO] Submitted task 0 (binary_train, train, configs/binary/rgb_synth_msi_unetpp_resnet34.yaml, seed=69, resume_checkpoint=none) as job 867994, attempt 1
+2026-06-09T07:45:18Z [INFO] Submitting task 1 try 1/3: group=binary_train kind=train config=configs/binary/rgb_synth_msi_unetpp_resnet50.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-09T07:45:18Z [INFO] Submitted task 1 (binary_train, train, configs/binary/rgb_synth_msi_unetpp_resnet50.yaml, seed=69, resume_checkpoint=none) as job 867995, attempt 1
+2026-06-09T07:45:18Z [INFO] Submitting task 2 try 1/3: group=binary_train kind=train config=configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-09T07:45:18Z [INFO] Submitted task 2 (binary_train, train, configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml, seed=69, resume_checkpoint=none) as job 867996, attempt 1

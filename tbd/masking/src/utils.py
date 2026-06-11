@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import json
 import logging
+import os
 import random
 import subprocess
 import sys
@@ -20,6 +21,10 @@ def ensure_dir(path: str | Path) -> Path:
     return path
 
 
+def _truthy_env(name: str) -> bool:
+    return os.environ.get(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
 def setup_file_logger(announcer: str, path: str | Path) -> logging.Logger:
     log_path = Path(path)
     ensure_dir(log_path.parent)
@@ -28,15 +33,25 @@ def setup_file_logger(announcer: str, path: str | Path) -> logging.Logger:
     logger.propagate = False
 
     resolved_path = log_path.resolve()
-    for handler in list(logger.handlers):
-        if isinstance(handler, logging.FileHandler) and Path(handler.baseFilename).resolve() == resolved_path:
-            return logger
-
     formatter = logging.Formatter("%(asctime)s [%(name)s] :: %(message)s")
-    file_handler = logging.FileHandler(log_path, encoding="utf-8")
-    file_handler.setLevel(logging.INFO)
-    file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
+    has_target_file_handler = any(
+        isinstance(handler, logging.FileHandler) and Path(handler.baseFilename).resolve() == resolved_path
+        for handler in logger.handlers
+    )
+    if not has_target_file_handler:
+        file_handler = logging.FileHandler(log_path, encoding="utf-8")
+        file_handler.setLevel(logging.INFO)
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
+
+    if _truthy_env("MASKING_LOG_TO_STDOUT"):
+        has_stdout_handler = any(getattr(handler, "_masking_stdout_handler", False) for handler in logger.handlers)
+        if not has_stdout_handler:
+            stream_handler = logging.StreamHandler(sys.stdout)
+            stream_handler.setLevel(logging.INFO)
+            stream_handler.setFormatter(formatter)
+            setattr(stream_handler, "_masking_stdout_handler", True)
+            logger.addHandler(stream_handler)
     return logger
 
 
