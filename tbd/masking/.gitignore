@@ -1,8 +1,5 @@
 logs
 outputs/cache
-outputs/runs/*/checkpoints/*
-outputs/runs/*/metrics/*
-outputs/runs/*/run_metadata.json
 outputs/slurm/status/**/task*1.log
 outputs/slurm/status/**/task*1.status
 outputs/slurm/status/**/task*2.log
@@ -13,20 +10,12 @@ outputs/slurm/status/**/task*4.status
 
 outputs/**/*.png
 
-outputs/runs/*/evaluation/test/*
-!outputs/runs/*/evaluation/test/overall_metrics.json
-outputs/runs/*/evaluation/test/visuals/
-outputs/runs/*/evaluation/test/masks/
-outputs/runs/*/logs/history.csv
+outputs/*/*/evaluation/test/*
+!outputs/*/*/evaluation/test/overall_metrics.json
+outputs/*/*/evaluation/test/visuals/
+outputs/*/*/evaluation/test/masks/
+outputs/*/*/logs/history.csv
+outputs/*/*/checkpoints/*
+outputs/*/*/metrics/*
+outputs/*/*/run_metadata.json
 
-outputs/binary_masking_all_no_synth/*/evaluation/test/*
-!outputs/binary_masking_all_no_synth/*/evaluation/test/overall_metrics.json
-outputs/binary_masking_all_no_synth/*/evaluation/test/visuals/
-outputs/binary_masking_all_no_synth/*/evaluation/test/masks/
-outputs/binary_masking_all_no_synth/*/logs/history.csv
-
-outputs/baseline/*/evaluation/test/*
-!outputs/baseline/*/evaluation/test/overall_metrics.json
-outputs/baseline/*/evaluation/test/visuals/
-outputs/baseline/*/evaluation/test/masks/
-outputs/baseline/*/logs/history.csv
