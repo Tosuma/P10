@@ -1,0 +1,37 @@
+2026-06-11T12:07:06Z [INFO] Controller started
+2026-06-11T12:07:06Z [INFO] manifest=retry-manifest.json max_parallel=8 max_retries=3 sbatch_submit_retries=3 poll_seconds=10
+2026-06-11T12:07:06Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-11T12:07:06Z [INFO] status_dir=outputs/slurm/status/retry-manifest_20260611T120706Z summary_dir=outputs/metrics log_dir=logs/masking/slurm
+2026-06-11T12:07:06Z [INFO] Acquired controller lock outputs/slurm/status/.masking_batch_controller.lock
+2026-06-11T12:07:07Z [INFO] Loaded 6 task(s) from retry-manifest.json
+2026-06-11T12:07:07Z [INFO] Status directory: outputs/slurm/status/retry-manifest_20260611T120706Z
+2026-06-11T12:07:07Z [INFO] Submitting task 0 try 1/3: group=binary_train kind=train config=configs/binary/synth_msi_unetpp_resnet34.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T12:07:07Z [INFO] Submitted task 0 (binary_train, train, configs/binary/synth_msi_unetpp_resnet34.yaml, seed=69, resume_checkpoint=none) as job 869517, attempt 1
+2026-06-11T12:07:07Z [INFO] Submitting task 1 try 1/3: group=binary_train kind=train config=configs/binary/synth_msi_unetpp_resnet50.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T12:07:07Z [INFO] Submitted task 1 (binary_train, train, configs/binary/synth_msi_unetpp_resnet50.yaml, seed=69, resume_checkpoint=none) as job 869518, attempt 1
+2026-06-11T12:07:07Z [INFO] Submitting task 2 try 1/3: group=binary_train kind=train config=configs/binary/synth_msi_deeplabv3plus_resnet34.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T12:07:07Z [INFO] Submitted task 2 (binary_train, train, configs/binary/synth_msi_deeplabv3plus_resnet34.yaml, seed=69, resume_checkpoint=none) as job 869519, attempt 1
+2026-06-11T12:07:07Z [INFO] Submitting task 3 try 1/3: group=binary_train kind=train config=configs/binary/synth_msi_deeplabv3plus_resnet50.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T12:07:07Z [INFO] Submitted task 3 (binary_train, train, configs/binary/synth_msi_deeplabv3plus_resnet50.yaml, seed=69, resume_checkpoint=none) as job 869520, attempt 1
+2026-06-11T12:07:07Z [INFO] Submitting task 4 try 1/3: group=binary_train kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T12:07:07Z [INFO] Submitted task 4 (binary_train, train, configs/binary/synth_msi_segformer_b0.yaml, seed=69, resume_checkpoint=none) as job 869521, attempt 1
+2026-06-11T12:07:07Z [INFO] Submitting task 5 try 1/3: group=binary_train kind=train config=configs/binary/synth_msi_segformer_b1.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T12:07:07Z [INFO] Submitted task 5 (binary_train, train, configs/binary/synth_msi_segformer_b1.yaml, seed=69, resume_checkpoint=none) as job 869522, attempt 1
+2026-06-11T14:48:46Z [INFO] Job 869519 for task 2 has left the Slurm queue; validating output
+2026-06-11T14:48:47Z [INFO] Task 2 completed successfully
+2026-06-11T15:01:44Z [INFO] Job 869521 for task 4 has left the Slurm queue; validating output
+2026-06-11T15:01:44Z [INFO] Task 4 completed successfully
+2026-06-11T15:08:41Z [INFO] Job 869520 for task 3 has left the Slurm queue; validating output
+2026-06-11T15:08:41Z [INFO] Task 3 completed successfully
+2026-06-11T15:47:24Z [INFO] Job 869522 for task 5 has left the Slurm queue; validating output
+2026-06-11T15:47:24Z [INFO] Task 5 completed successfully
+2026-06-11T15:50:55Z [INFO] Job 869517 for task 0 has left the Slurm queue; validating output
+2026-06-11T15:51:00Z [INFO] Task 0 completed successfully
+2026-06-11T16:49:51Z [INFO] Job 869518 for task 1 has left the Slurm queue; validating output
+2026-06-11T16:49:52Z [INFO] Task 1 completed successfully
+2026-06-11T16:49:52Z [INFO] Skipping summary for 224316; no successful runs
+2026-06-11T16:49:52Z [INFO] Skipping summary for 141735; no successful runs
+2026-06-11T16:49:52Z [INFO] Skipping summary for 141732; no successful runs
+2026-06-11T16:49:52Z [INFO] Skipping summary for 412883; no successful runs
+2026-06-11T16:49:52Z [INFO] Skipping summary for 414915; no successful runs
+2026-06-11T16:49:52Z [INFO] All Slurm masking tasks completed successfully
