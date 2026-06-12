@@ -1,0 +1,170 @@
+2026-06-11T12:34:38Z [INFO] Controller started
+2026-06-11T12:34:38Z [INFO] manifest=scripts/slurm/workloads/split/tsm2.json max_parallel=8 max_retries=3 sbatch_submit_retries=3 poll_seconds=10
+2026-06-11T12:34:38Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-11T12:34:38Z [INFO] status_dir=outputs/slurm/status/tsm2_20260611T123438Z summary_dir=outputs/metrics log_dir=logs/masking/slurm
+2026-06-11T12:34:38Z [INFO] Acquired controller lock outputs/slurm/status/.masking_batch_controller.lock
+2026-06-11T12:34:38Z [INFO] Loaded 39 task(s) from scripts/slurm/workloads/split/tsm2.json
+2026-06-11T12:34:38Z [INFO] Status directory: outputs/slurm/status/tsm2_20260611T123438Z
+2026-06-11T12:34:38Z [INFO] Submitting task 0 try 1/3: group=binary_train kind=train config=configs/binary/rgb_unetpp_resnet34.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T12:34:38Z [INFO] Submitted task 0 (binary_train, train, configs/binary/rgb_unetpp_resnet34.yaml, seed=69, resume_checkpoint=none) as job 869551, attempt 1
+2026-06-11T12:34:38Z [INFO] Submitting task 1 try 1/3: group=binary_train kind=train config=configs/binary/rgb_unetpp_resnet50.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T12:34:38Z [INFO] Submitted task 1 (binary_train, train, configs/binary/rgb_unetpp_resnet50.yaml, seed=69, resume_checkpoint=none) as job 869552, attempt 1
+2026-06-11T12:34:38Z [INFO] Submitting task 2 try 1/3: group=binary_train kind=train config=configs/binary/rgb_deeplabv3plus_resnet34.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T12:34:38Z [INFO] Submitted task 2 (binary_train, train, configs/binary/rgb_deeplabv3plus_resnet34.yaml, seed=69, resume_checkpoint=none) as job 869553, attempt 1
+2026-06-11T12:34:38Z [INFO] Submitting task 3 try 1/3: group=binary_train kind=train config=configs/binary/rgb_deeplabv3plus_resnet50.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T12:34:38Z [INFO] Submitted task 3 (binary_train, train, configs/binary/rgb_deeplabv3plus_resnet50.yaml, seed=69, resume_checkpoint=none) as job 869554, attempt 1
+2026-06-11T12:34:38Z [INFO] Submitting task 4 try 1/3: group=binary_train kind=train config=configs/binary/rgb_segformer_b0.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T12:34:38Z [INFO] Submitted task 4 (binary_train, train, configs/binary/rgb_segformer_b0.yaml, seed=69, resume_checkpoint=none) as job 869555, attempt 1
+2026-06-11T12:34:38Z [INFO] Submitting task 5 try 1/3: group=binary_train kind=train config=configs/binary/rgb_segformer_b1.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T12:34:38Z [INFO] Submitted task 5 (binary_train, train, configs/binary/rgb_segformer_b1.yaml, seed=69, resume_checkpoint=none) as job 869556, attempt 1
+2026-06-11T12:34:38Z [INFO] Submitting task 6 try 1/3: group=binary_train kind=train config=configs/binary/real_msi_unetpp_resnet34.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T12:34:38Z [INFO] Submitted task 6 (binary_train, train, configs/binary/real_msi_unetpp_resnet34.yaml, seed=69, resume_checkpoint=none) as job 869557, attempt 1
+2026-06-11T12:34:38Z [INFO] Submitting task 7 try 1/3: group=binary_train kind=train config=configs/binary/real_msi_unetpp_resnet50.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T12:34:38Z [INFO] Submitted task 7 (binary_train, train, configs/binary/real_msi_unetpp_resnet50.yaml, seed=69, resume_checkpoint=none) as job 869558, attempt 1
+2026-06-11T15:09:32Z [INFO] Job 869554 for task 3 has left the Slurm queue; validating output
+2026-06-11T15:09:33Z [INFO] Task 3 completed successfully
+2026-06-11T15:09:43Z [INFO] Submitting task 8 try 1/3: group=binary_train kind=train config=configs/binary/real_msi_deeplabv3plus_resnet34.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T15:09:43Z [INFO] Submitted task 8 (binary_train, train, configs/binary/real_msi_deeplabv3plus_resnet34.yaml, seed=69, resume_checkpoint=none) as job 869627, attempt 1
+2026-06-11T16:01:24Z [INFO] Job 869555 for task 4 has left the Slurm queue; validating output
+2026-06-11T16:01:25Z [INFO] Task 4 completed successfully
+2026-06-11T16:01:35Z [INFO] Submitting task 9 try 1/3: group=binary_train kind=train config=configs/binary/real_msi_deeplabv3plus_resnet50.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T16:01:35Z [INFO] Submitted task 9 (binary_train, train, configs/binary/real_msi_deeplabv3plus_resnet50.yaml, seed=69, resume_checkpoint=none) as job 869655, attempt 1
+2026-06-11T16:08:10Z [INFO] Job 869557 for task 6 has left the Slurm queue; validating output
+2026-06-11T16:08:10Z [INFO] Task 6 completed successfully
+2026-06-11T16:08:20Z [INFO] Submitting task 10 try 1/3: group=binary_train kind=train config=configs/binary/real_msi_segformer_b0.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T16:08:21Z [INFO] Submitted task 10 (binary_train, train, configs/binary/real_msi_segformer_b0.yaml, seed=69, resume_checkpoint=none) as job 869657, attempt 1
+2026-06-11T16:15:46Z [INFO] Job 869556 for task 5 has left the Slurm queue; validating output
+2026-06-11T16:15:47Z [INFO] Task 5 completed successfully
+2026-06-11T16:15:57Z [INFO] Submitting task 11 try 1/3: group=binary_train kind=train config=configs/binary/real_msi_segformer_b1.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T16:15:57Z [INFO] Submitted task 11 (binary_train, train, configs/binary/real_msi_segformer_b1.yaml, seed=69, resume_checkpoint=none) as job 869664, attempt 1
+2026-06-11T16:15:57Z [INFO] Job 869553 for task 2 has left the Slurm queue; validating output
+2026-06-11T16:15:57Z [INFO] Task 2 completed successfully
+2026-06-11T16:16:07Z [INFO] Submitting task 12 try 1/3: group=binary_train kind=train config=configs/binary/rgb_real_msi_unetpp_resnet34.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T16:16:07Z [INFO] Submitted task 12 (binary_train, train, configs/binary/rgb_real_msi_unetpp_resnet34.yaml, seed=69, resume_checkpoint=none) as job 869665, attempt 1
+2026-06-11T16:32:30Z [INFO] Job 869551 for task 0 has left the Slurm queue; validating output
+2026-06-11T16:32:31Z [INFO] Task 0 completed successfully
+2026-06-11T16:32:41Z [INFO] Submitting task 13 try 1/3: group=binary_train kind=train config=configs/binary/rgb_real_msi_unetpp_resnet50.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T16:32:41Z [INFO] Submitted task 13 (binary_train, train, configs/binary/rgb_real_msi_unetpp_resnet50.yaml, seed=69, resume_checkpoint=none) as job 869672, attempt 1
+2026-06-11T17:33:05Z [INFO] Job 869552 for task 1 has left the Slurm queue; validating output
+2026-06-11T17:33:05Z [INFO] Task 1 completed successfully
+2026-06-11T17:33:15Z [INFO] Submitting task 14 try 1/3: group=binary_train kind=train config=configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T17:33:15Z [INFO] Submitted task 14 (binary_train, train, configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml, seed=69, resume_checkpoint=none) as job 869705, attempt 1
+2026-06-11T18:03:10Z [INFO] Job 869558 for task 7 has left the Slurm queue; validating output
+2026-06-11T18:03:10Z [INFO] Task 7 completed successfully
+2026-06-11T18:03:20Z [INFO] Submitting task 15 try 1/3: group=binary_train kind=train config=configs/binary/rgb_real_msi_deeplabv3plus_resnet50.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T18:03:20Z [INFO] Submitted task 15 (binary_train, train, configs/binary/rgb_real_msi_deeplabv3plus_resnet50.yaml, seed=69, resume_checkpoint=none) as job 869718, attempt 1
+2026-06-11T18:05:11Z [INFO] Job 869627 for task 8 has left the Slurm queue; validating output
+2026-06-11T18:05:12Z [INFO] Task 8 completed successfully
+2026-06-11T18:05:22Z [INFO] Submitting task 16 try 1/3: group=binary_train kind=train config=configs/binary/rgb_real_msi_segformer_b0.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T18:05:23Z [INFO] Submitted task 16 (binary_train, train, configs/binary/rgb_real_msi_segformer_b0.yaml, seed=69, resume_checkpoint=none) as job 869719, attempt 1
+2026-06-11T18:29:45Z [INFO] Job 869655 for task 9 has left the Slurm queue; validating output
+2026-06-11T18:29:45Z [INFO] Task 9 completed successfully
+2026-06-11T18:29:55Z [INFO] Submitting task 17 try 1/3: group=binary_train kind=train config=configs/binary/rgb_real_msi_segformer_b1.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T18:29:55Z [INFO] Submitted task 17 (binary_train, train, configs/binary/rgb_real_msi_segformer_b1.yaml, seed=69, resume_checkpoint=none) as job 869726, attempt 1
+2026-06-11T18:40:44Z [INFO] Job 869657 for task 10 has left the Slurm queue; validating output
+2026-06-11T18:40:44Z [INFO] Task 10 completed successfully
+2026-06-11T18:40:55Z [INFO] Submitting task 18 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/rgb.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T18:40:55Z [INFO] Submitted task 18 (binary_baseline_no_synth, baseline, configs/binary/rgb.yaml, seed=69, resume_checkpoint=none) as job 869733, attempt 1
+2026-06-11T18:44:18Z [INFO] Job 869733 for task 18 has left the Slurm queue; validating output
+2026-06-11T18:44:18Z [INFO] Task 18 completed successfully
+2026-06-11T18:44:28Z [INFO] Submitting task 19 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/rgb_unetpp_resnet34.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T18:44:28Z [INFO] Submitted task 19 (binary_baseline_no_synth, baseline, configs/binary/rgb_unetpp_resnet34.yaml, seed=69, resume_checkpoint=none) as job 869735, attempt 1
+2026-06-11T18:48:22Z [INFO] Job 869735 for task 19 has left the Slurm queue; validating output
+2026-06-11T18:48:22Z [INFO] Task 19 completed successfully
+2026-06-11T18:48:32Z [INFO] Submitting task 20 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/rgb_unetpp_resnet50.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T18:48:32Z [INFO] Submitted task 20 (binary_baseline_no_synth, baseline, configs/binary/rgb_unetpp_resnet50.yaml, seed=69, resume_checkpoint=none) as job 869742, attempt 1
+2026-06-11T18:51:55Z [INFO] Job 869742 for task 20 has left the Slurm queue; validating output
+2026-06-11T18:51:56Z [INFO] Task 20 completed successfully
+2026-06-11T18:52:06Z [INFO] Submitting task 21 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/rgb_deeplabv3plus_resnet34.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T18:52:06Z [INFO] Submitted task 21 (binary_baseline_no_synth, baseline, configs/binary/rgb_deeplabv3plus_resnet34.yaml, seed=69, resume_checkpoint=none) as job 869743, attempt 1
+2026-06-11T18:54:58Z [INFO] Job 869743 for task 21 has left the Slurm queue; validating output
+2026-06-11T18:54:59Z [INFO] Task 21 completed successfully
+2026-06-11T18:55:09Z [INFO] Submitting task 22 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/rgb_deeplabv3plus_resnet50.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T18:55:09Z [INFO] Submitted task 22 (binary_baseline_no_synth, baseline, configs/binary/rgb_deeplabv3plus_resnet50.yaml, seed=69, resume_checkpoint=none) as job 869744, attempt 1
+2026-06-11T18:58:01Z [INFO] Job 869744 for task 22 has left the Slurm queue; validating output
+2026-06-11T18:58:02Z [INFO] Task 22 completed successfully
+2026-06-11T18:58:12Z [INFO] Submitting task 23 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/rgb_segformer_b0.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T18:58:12Z [INFO] Submitted task 23 (binary_baseline_no_synth, baseline, configs/binary/rgb_segformer_b0.yaml, seed=69, resume_checkpoint=none) as job 869745, attempt 1
+2026-06-11T19:00:54Z [INFO] Job 869745 for task 23 has left the Slurm queue; validating output
+2026-06-11T19:00:54Z [INFO] Task 23 completed successfully
+2026-06-11T19:01:04Z [INFO] Submitting task 24 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/rgb_segformer_b1.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T19:01:04Z [INFO] Submitted task 24 (binary_baseline_no_synth, baseline, configs/binary/rgb_segformer_b1.yaml, seed=69, resume_checkpoint=none) as job 869752, attempt 1
+2026-06-11T19:03:57Z [INFO] Job 869752 for task 24 has left the Slurm queue; validating output
+2026-06-11T19:03:57Z [INFO] Task 24 completed successfully
+2026-06-11T19:04:07Z [INFO] Submitting task 25 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/real_msi.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T19:04:07Z [INFO] Submitted task 25 (binary_baseline_no_synth, baseline, configs/binary/real_msi.yaml, seed=69, resume_checkpoint=none) as job 869753, attempt 1
+2026-06-11T19:07:00Z [INFO] Job 869753 for task 25 has left the Slurm queue; validating output
+2026-06-11T19:07:00Z [INFO] Task 25 completed successfully
+2026-06-11T19:07:10Z [INFO] Submitting task 26 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/real_msi_unetpp_resnet34.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T19:07:10Z [INFO] Submitted task 26 (binary_baseline_no_synth, baseline, configs/binary/real_msi_unetpp_resnet34.yaml, seed=69, resume_checkpoint=none) as job 869754, attempt 1
+2026-06-11T19:10:13Z [INFO] Job 869754 for task 26 has left the Slurm queue; validating output
+2026-06-11T19:10:13Z [INFO] Task 26 completed successfully
+2026-06-11T19:10:23Z [INFO] Submitting task 27 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/real_msi_unetpp_resnet50.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T19:10:23Z [INFO] Submitted task 27 (binary_baseline_no_synth, baseline, configs/binary/real_msi_unetpp_resnet50.yaml, seed=69, resume_checkpoint=none) as job 869755, attempt 1
+2026-06-11T19:14:16Z [INFO] Job 869755 for task 27 has left the Slurm queue; validating output
+2026-06-11T19:14:20Z [INFO] Task 27 completed successfully
+2026-06-11T19:14:30Z [INFO] Submitting task 28 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/real_msi_deeplabv3plus_resnet34.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T19:14:30Z [INFO] Submitted task 28 (binary_baseline_no_synth, baseline, configs/binary/real_msi_deeplabv3plus_resnet34.yaml, seed=69, resume_checkpoint=none) as job 869756, attempt 1
+2026-06-11T19:17:22Z [INFO] Job 869756 for task 28 has left the Slurm queue; validating output
+2026-06-11T19:17:24Z [INFO] Task 28 completed successfully
+2026-06-11T19:17:34Z [INFO] Submitting task 29 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/real_msi_deeplabv3plus_resnet50.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T19:17:34Z [INFO] Submitted task 29 (binary_baseline_no_synth, baseline, configs/binary/real_msi_deeplabv3plus_resnet50.yaml, seed=69, resume_checkpoint=none) as job 869763, attempt 1
+2026-06-11T19:20:26Z [INFO] Job 869763 for task 29 has left the Slurm queue; validating output
+2026-06-11T19:20:26Z [INFO] Task 29 completed successfully
+2026-06-11T19:20:37Z [INFO] Submitting task 30 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/real_msi_segformer_b0.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T19:20:37Z [INFO] Submitted task 30 (binary_baseline_no_synth, baseline, configs/binary/real_msi_segformer_b0.yaml, seed=69, resume_checkpoint=none) as job 869764, attempt 1
+2026-06-11T19:23:19Z [INFO] Job 869764 for task 30 has left the Slurm queue; validating output
+2026-06-11T19:23:19Z [INFO] Task 30 completed successfully
+2026-06-11T19:23:29Z [INFO] Submitting task 31 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/real_msi_segformer_b1.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T19:23:29Z [INFO] Submitted task 31 (binary_baseline_no_synth, baseline, configs/binary/real_msi_segformer_b1.yaml, seed=69, resume_checkpoint=none) as job 869765, attempt 1
+2026-06-11T19:26:11Z [INFO] Job 869765 for task 31 has left the Slurm queue; validating output
+2026-06-11T19:26:12Z [INFO] Task 31 completed successfully
+2026-06-11T19:26:22Z [INFO] Submitting task 32 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/rgb_real_msi.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T19:26:22Z [INFO] Submitted task 32 (binary_baseline_no_synth, baseline, configs/binary/rgb_real_msi.yaml, seed=69, resume_checkpoint=none) as job 869766, attempt 1
+2026-06-11T19:29:35Z [INFO] Job 869766 for task 32 has left the Slurm queue; validating output
+2026-06-11T19:29:36Z [INFO] Task 32 completed successfully
+2026-06-11T19:29:46Z [INFO] Submitting task 33 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/rgb_real_msi_unetpp_resnet34.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T19:29:46Z [INFO] Submitted task 33 (binary_baseline_no_synth, baseline, configs/binary/rgb_real_msi_unetpp_resnet34.yaml, seed=69, resume_checkpoint=none) as job 869767, attempt 1
+2026-06-11T19:33:39Z [INFO] Job 869767 for task 33 has left the Slurm queue; validating output
+2026-06-11T19:33:39Z [INFO] Task 33 completed successfully
+2026-06-11T19:33:49Z [INFO] Submitting task 34 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/rgb_real_msi_unetpp_resnet50.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T19:33:49Z [INFO] Submitted task 34 (binary_baseline_no_synth, baseline, configs/binary/rgb_real_msi_unetpp_resnet50.yaml, seed=69, resume_checkpoint=none) as job 869774, attempt 1
+2026-06-11T19:37:32Z [INFO] Job 869774 for task 34 has left the Slurm queue; validating output
+2026-06-11T19:37:32Z [INFO] Task 34 completed successfully
+2026-06-11T19:37:42Z [INFO] Submitting task 35 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T19:37:43Z [INFO] Submitted task 35 (binary_baseline_no_synth, baseline, configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml, seed=69, resume_checkpoint=none) as job 869775, attempt 1
+2026-06-11T19:40:45Z [INFO] Job 869775 for task 35 has left the Slurm queue; validating output
+2026-06-11T19:40:46Z [INFO] Task 35 completed successfully
+2026-06-11T19:40:56Z [INFO] Submitting task 36 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/rgb_real_msi_deeplabv3plus_resnet50.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T19:40:56Z [INFO] Submitted task 36 (binary_baseline_no_synth, baseline, configs/binary/rgb_real_msi_deeplabv3plus_resnet50.yaml, seed=69, resume_checkpoint=none) as job 869776, attempt 1
+2026-06-11T19:44:19Z [INFO] Job 869776 for task 36 has left the Slurm queue; validating output
+2026-06-11T19:44:21Z [INFO] Task 36 completed successfully
+2026-06-11T19:44:31Z [INFO] Submitting task 37 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/rgb_real_msi_segformer_b0.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T19:44:31Z [INFO] Submitted task 37 (binary_baseline_no_synth, baseline, configs/binary/rgb_real_msi_segformer_b0.yaml, seed=69, resume_checkpoint=none) as job 869777, attempt 1
+2026-06-11T19:47:33Z [INFO] Job 869777 for task 37 has left the Slurm queue; validating output
+2026-06-11T19:47:34Z [INFO] Task 37 completed successfully
+2026-06-11T19:47:44Z [INFO] Submitting task 38 try 1/3: group=binary_baseline_no_synth kind=baseline config=configs/binary/rgb_real_msi_segformer_b1.yaml split=test seed=69 resume_checkpoint=none attempt=1
+2026-06-11T19:47:44Z [INFO] Submitted task 38 (binary_baseline_no_synth, baseline, configs/binary/rgb_real_msi_segformer_b1.yaml, seed=69, resume_checkpoint=none) as job 869784, attempt 1
+2026-06-11T19:50:56Z [INFO] Job 869784 for task 38 has left the Slurm queue; validating output
+2026-06-11T19:50:58Z [INFO] Task 38 completed successfully
+2026-06-11T19:51:18Z [INFO] Job 869664 for task 11 has left the Slurm queue; validating output
+2026-06-11T19:51:18Z [INFO] Task 11 completed successfully
+2026-06-11T22:38:39Z [INFO] Job 869719 for task 16 has left the Slurm queue; validating output
+2026-06-11T22:38:39Z [INFO] Task 16 completed successfully
+2026-06-11T22:45:33Z [INFO] Job 869718 for task 15 has left the Slurm queue; validating output
+2026-06-11T22:45:33Z [INFO] Task 15 completed successfully
+2026-06-11T23:15:37Z [INFO] Job 869665 for task 12 has left the Slurm queue; validating output
+2026-06-11T23:15:38Z [INFO] Task 12 completed successfully
+2026-06-11T23:19:09Z [INFO] Job 869672 for task 13 has left the Slurm queue; validating output
+2026-06-11T23:19:09Z [INFO] Task 13 completed successfully
+2026-06-11T23:43:15Z [INFO] Job 869705 for task 14 has left the Slurm queue; validating output
+2026-06-11T23:43:16Z [INFO] Task 14 completed successfully
+2026-06-12T00:06:10Z [INFO] Job 869726 for task 17 has left the Slurm queue; validating output
+2026-06-12T00:06:10Z [INFO] Task 17 completed successfully
+2026-06-12T00:06:10Z [INFO] Skipping summary for 225154; no successful runs
+2026-06-12T00:06:10Z [INFO] Skipping summary for 141735; no successful runs
+2026-06-12T00:06:10Z [INFO] Skipping summary for 141732; no successful runs
+2026-06-12T00:06:10Z [INFO] Skipping summary for 400722; no successful runs
+2026-06-12T00:06:10Z [INFO] Skipping summary for 412883; no successful runs
+2026-06-12T00:06:10Z [INFO] Skipping summary for 414915; no successful runs
+2026-06-12T00:06:10Z [INFO] All Slurm masking tasks completed successfully
