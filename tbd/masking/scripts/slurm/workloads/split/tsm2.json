@@ -3,21 +3,273 @@
         {
             "group": "binary_train",
             "kind": "train",
-            "config": "configs/binary/rgb_synth_msi_unetpp_resnet34.yaml",
+            "config": "configs/binary/rgb_unetpp_resnet34.yaml",
             "split": "test",
             "seed": 69
         },
         {
             "group": "binary_train",
             "kind": "train",
-            "config": "configs/binary/rgb_synth_msi_unetpp_resnet50.yaml",
+            "config": "configs/binary/rgb_unetpp_resnet50.yaml",
             "split": "test",
             "seed": 69
         },
         {
             "group": "binary_train",
             "kind": "train",
-            "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml",
+            "config": "configs/binary/rgb_deeplabv3plus_resnet34.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_deeplabv3plus_resnet50.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_segformer_b0.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_segformer_b1.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/real_msi_unetpp_resnet34.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/real_msi_unetpp_resnet50.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/real_msi_deeplabv3plus_resnet34.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/real_msi_deeplabv3plus_resnet50.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/real_msi_segformer_b0.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/real_msi_segformer_b1.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_real_msi_unetpp_resnet34.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_real_msi_unetpp_resnet50.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_real_msi_deeplabv3plus_resnet50.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_real_msi_segformer_b0.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_train",
+            "kind": "train",
+            "config": "configs/binary/rgb_real_msi_segformer_b1.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/rgb.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/rgb_unetpp_resnet34.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/rgb_unetpp_resnet50.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/rgb_deeplabv3plus_resnet34.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/rgb_deeplabv3plus_resnet50.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/rgb_segformer_b0.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/rgb_segformer_b1.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/real_msi.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/real_msi_unetpp_resnet34.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/real_msi_unetpp_resnet50.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/real_msi_deeplabv3plus_resnet34.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/real_msi_deeplabv3plus_resnet50.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/real_msi_segformer_b0.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/real_msi_segformer_b1.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/rgb_real_msi.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/rgb_real_msi_unetpp_resnet34.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/rgb_real_msi_unetpp_resnet50.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/rgb_real_msi_deeplabv3plus_resnet50.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/rgb_real_msi_segformer_b0.yaml",
+            "split": "test",
+            "seed": 69
+        },
+        {
+            "group": "binary_baseline_no_synth",
+            "kind": "baseline",
+            "config": "configs/binary/rgb_real_msi_segformer_b1.yaml",
             "split": "test",
             "seed": 69
         }

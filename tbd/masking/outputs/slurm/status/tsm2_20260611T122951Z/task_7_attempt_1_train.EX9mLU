@@ -1,0 +1,15 @@
+container_pwd=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking
+container_python_before_venv=/usr/bin/python
+using_venv=../../p10_venv/bin/activate
+container_python_after_venv=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/bin/python
+python_executable=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/bin/python
+python_version=3.12.3
+pythonpath=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking
+2026-06-11 14:30:13,187 [Trainer] :: Training run initialized at /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/no_synth_69/real_msi_unetplusplus_resnet50_seed69_20260611T123012Z
+2026-06-11 14:30:13,187 [Trainer] :: Loaded config from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/configs/binary/real_msi_unetpp_resnet50.yaml
+2026-06-11 14:30:13,187 [Trainer] :: Using seed=69 and device=None
+2026-06-11 14:30:13,187 [Trainer] :: Using model architecture=UnetPlusPlus encoder=resnet50 encoder_weights=imagenet
+2026-06-11 14:30:13,887 [Trainer] :: Resolved runtime device to cuda
+2026-06-11 14:30:13,887 [Trainer] :: Prepared normalization from source=train_split_patch_stats
+2026-06-11 14:30:29,151 [Trainer] :: Built dataloaders with batch_size=16, num_workers=0
+2026-06-11 14:30:29,210 [Trainer] :: Starting epoch 1
