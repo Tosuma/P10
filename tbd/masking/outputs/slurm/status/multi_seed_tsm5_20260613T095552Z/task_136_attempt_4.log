@@ -1,0 +1,13 @@
+2026-06-13T10:54:49Z [INFO] Slurm masking job started
+2026-06-13T10:54:49Z [INFO] task_id=136 group=binary_baseline_multi_seed kind=baseline config=configs/binary/rgb_deeplabv3plus_resnet50.yaml split=test seed=424 resume_checkpoint=none attempt=4
+2026-06-13T10:54:50Z [INFO] pwd=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking host=ailab-l4-04 slurm_job_id=871101 cuda_visible_devices=4
+2026-06-13T10:54:50Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-13T10:54:50Z [INFO] status_file=outputs/slurm/status/multi_seed_tsm5_20260613T095552Z/task_136_attempt_4.status
+2026-06-13T10:54:50Z [INFO] PYTHONPATH=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking OMP_NUM_THREADS=15 MKL_NUM_THREADS=15 PYTHONUNBUFFERED=1 MASKING_LOG_TO_STDOUT=1
+2026-06-13T10:54:50Z [INFO] singularity=/usr/bin/singularity
+
+==== baseline ====
+started_at=2026-06-13T10:54:50Z
+command=python -u -m src.evaluate_base --config 'configs/binary/rgb_deeplabv3plus_resnet50.yaml' --split 'test' --seed '424'
+[33mWARNING:[0m Could not lookup the current user's information: user: unknown userid 225154
+[31mFATAL:  [0m Couldn't determine user account information: user: unknown userid 225154

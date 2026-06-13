@@ -1,0 +1,32 @@
+2026-06-13T11:04:46Z [INFO] Slurm masking job started
+2026-06-13T11:04:46Z [INFO] task_id=159 group=binary_baseline_multi_seed kind=baseline config=configs/binary/rgb_real_msi_unetpp_resnet34.yaml split=test seed=425 resume_checkpoint=none attempt=4
+2026-06-13T11:04:46Z [INFO] pwd=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking host=ailab-l4-02 slurm_job_id=871144 cuda_visible_devices=6
+2026-06-13T11:04:46Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-13T11:04:46Z [INFO] status_file=outputs/slurm/status/multi_seed_tsm5_20260613T095552Z/task_159_attempt_4.status
+2026-06-13T11:04:46Z [INFO] PYTHONPATH=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking OMP_NUM_THREADS=15 MKL_NUM_THREADS=15 PYTHONUNBUFFERED=1 MASKING_LOG_TO_STDOUT=1
+2026-06-13T11:04:46Z [INFO] singularity=/usr/bin/singularity
+
+==== baseline ====
+started_at=2026-06-13T11:04:46Z
+command=python -u -m src.evaluate_base --config 'configs/binary/rgb_real_msi_unetpp_resnet34.yaml' --split 'test' --seed '425'
+container_pwd=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking
+container_python_before_venv=/usr/bin/python
+using_venv=../../p10_venv/bin/activate
+container_python_after_venv=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/bin/python
+python_executable=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/p10_venv/bin/python
+python_version=3.12.3
+pythonpath=/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking
+2026-06-13 13:04:53,023 [BaseEvaluator] :: Baseline evaluation initialized at /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_real_msi_unetplusplus_resnet34_baseline_seed425_20260613T110452Z
+2026-06-13 13:04:53,024 [BaseEvaluator] :: Loaded config from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/configs/binary/rgb_real_msi_unetpp_resnet34.yaml
+2026-06-13 13:04:53,024 [BaseEvaluator] :: Using model architecture=UnetPlusPlus encoder=resnet34 encoder_weights=imagenet
+2026-06-13 13:04:53,342 [BaseEvaluator] :: Resolved runtime device to cuda
+2026-06-13 13:04:53,343 [BaseEvaluator] :: Prepared normalization from source=train_split_patch_stats
+2026-06-13 13:04:56,966 [BaseEvaluator] :: Loaded normalization from data/processed/rgb_real_msi_normalization.json
+2026-06-13 13:04:56,966 [BaseEvaluator] :: Running inference with threshold=0.5000
+2026-06-13 13:07:51,882 [BaseEvaluator] :: Saved aggregate metrics to outputs/runs/rgb_real_msi_unetplusplus_resnet34_baseline_seed425_20260613T110452Z/evaluation/test/overall_metrics.json
+2026-06-13 13:07:51,936 [BaseEvaluator] :: Saved 733 patch rows and 186 image rows
+2026-06-13 13:07:57,069 [BaseEvaluator] :: Saved 186 predicted mask(s) to outputs/runs/rgb_real_msi_unetplusplus_resnet34_baseline_seed425_20260613T110452Z/evaluation/test/masks
+2026-06-13 13:08:02,448 [BaseEvaluator] :: Saved 8 visualization panel(s) to outputs/runs/rgb_real_msi_unetplusplus_resnet34_baseline_seed425_20260613T110452Z/evaluation/test/visuals
+2026-06-13 13:08:02,451 [BaseEvaluator] :: Baseline overall metrics written to outputs/runs/rgb_real_msi_unetplusplus_resnet34_baseline_seed425_20260613T110452Z/evaluation/test/overall_metrics.json
+2026-06-13 13:08:02,451 [BaseEvaluator] :: Baseline evaluation completed
+/ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_real_msi_unetplusplus_resnet34_baseline_seed425_20260613T110452Z

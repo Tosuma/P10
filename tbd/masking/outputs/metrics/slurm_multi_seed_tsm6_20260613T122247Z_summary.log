@@ -1,0 +1,6 @@
+2026-06-13 14:26:39,866 [Summarizer] :: Summary generation started
+2026-06-13 14:26:39,866 [Summarizer] :: Collecting metrics from 1 run(s)
+2026-06-13 14:26:39,866 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/runs/rgb_deeplabv3plus_resnet50_baseline_seed424_20260613T122255Z
+2026-06-13 14:26:40,005 [Summarizer] :: Wrote 1 run summary item(s) to /ceph/home/student.aau.dk/qd36zu/fuzzy-p10/tbd/masking/outputs/metrics/slurm_multi_seed_tsm6_20260613T122247Z_summary.json
+2026-06-13 14:26:40,005 [Summarizer] :: Wrote 1 aggregate summary item(s)
+2026-06-13 14:26:40,005 [Summarizer] :: Summary generation completed

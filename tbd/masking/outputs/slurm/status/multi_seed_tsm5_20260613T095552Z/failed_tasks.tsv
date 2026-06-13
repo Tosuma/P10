@@ -1,0 +1,2 @@
+task_id	group	kind	config	split	seed	attempts	state
+136	binary_baseline_multi_seed	baseline	configs/binary/rgb_deeplabv3plus_resnet50.yaml	test	424	4	failed
