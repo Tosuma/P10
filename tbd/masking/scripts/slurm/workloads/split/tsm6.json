@@ -1,0 +1,10 @@
+{
+    "tasks": [
+        {
+            "group": "binary_baseline",
+            "kind": "baseline",
+            "config": "configs/binary/rgb_deeplabv3plus_resnet50.yaml",
+            "split": "test"
+        }
+    ]
+}
