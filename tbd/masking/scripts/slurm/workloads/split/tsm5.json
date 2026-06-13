@@ -1,92 +1,92 @@
 {
     "tasks": [
         {
-            "group": "binary_train",
-            "kind": "train",
+            "group": "binary_baseline",
+            "kind": "baseline",
             "config": "configs/binary/rgb_unetpp_resnet34.yaml",
             "split": "test"
         },
         {
-            "group": "binary_train",
-            "kind": "train",
+            "group": "binary_baseline",
+            "kind": "baseline",
             "config": "configs/binary/rgb_deeplabv3plus_resnet34.yaml",
             "split": "test"
         },
         {
-            "group": "binary_train",
-            "kind": "train",
+            "group": "binary_baseline",
+            "kind": "baseline",
             "config": "configs/binary/rgb_segformer_b0.yaml",
             "split": "test"
         },
         {
-            "group": "binary_train",
-            "kind": "train",
+            "group": "binary_baseline",
+            "kind": "baseline",
             "config": "configs/binary/real_msi_unetpp_resnet34.yaml",
             "split": "test"
         },
         {
-            "group": "binary_train",
-            "kind": "train",
+            "group": "binary_baseline",
+            "kind": "baseline",
             "config": "configs/binary/real_msi_deeplabv3plus_resnet34.yaml",
             "split": "test"
         },
         {
-            "group": "binary_train",
-            "kind": "train",
+            "group": "binary_baseline",
+            "kind": "baseline",
             "config": "configs/binary/real_msi_segformer_b0.yaml",
             "split": "test"
         },
         {
-            "group": "binary_train",
-            "kind": "train",
+            "group": "binary_baseline",
+            "kind": "baseline",
             "config": "configs/binary/synth_msi_unetpp_resnet34.yaml",
             "split": "test"
         },
         {
-            "group": "binary_train",
-            "kind": "train",
+            "group": "binary_baseline",
+            "kind": "baseline",
             "config": "configs/binary/synth_msi_deeplabv3plus_resnet34.yaml",
             "split": "test"
         },
         {
-            "group": "binary_train",
-            "kind": "train",
+            "group": "binary_baseline",
+            "kind": "baseline",
             "config": "configs/binary/synth_msi_segformer_b0.yaml",
             "split": "test"
         },
         {
-            "group": "binary_train",
-            "kind": "train",
+            "group": "binary_baseline",
+            "kind": "baseline",
             "config": "configs/binary/rgb_real_msi_unetpp_resnet34.yaml",
             "split": "test"
         },
         {
-            "group": "binary_train",
-            "kind": "train",
+            "group": "binary_baseline",
+            "kind": "baseline",
             "config": "configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml",
             "split": "test"
         },
         {
-            "group": "binary_train",
-            "kind": "train",
+            "group": "binary_baseline",
+            "kind": "baseline",
             "config": "configs/binary/rgb_real_msi_segformer_b0.yaml",
             "split": "test"
         },
         {
-            "group": "binary_train",
-            "kind": "train",
+            "group": "binary_baseline",
+            "kind": "baseline",
             "config": "configs/binary/rgb_synth_msi_unetpp_resnet34.yaml",
             "split": "test"
         },
         {
-            "group": "binary_train",
-            "kind": "train",
+            "group": "binary_baseline",
+            "kind": "baseline",
             "config": "configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml",
             "split": "test"
         },
         {
-            "group": "binary_train",
-            "kind": "train",
+            "group": "binary_baseline",
+            "kind": "baseline",
             "config": "configs/binary/rgb_synth_msi_segformer_b0.yaml",
             "split": "test"
         }
