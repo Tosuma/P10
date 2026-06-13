@@ -9,7 +9,7 @@ model:
 seed: 44
 device: null
 paths:
-  run_root: outputs/runs
+  run_root: outputs/more-seeds
   train_manifest: data/splits/train.csv
   val_manifest: data/splits/val.csv
   test_manifest: data/splits/test.csv
