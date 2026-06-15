@@ -1,0 +1,13 @@
+2026-06-13T20:51:38Z [INFO] Slurm masking job started
+2026-06-13T20:51:38Z [INFO] task_id=29 group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=421 resume_checkpoint=none attempt=4
+2026-06-13T20:51:38Z [INFO] pwd=/ceph/home/student.aau.dk/ay64ve/third/p10/tbd/masking host=ailab-l4-03 slurm_job_id=871646 cuda_visible_devices=2
+2026-06-13T20:51:38Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-13T20:51:38Z [INFO] status_file=outputs/slurm/status/multi_seed_hjz4_20260613T101418Z/task_29_attempt_4.status
+2026-06-13T20:51:38Z [INFO] PYTHONPATH=/ceph/home/student.aau.dk/ay64ve/third/p10/tbd/masking OMP_NUM_THREADS=15 MKL_NUM_THREADS=15 PYTHONUNBUFFERED=1 MASKING_LOG_TO_STDOUT=1
+2026-06-13T20:51:38Z [INFO] singularity=/usr/bin/singularity
+
+==== train ====
+started_at=2026-06-13T20:51:38Z
+command=python -u -m src.train --config 'configs/binary/rgb_synth_msi_segformer_b1.yaml' --seed '421'
+[33mWARNING:[0m Could not lookup the current user's information: user: unknown userid 224316
+[31mFATAL:  [0m Couldn't determine user account information: user: unknown userid 224316

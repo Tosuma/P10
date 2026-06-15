@@ -18,4 +18,4 @@ outputs/*/*/logs/history.csv
 outputs/*/*/checkpoints/*
 outputs/*/*/metrics/*
 outputs/*/*/run_metadata.json
-
+outputs/slurm/status/.masking_batch_controller.lock
