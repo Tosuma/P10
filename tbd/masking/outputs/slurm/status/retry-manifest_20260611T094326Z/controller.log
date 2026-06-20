@@ -1,0 +1,73 @@
+2026-06-11T09:43:26Z [INFO] Controller started
+2026-06-11T09:43:26Z [INFO] manifest=retry-manifest.json max_parallel=8 max_retries=3 sbatch_submit_retries=3 poll_seconds=10
+2026-06-11T09:43:26Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-11T09:43:26Z [INFO] status_dir=outputs/slurm/status/retry-manifest_20260611T094326Z summary_dir=outputs/metrics log_dir=logs/masking/slurm
+2026-06-11T09:43:26Z [INFO] Acquired controller lock outputs/slurm/status/.masking_batch_controller.lock
+2026-06-11T09:43:26Z [INFO] Loaded 15 task(s) from retry-manifest.json
+2026-06-11T09:43:26Z [INFO] Status directory: outputs/slurm/status/retry-manifest_20260611T094326Z
+2026-06-11T09:43:26Z [INFO] Submitting task 0 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_unetpp_resnet34.yaml split=test seed=51 attempt=1
+2026-06-11T09:43:26Z [INFO] Submitted task 0 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_unetpp_resnet34.yaml, seed=51) as job 869435, attempt 1
+2026-06-11T09:43:26Z [INFO] Submitting task 1 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_unetpp_resnet50.yaml split=test seed=51 attempt=1
+2026-06-11T09:43:26Z [INFO] Submitted task 1 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_unetpp_resnet50.yaml, seed=51) as job 869436, attempt 1
+2026-06-11T09:43:26Z [INFO] Submitting task 2 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml split=test seed=51 attempt=1
+2026-06-11T09:43:26Z [INFO] Submitted task 2 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml, seed=51) as job 869437, attempt 1
+2026-06-11T09:43:26Z [INFO] Submitting task 3 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml split=test seed=51 attempt=1
+2026-06-11T09:43:26Z [INFO] Submitted task 3 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_deeplabv3plus_resnet50.yaml, seed=51) as job 869438, attempt 1
+2026-06-11T09:43:26Z [INFO] Submitting task 4 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=51 attempt=1
+2026-06-11T09:43:26Z [INFO] Submitted task 4 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=51) as job 869439, attempt 1
+2026-06-11T09:43:26Z [INFO] Submitting task 5 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=51 attempt=1
+2026-06-11T09:43:26Z [INFO] Submitted task 5 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=51) as job 869440, attempt 1
+2026-06-11T09:43:26Z [INFO] Submitting task 6 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_unetpp_resnet34.yaml split=test seed=51 attempt=1
+2026-06-11T09:43:26Z [INFO] Submitted task 6 (binary_train_multi_seed, train, configs/binary/synth_msi_unetpp_resnet34.yaml, seed=51) as job 869441, attempt 1
+2026-06-11T09:43:26Z [INFO] Submitting task 7 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_unetpp_resnet50.yaml split=test seed=51 attempt=1
+2026-06-11T09:43:26Z [INFO] Submitted task 7 (binary_train_multi_seed, train, configs/binary/synth_msi_unetpp_resnet50.yaml, seed=51) as job 869442, attempt 1
+2026-06-11T12:50:40Z [INFO] Job 869441 for task 6 has left the Slurm queue; validating output
+2026-06-11T12:50:40Z [INFO] Task 6 completed successfully
+2026-06-11T12:50:50Z [INFO] Submitting task 8 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_deeplabv3plus_resnet34.yaml split=test seed=51 attempt=1
+2026-06-11T12:50:50Z [INFO] Submitted task 8 (binary_train_multi_seed, train, configs/binary/synth_msi_deeplabv3plus_resnet34.yaml, seed=51) as job 869565, attempt 1
+2026-06-11T14:13:25Z [INFO] Job 869437 for task 2 has left the Slurm queue; validating output
+2026-06-11T14:13:26Z [INFO] Task 2 completed successfully
+2026-06-11T14:13:36Z [INFO] Submitting task 9 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_deeplabv3plus_resnet50.yaml split=test seed=51 attempt=1
+2026-06-11T14:13:36Z [INFO] Submitted task 9 (binary_train_multi_seed, train, configs/binary/synth_msi_deeplabv3plus_resnet50.yaml, seed=51) as job 869599, attempt 1
+2026-06-11T14:44:33Z [INFO] Job 869438 for task 3 has left the Slurm queue; validating output
+2026-06-11T14:44:37Z [INFO] Task 3 completed successfully
+2026-06-11T14:44:48Z [INFO] Submitting task 10 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=51 attempt=1
+2026-06-11T14:44:48Z [INFO] Submitted task 10 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=51) as job 869612, attempt 1
+2026-06-11T14:45:38Z [INFO] Job 869439 for task 4 has left the Slurm queue; validating output
+2026-06-11T14:45:39Z [INFO] Task 4 completed successfully
+2026-06-11T14:45:49Z [INFO] Submitting task 11 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b1.yaml split=test seed=51 attempt=1
+2026-06-11T14:45:49Z [INFO] Submitted task 11 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b1.yaml, seed=51) as job 869619, attempt 1
+2026-06-11T14:47:51Z [INFO] Job 869565 for task 8 has left the Slurm queue; validating output
+2026-06-11T14:47:52Z [INFO] Task 8 completed successfully
+2026-06-11T14:48:02Z [INFO] Submitting task 12 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_unetpp_resnet50.yaml split=test seed=49 attempt=1
+2026-06-11T14:48:02Z [INFO] Submitted task 12 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_unetpp_resnet50.yaml, seed=49) as job 869620, attempt 1
+2026-06-11T15:19:20Z [INFO] Job 869440 for task 5 has left the Slurm queue; validating output
+2026-06-11T15:19:20Z [INFO] Task 5 completed successfully
+2026-06-11T15:19:30Z [INFO] Submitting task 13 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=50 attempt=1
+2026-06-11T15:19:30Z [INFO] Submitted task 13 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=50) as job 869634, attempt 1
+2026-06-11T15:29:18Z [INFO] Job 869442 for task 7 has left the Slurm queue; validating output
+2026-06-11T15:29:18Z [INFO] Task 7 completed successfully
+2026-06-11T15:29:28Z [INFO] Submitting task 14 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=50 attempt=1
+2026-06-11T15:29:28Z [INFO] Submitted task 14 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=50) as job 869635, attempt 1
+2026-06-11T15:46:11Z [INFO] Job 869435 for task 0 has left the Slurm queue; validating output
+2026-06-11T15:46:12Z [INFO] Task 0 completed successfully
+2026-06-11T16:33:59Z [INFO] Job 869599 for task 9 has left the Slurm queue; validating output
+2026-06-11T16:33:59Z [INFO] Task 9 completed successfully
+2026-06-11T17:08:21Z [INFO] Job 869619 for task 11 has left the Slurm queue; validating output
+2026-06-11T17:08:22Z [INFO] Task 11 completed successfully
+2026-06-11T17:17:57Z [INFO] Job 869612 for task 10 has left the Slurm queue; validating output
+2026-06-11T17:17:58Z [INFO] Task 10 completed successfully
+2026-06-11T19:47:59Z [INFO] Job 869635 for task 14 has left the Slurm queue; validating output
+2026-06-11T19:48:00Z [INFO] Task 14 completed successfully
+2026-06-11T20:06:16Z [INFO] Job 869634 for task 13 has left the Slurm queue; validating output
+2026-06-11T20:06:18Z [INFO] Task 13 completed successfully
+2026-06-11T21:12:13Z [INFO] Job 869436 for task 1 has left the Slurm queue; validating output
+2026-06-11T21:12:13Z [INFO] Task 1 completed successfully
+2026-06-12T00:29:28Z [INFO] Job 869620 for task 12 has left the Slurm queue; validating output
+2026-06-12T00:29:28Z [INFO] Task 12 completed successfully
+2026-06-12T00:29:28Z [INFO] Skipping summary for 225776; no successful runs
+2026-06-12T00:29:28Z [INFO] Skipping summary for 141735; no successful runs
+2026-06-12T00:29:28Z [INFO] Skipping summary for 141732; no successful runs
+2026-06-12T00:29:28Z [INFO] Skipping summary for 412883; no successful runs
+2026-06-12T00:29:28Z [INFO] Skipping summary for 414915; no successful runs
+2026-06-12T00:29:28Z [INFO] All Slurm masking tasks completed successfully

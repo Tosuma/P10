@@ -1,0 +1,87 @@
+2026-06-05T08:31:39Z [INFO] Controller started
+2026-06-05T08:31:39Z [INFO] manifest=outputs/slurm/manifests/multi_seed_mhj_20260605T083138Z.json max_parallel=8 max_retries=3 sbatch_submit_retries=3 poll_seconds=10
+2026-06-05T08:31:39Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-05T08:31:39Z [INFO] status_dir=outputs/slurm/status/multi_seed_mhj_20260605T083138Z summary_dir=outputs/metrics log_dir=logs/masking/slurm
+2026-06-05T08:31:39Z [INFO] Acquired controller lock outputs/slurm/status/.masking_batch_controller.lock
+2026-06-05T08:31:39Z [INFO] Loaded 40 task(s) from outputs/slurm/manifests/multi_seed_mhj_20260605T083138Z.json
+2026-06-05T08:31:39Z [INFO] Status directory: outputs/slurm/status/multi_seed_mhj_20260605T083138Z
+2026-06-05T08:31:39Z [INFO] Submitting task 0 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b1.yaml split=test seed=42 attempt=1
+2026-06-05T08:31:39Z [INFO] Submitted task 0 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b1.yaml, seed=42) as job 864692, attempt 1
+2026-06-05T08:31:39Z [INFO] Submitting task 1 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=42 attempt=1
+2026-06-05T08:31:39Z [INFO] Submitted task 1 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=42) as job 864693, attempt 1
+2026-06-05T08:31:39Z [INFO] Submitting task 2 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=42 attempt=1
+2026-06-05T08:31:39Z [INFO] Submitted task 2 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=42) as job 864694, attempt 1
+2026-06-05T08:31:39Z [INFO] Submitting task 3 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=42 attempt=1
+2026-06-05T08:31:39Z [INFO] Submitted task 3 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=42) as job 864695, attempt 1
+2026-06-05T08:31:39Z [INFO] Submitting task 4 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b1.yaml split=test seed=43 attempt=1
+2026-06-05T08:31:39Z [INFO] Submitted task 4 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b1.yaml, seed=43) as job 864696, attempt 1
+2026-06-05T08:31:39Z [INFO] Submitting task 5 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=43 attempt=1
+2026-06-05T08:31:39Z [INFO] Submitted task 5 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=43) as job 864697, attempt 1
+2026-06-05T08:31:39Z [INFO] Submitting task 6 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=43 attempt=1
+2026-06-05T08:31:39Z [INFO] Submitted task 6 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=43) as job 864698, attempt 1
+2026-06-05T08:31:39Z [INFO] Submitting task 7 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=43 attempt=1
+2026-06-05T08:31:39Z [INFO] Submitted task 7 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=43) as job 864699, attempt 1
+2026-06-05T08:35:12Z [INFO] Job 864692 for task 0 has left the Slurm queue; validating output
+2026-06-05T08:35:12Z [ERROR] Task 0: status file reports state=failed; seed=42; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_0_attempt_1.log; job_log=outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_0_attempt_1.log
+2026-06-05T08:35:12Z [ERROR] Task 0: validation failed; re-queueing for retry
+2026-06-05T08:35:12Z [INFO] Job 864693 for task 1 has left the Slurm queue; validating output
+2026-06-05T08:35:13Z [ERROR] Task 1: status file reports state=failed; seed=42; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_1_attempt_1.log; job_log=outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_1_attempt_1.log
+2026-06-05T08:35:13Z [ERROR] Task 1: validation failed; re-queueing for retry
+2026-06-05T08:35:13Z [INFO] Job 864694 for task 2 has left the Slurm queue; validating output
+2026-06-05T08:35:13Z [ERROR] Task 2: status file reports state=failed; seed=42; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_2_attempt_1.log; job_log=outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_2_attempt_1.log
+2026-06-05T08:35:13Z [ERROR] Task 2: validation failed; re-queueing for retry
+2026-06-05T08:35:13Z [INFO] Job 864695 for task 3 has left the Slurm queue; validating output
+2026-06-05T08:35:13Z [ERROR] Task 3: status file reports state=failed; seed=42; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_3_attempt_1.log; job_log=outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_3_attempt_1.log
+2026-06-05T08:35:13Z [ERROR] Task 3: validation failed; re-queueing for retry
+2026-06-05T08:35:13Z [INFO] Job 864696 for task 4 has left the Slurm queue; validating output
+2026-06-05T08:35:13Z [ERROR] Task 4: status file reports state=failed; seed=43; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_4_attempt_1.log; job_log=outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_4_attempt_1.log
+2026-06-05T08:35:13Z [ERROR] Task 4: validation failed; re-queueing for retry
+2026-06-05T08:35:13Z [INFO] Job 864697 for task 5 has left the Slurm queue; validating output
+2026-06-05T08:35:13Z [ERROR] Task 5: status file reports state=failed; seed=43; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_5_attempt_1.log; job_log=outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_5_attempt_1.log
+2026-06-05T08:35:13Z [ERROR] Task 5: validation failed; re-queueing for retry
+2026-06-05T08:35:13Z [INFO] Job 864698 for task 6 has left the Slurm queue; validating output
+2026-06-05T08:35:13Z [ERROR] Task 6: status file reports state=failed; seed=43; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_6_attempt_1.log; job_log=outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_6_attempt_1.log
+2026-06-05T08:35:13Z [ERROR] Task 6: validation failed; re-queueing for retry
+2026-06-05T08:35:14Z [INFO] Job 864699 for task 7 has left the Slurm queue; validating output
+2026-06-05T08:35:14Z [ERROR] Task 7: status file reports state=failed; seed=43; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_7_attempt_1.log; job_log=outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_7_attempt_1.log
+2026-06-05T08:35:14Z [ERROR] Task 7: validation failed; re-queueing for retry
+2026-06-05T08:35:24Z [INFO] Submitting task 0 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b1.yaml split=test seed=42 attempt=2
+2026-06-05T08:35:24Z [INFO] Submitted task 0 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b1.yaml, seed=42) as job 864701, attempt 2
+2026-06-05T08:35:24Z [INFO] Submitting task 1 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=42 attempt=2
+2026-06-05T08:35:24Z [INFO] Submitted task 1 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=42) as job 864702, attempt 2
+2026-06-05T08:35:24Z [INFO] Submitting task 2 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=42 attempt=2
+2026-06-05T08:35:24Z [INFO] Submitted task 2 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=42) as job 864703, attempt 2
+2026-06-05T08:35:24Z [INFO] Submitting task 3 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=42 attempt=2
+2026-06-05T08:35:24Z [INFO] Submitted task 3 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=42) as job 864704, attempt 2
+2026-06-05T08:35:24Z [INFO] Submitting task 4 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b1.yaml split=test seed=43 attempt=2
+2026-06-05T08:35:24Z [INFO] Submitted task 4 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b1.yaml, seed=43) as job 864705, attempt 2
+2026-06-05T08:35:24Z [INFO] Submitting task 5 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=43 attempt=2
+2026-06-05T08:35:24Z [INFO] Submitted task 5 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=43) as job 864706, attempt 2
+2026-06-05T08:35:24Z [INFO] Submitting task 6 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=43 attempt=2
+2026-06-05T08:35:24Z [INFO] Submitted task 6 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=43) as job 864707, attempt 2
+2026-06-05T08:35:24Z [INFO] Submitting task 7 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=43 attempt=2
+2026-06-05T08:35:24Z [INFO] Submitted task 7 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=43) as job 864708, attempt 2
+2026-06-05T08:35:34Z [INFO] Job 864701 for task 0 has left the Slurm queue; validating output
+2026-06-05T08:35:34Z [ERROR] Task 0: status file reports state=failed; seed=42; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_0_attempt_2.log; job_log=outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_0_attempt_2.log
+2026-06-05T08:35:34Z [ERROR] Task 0: validation failed; re-queueing for retry
+2026-06-05T08:35:34Z [INFO] Job 864702 for task 1 has left the Slurm queue; validating output
+2026-06-05T08:35:35Z [ERROR] Task 1: status file reports state=failed; seed=42; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_1_attempt_2.log; job_log=outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_1_attempt_2.log
+2026-06-05T08:35:35Z [ERROR] Task 1: validation failed; re-queueing for retry
+2026-06-05T08:35:35Z [INFO] Job 864703 for task 2 has left the Slurm queue; validating output
+2026-06-05T08:35:35Z [ERROR] Task 2: status file reports state=failed; seed=42; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_2_attempt_2.log; job_log=outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_2_attempt_2.log
+2026-06-05T08:35:35Z [ERROR] Task 2: validation failed; re-queueing for retry
+2026-06-05T08:35:35Z [INFO] Job 864704 for task 3 has left the Slurm queue; validating output
+2026-06-05T08:35:35Z [ERROR] Task 3: status file reports state=failed; seed=42; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_3_attempt_2.log; job_log=outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_3_attempt_2.log
+2026-06-05T08:35:35Z [ERROR] Task 3: validation failed; re-queueing for retry
+2026-06-05T08:35:35Z [INFO] Job 864705 for task 4 has left the Slurm queue; validating output
+2026-06-05T08:35:35Z [ERROR] Task 4: status file reports state=failed; seed=43; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_4_attempt_2.log; job_log=outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_4_attempt_2.log
+2026-06-05T08:35:35Z [ERROR] Task 4: validation failed; re-queueing for retry
+2026-06-05T08:35:35Z [INFO] Job 864706 for task 5 has left the Slurm queue; validating output
+2026-06-05T08:35:35Z [ERROR] Task 5: status file reports state=failed; seed=43; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_5_attempt_2.log; job_log=outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_5_attempt_2.log
+2026-06-05T08:35:35Z [ERROR] Task 5: validation failed; re-queueing for retry
+2026-06-05T08:35:35Z [INFO] Job 864707 for task 6 has left the Slurm queue; validating output
+2026-06-05T08:35:35Z [ERROR] Task 6: status file reports state=failed; seed=43; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_6_attempt_2.log; job_log=outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_6_attempt_2.log
+2026-06-05T08:35:35Z [ERROR] Task 6: validation failed; re-queueing for retry
+2026-06-05T08:35:35Z [INFO] Job 864708 for task 7 has left the Slurm queue; validating output
+2026-06-05T08:35:36Z [ERROR] Task 7: status file reports state=failed; seed=43; message=train failed; see outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_7_attempt_2.log; job_log=outputs/slurm/status/multi_seed_mhj_20260605T083138Z/task_7_attempt_2.log
+2026-06-05T08:35:36Z [ERROR] Task 7: validation failed; re-queueing for retry

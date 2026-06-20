@@ -1,0 +1,59 @@
+2026-06-07T22:29:54Z [INFO] Slurm masking job started
+2026-06-07T22:29:54Z [INFO] task_id=1 group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=51 attempt=4
+2026-06-07T22:29:54Z [INFO] pwd=/ceph/home/student.aau.dk/ba35so/P10/tbd/masking host=ailab-l4-10 slurm_job_id=866874 cuda_visible_devices=2
+2026-06-07T22:29:54Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-07T22:29:54Z [INFO] status_file=outputs/slurm/status/retry-manifest_20260607T151815Z/task_1_attempt_4.status
+2026-06-07T22:29:54Z [INFO] PYTHONPATH=/ceph/home/student.aau.dk/ba35so/P10/tbd/masking OMP_NUM_THREADS=15 MKL_NUM_THREADS=15
+2026-06-07T22:29:54Z [INFO] singularity=/usr/bin/singularity
+
+==== train ====
+started_at=2026-06-07T22:29:54Z
+command=python -u -m src.train --config 'configs/binary/rgb_synth_msi_segformer_b0.yaml' --seed '51'
+container_pwd=/ceph/home/student.aau.dk/ba35so/P10/tbd/masking
+container_python_before_venv=/usr/bin/python
+using_venv=../../p10_venv/bin/activate
+container_python_after_venv=/ceph/home/student.aau.dk/ba35so/P10/p10_venv/bin/python
+python_executable=/ceph/home/student.aau.dk/ba35so/P10/p10_venv/bin/python
+python_version=3.12.3
+pythonpath=/ceph/home/student.aau.dk/ba35so/P10/tbd/masking
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/ceph/home/student.aau.dk/ba35so/P10/tbd/masking/src/train.py", line 379, in <module>
+    main()
+  File "/ceph/home/student.aau.dk/ba35so/P10/tbd/masking/src/train.py", line 295, in main
+    train_metrics = run_epoch(
+                    ^^^^^^^^^^
+  File "/ceph/home/student.aau.dk/ba35so/P10/tbd/masking/src/train.py", line 82, in run_epoch
+    for batch in loader:
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/data/dataloader.py", line 741, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/data/dataloader.py", line 801, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/data/_utils/fetch.py", line 54, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+            ~~~~~~~~~~~~^^^^^
+  File "/ceph/home/student.aau.dk/ba35so/P10/tbd/masking/src/datasets.py", line 121, in __getitem__
+    image = crop_hw(self._load_image(sample), left, top, width, height)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/ceph/home/student.aau.dk/ba35so/P10/tbd/masking/src/datasets.py", line 113, in _load_image
+    return load_image_for_modality(sample, self.modality)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/ceph/home/student.aau.dk/ba35so/P10/tbd/masking/src/datasets.py", line 74, in load_image_for_modality
+    synthetic_msi = load_image_for_modality(sample, "synthetic_msi")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/ceph/home/student.aau.dk/ba35so/P10/tbd/masking/src/datasets.py", line 63, in load_image_for_modality
+    return load_synthetic(sample["synthetic_msi_path"])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/ceph/home/student.aau.dk/ba35so/P10/tbd/masking/src/datasets.py", line 41, in load_synthetic
+    return load_array_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/ceph/home/student.aau.dk/ba35so/P10/tbd/masking/src/datasets.py", line 26, in load_array_file
+    array = np.load(file_path)
+            ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/numpy/lib/_npyio_impl.py", line 459, in load
+    fid = stack.enter_context(open(os.fspath(file), "rb"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/ceph/home/student.aau.dk/ba35so/P10/tbd/masking/data/weedy-rice/Synthetic/DJI_DateTime_2024_06_04_09_28_0246_lat_10.3015928_lon_105.2726302_alt_20.241m.npy'

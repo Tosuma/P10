@@ -1,0 +1,4 @@
+task_id	group	kind	config	split	seed	attempts	state
+29	binary_train_multi_seed	train	configs/binary/rgb_synth_msi_segformer_b1.yaml	test	49	4	failed
+38	binary_train_multi_seed	train	configs/binary/rgb_synth_msi_segformer_b0.yaml	test	51	4	failed
+39	binary_train_multi_seed	train	configs/binary/synth_msi_segformer_b0.yaml	test	51	4	failed

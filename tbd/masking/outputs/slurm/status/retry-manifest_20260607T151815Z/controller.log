@@ -1,0 +1,41 @@
+2026-06-07T15:18:15Z [INFO] Controller started
+2026-06-07T15:18:15Z [INFO] manifest=retry-manifest.json max_parallel=8 max_retries=3 sbatch_submit_retries=3 poll_seconds=10
+2026-06-07T15:18:15Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-07T15:18:15Z [INFO] status_dir=outputs/slurm/status/retry-manifest_20260607T151815Z summary_dir=outputs/metrics log_dir=logs/masking/slurm
+2026-06-07T15:18:15Z [INFO] Acquired controller lock outputs/slurm/status/.masking_batch_controller.lock
+2026-06-07T15:18:15Z [INFO] Loaded 3 task(s) from retry-manifest.json
+2026-06-07T15:18:15Z [INFO] Status directory: outputs/slurm/status/retry-manifest_20260607T151815Z
+2026-06-07T15:18:15Z [INFO] Submitting task 0 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b1.yaml split=test seed=49 attempt=1
+2026-06-07T15:18:15Z [INFO] Submitted task 0 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b1.yaml, seed=49) as job 866519, attempt 1
+2026-06-07T15:18:15Z [INFO] Submitting task 1 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=51 attempt=1
+2026-06-07T15:18:16Z [INFO] Submitted task 1 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=51) as job 866520, attempt 1
+2026-06-07T15:18:16Z [INFO] Submitting task 2 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=51 attempt=1
+2026-06-07T15:18:16Z [INFO] Submitted task 2 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=51) as job 866521, attempt 1
+2026-06-07T18:59:19Z [INFO] Job 866521 for task 2 has left the Slurm queue; validating output
+2026-06-07T18:59:21Z [INFO] Task 2 completed successfully
+2026-06-07T20:31:40Z [INFO] Job 866519 for task 0 has left the Slurm queue; validating output
+2026-06-07T20:31:40Z [INFO] Task 0 completed successfully
+2026-06-07T22:28:07Z [INFO] Job 866520 for task 1 has left the Slurm queue; validating output
+2026-06-07T22:28:07Z [ERROR] Task 1: status file reports state=failed; seed=51; message=train failed; see outputs/slurm/status/retry-manifest_20260607T151815Z/task_1_attempt_1.log; job_log=outputs/slurm/status/retry-manifest_20260607T151815Z/task_1_attempt_1.log
+2026-06-07T22:28:07Z [ERROR] Task 1: validation failed; re-queueing for retry
+2026-06-07T22:28:17Z [INFO] Submitting task 1 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=51 attempt=2
+2026-06-07T22:28:17Z [INFO] Submitted task 1 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=51) as job 866872, attempt 2
+2026-06-07T22:29:07Z [INFO] Job 866872 for task 1 has left the Slurm queue; validating output
+2026-06-07T22:29:08Z [ERROR] Task 1: status file reports state=failed; seed=51; message=train failed; see outputs/slurm/status/retry-manifest_20260607T151815Z/task_1_attempt_2.log; job_log=outputs/slurm/status/retry-manifest_20260607T151815Z/task_1_attempt_2.log
+2026-06-07T22:29:08Z [ERROR] Task 1: validation failed; re-queueing for retry
+2026-06-07T22:29:18Z [INFO] Submitting task 1 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=51 attempt=3
+2026-06-07T22:29:18Z [INFO] Submitted task 1 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=51) as job 866873, attempt 3
+2026-06-07T22:29:38Z [INFO] Job 866873 for task 1 has left the Slurm queue; validating output
+2026-06-07T22:29:43Z [ERROR] Task 1: status file reports state=failed; seed=51; message=train failed; see outputs/slurm/status/retry-manifest_20260607T151815Z/task_1_attempt_3.log; job_log=outputs/slurm/status/retry-manifest_20260607T151815Z/task_1_attempt_3.log
+2026-06-07T22:29:43Z [ERROR] Task 1: validation failed; re-queueing for retry
+2026-06-07T22:29:53Z [INFO] Submitting task 1 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=51 attempt=4
+2026-06-07T22:29:53Z [INFO] Submitted task 1 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=51) as job 866874, attempt 4
+2026-06-07T22:30:13Z [INFO] Job 866874 for task 1 has left the Slurm queue; validating output
+2026-06-07T22:30:13Z [ERROR] Task 1: status file reports state=failed; seed=51; message=train failed; see outputs/slurm/status/retry-manifest_20260607T151815Z/task_1_attempt_4.log; job_log=outputs/slurm/status/retry-manifest_20260607T151815Z/task_1_attempt_4.log
+2026-06-07T22:30:13Z [ERROR] Task 1: permanent failure after 4 attempt(s)
+2026-06-07T22:30:13Z [INFO] Skipping summary for 225776; no successful runs
+2026-06-07T22:30:13Z [INFO] Skipping summary for 141735; no successful runs
+2026-06-07T22:30:13Z [INFO] Skipping summary for 141732; no successful runs
+2026-06-07T22:30:13Z [INFO] Skipping summary for 412883; no successful runs
+2026-06-07T22:30:13Z [INFO] Skipping summary for 414915; no successful runs
+2026-06-07T22:30:13Z [ERROR] Completed with 1 permanent failure(s). See outputs/slurm/status/retry-manifest_20260607T151815Z/failed_tasks.tsv

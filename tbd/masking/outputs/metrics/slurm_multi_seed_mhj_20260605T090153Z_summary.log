@@ -1,0 +1,42 @@
+2026-06-06 11:54:11,391 [Summarizer] :: Summary generation started
+2026-06-06 11:54:11,391 [Summarizer] :: Collecting metrics from 37 run(s)
+2026-06-06 11:54:11,405 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b1_seed42_20260605T090201Z
+2026-06-06 11:54:11,874 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/rgb_synthetic_msi_segformer_b0_seed44_20260605T121436Z
+2026-06-06 11:54:12,083 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b0_seed44_20260605T122504Z
+2026-06-06 11:54:12,417 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b1_seed45_20260605T134100Z
+2026-06-06 11:54:12,505 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/rgb_synthetic_msi_segformer_b1_seed45_20260605T141838Z
+2026-06-06 11:54:12,686 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/rgb_synthetic_msi_segformer_b0_seed45_20260605T144041Z
+2026-06-06 11:54:12,807 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b0_seed45_20260605T145816Z
+2026-06-06 11:54:12,915 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b1_seed46_20260605T151617Z
+2026-06-06 11:54:13,045 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/rgb_synthetic_msi_segformer_b1_seed46_20260605T162604Z
+2026-06-06 11:54:13,139 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/rgb_synthetic_msi_segformer_b0_seed46_20260605T173501Z
+2026-06-06 11:54:13,199 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b0_seed46_20260605T174408Z
+2026-06-06 11:54:13,298 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/rgb_synthetic_msi_segformer_b1_seed42_20260605T090201Z
+2026-06-06 11:54:13,404 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b1_seed47_20260605T174508Z
+2026-06-06 11:54:13,497 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/rgb_synthetic_msi_segformer_b1_seed47_20260605T181928Z
+2026-06-06 11:54:13,621 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/rgb_synthetic_msi_segformer_b0_seed47_20260605T190749Z
+2026-06-06 11:54:13,686 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b0_seed47_20260605T200113Z
+2026-06-06 11:54:13,995 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b1_seed48_20260605T204454Z
+2026-06-06 11:54:14,244 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/rgb_synthetic_msi_segformer_b1_seed48_20260605T205251Z
+2026-06-06 11:54:14,335 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/rgb_synthetic_msi_segformer_b0_seed48_20260605T213119Z
+2026-06-06 11:54:14,819 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b0_seed48_20260605T221753Z
+2026-06-06 11:54:14,914 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b1_seed49_20260605T224515Z
+2026-06-06 11:54:15,033 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/rgb_synthetic_msi_segformer_b0_seed42_20260605T090201Z
+2026-06-06 11:54:15,120 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/rgb_synthetic_msi_segformer_b0_seed49_20260605T234131Z
+2026-06-06 11:54:15,441 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b0_seed49_20260606T012317Z
+2026-06-06 11:54:15,756 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b1_seed50_20260606T015136Z
+2026-06-06 11:54:15,956 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/rgb_synthetic_msi_segformer_b1_seed50_20260606T020055Z
+2026-06-06 11:54:16,032 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/rgb_synthetic_msi_segformer_b0_seed50_20260606T020639Z
+2026-06-06 11:54:16,197 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b0_seed50_20260606T033231Z
+2026-06-06 11:54:16,300 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b1_seed51_20260606T041647Z
+2026-06-06 11:54:16,375 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/rgb_synthetic_msi_segformer_b1_seed51_20260606T045246Z
+2026-06-06 11:54:16,422 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b0_seed42_20260605T090200Z
+2026-06-06 11:54:16,508 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b1_seed43_20260605T090200Z
+2026-06-06 11:54:16,603 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/rgb_synthetic_msi_segformer_b1_seed43_20260605T090201Z
+2026-06-06 11:54:16,698 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/rgb_synthetic_msi_segformer_b0_seed43_20260605T090203Z
+2026-06-06 11:54:16,804 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b0_seed43_20260605T090203Z
+2026-06-06 11:54:17,114 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/synthetic_msi_segformer_b1_seed44_20260605T113306Z
+2026-06-06 11:54:17,242 [Summarizer] :: Reading run artifacts from /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/runs/rgb_synthetic_msi_segformer_b1_seed44_20260605T115919Z
+2026-06-06 11:54:17,494 [Summarizer] :: Wrote 37 run summary item(s) to /ceph/home/student.aau.dk/ba35so/P10/tbd/masking/outputs/metrics/slurm_multi_seed_mhj_20260605T090153Z_summary.json
+2026-06-06 11:54:17,494 [Summarizer] :: Wrote 4 aggregate summary item(s)
+2026-06-06 11:54:17,494 [Summarizer] :: Summary generation completed

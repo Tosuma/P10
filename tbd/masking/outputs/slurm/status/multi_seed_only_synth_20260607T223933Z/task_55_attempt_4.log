@@ -1,0 +1,13 @@
+2026-06-08T23:59:44Z [INFO] Slurm masking job started
+2026-06-08T23:59:44Z [INFO] task_id=55 group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_unetpp_resnet50.yaml split=test seed=46 attempt=4
+2026-06-08T23:59:44Z [INFO] pwd=/ceph/home/student.aau.dk/ba35so/P10/tbd/masking host=ailab-l4-02 slurm_job_id=867785 cuda_visible_devices=2
+2026-06-08T23:59:44Z [INFO] python=python singularity_image=/ceph/container/pytorch/pytorch_26.02.sif venv_activate=p10_venv/bin/activate
+2026-06-08T23:59:44Z [INFO] status_file=outputs/slurm/status/multi_seed_only_synth_20260607T223933Z/task_55_attempt_4.status
+2026-06-08T23:59:44Z [INFO] PYTHONPATH=/ceph/home/student.aau.dk/ba35so/P10/tbd/masking OMP_NUM_THREADS=15 MKL_NUM_THREADS=15
+2026-06-08T23:59:44Z [INFO] singularity=/usr/bin/singularity
+
+==== train ====
+started_at=2026-06-08T23:59:44Z
+command=python -u -m src.train --config 'configs/binary/rgb_synth_msi_unetpp_resnet50.yaml' --seed '46'
+[33mWARNING:[0m Could not lookup the current user's information: user: unknown userid 225776
+[31mFATAL:  [0m Couldn't determine user account information: user: unknown userid 225776
