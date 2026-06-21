@@ -31,3 +31,369 @@
 2026-06-16T06:47:18Z [INFO] Submitted task 0 (binary_train_multi_seed, train, configs/binary/rgb_deeplabv3plus_resnet34.yaml, seed=421, resume_checkpoint=none) as job 873613, attempt 2
 2026-06-16T06:47:18Z [INFO] Submitting task 5 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_deeplabv3plus_resnet34.yaml split=test seed=421 resume_checkpoint=none attempt=2
 2026-06-16T06:47:18Z [INFO] Submitted task 5 (binary_train_multi_seed, train, configs/binary/synth_msi_deeplabv3plus_resnet34.yaml, seed=421, resume_checkpoint=none) as job 873614, attempt 2
+2026-06-16T06:47:28Z [INFO] Job 873613 for task 0 has left the Slurm queue; validating output
+2026-06-16T06:47:30Z [ERROR] Task 0: status file reports state=failed; seed=421; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_0_attempt_2.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_0_attempt_2.log
+2026-06-16T06:47:30Z [ERROR] Task 0: validation failed; re-queueing for retry
+2026-06-16T06:47:40Z [INFO] Submitting task 0 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_deeplabv3plus_resnet34.yaml split=test seed=421 resume_checkpoint=none attempt=3
+2026-06-16T06:47:40Z [INFO] Submitted task 0 (binary_train_multi_seed, train, configs/binary/rgb_deeplabv3plus_resnet34.yaml, seed=421, resume_checkpoint=none) as job 873615, attempt 3
+2026-06-16T06:47:50Z [INFO] Job 873615 for task 0 has left the Slurm queue; validating output
+2026-06-16T06:47:50Z [ERROR] Task 0: status file reports state=failed; seed=421; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_0_attempt_3.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_0_attempt_3.log
+2026-06-16T06:47:50Z [ERROR] Task 0: validation failed; re-queueing for retry
+2026-06-16T06:48:00Z [INFO] Submitting task 0 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_deeplabv3plus_resnet34.yaml split=test seed=421 resume_checkpoint=none attempt=4
+2026-06-16T06:48:00Z [INFO] Submitted task 0 (binary_train_multi_seed, train, configs/binary/rgb_deeplabv3plus_resnet34.yaml, seed=421, resume_checkpoint=none) as job 873616, attempt 4
+2026-06-16T06:48:10Z [INFO] Job 873616 for task 0 has left the Slurm queue; validating output
+2026-06-16T06:48:11Z [ERROR] Task 0: status file reports state=failed; seed=421; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_0_attempt_4.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_0_attempt_4.log
+2026-06-16T06:48:11Z [ERROR] Task 0: permanent failure after 4 attempt(s)
+2026-06-16T06:48:21Z [INFO] Submitting task 8 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml split=test seed=421 resume_checkpoint=none attempt=1
+2026-06-16T06:48:21Z [INFO] Submitted task 8 (binary_train_multi_seed, train, configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml, seed=421, resume_checkpoint=none) as job 873617, attempt 1
+2026-06-16T06:48:31Z [INFO] Job 873617 for task 8 has left the Slurm queue; validating output
+2026-06-16T06:48:32Z [ERROR] Task 8: status file reports state=failed; seed=421; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_8_attempt_1.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_8_attempt_1.log
+2026-06-16T06:48:32Z [ERROR] Task 8: validation failed; re-queueing for retry
+2026-06-16T06:48:42Z [INFO] Submitting task 8 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml split=test seed=421 resume_checkpoint=none attempt=2
+2026-06-16T06:48:42Z [INFO] Submitted task 8 (binary_train_multi_seed, train, configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml, seed=421, resume_checkpoint=none) as job 873618, attempt 2
+2026-06-16T06:48:52Z [INFO] Job 873618 for task 8 has left the Slurm queue; validating output
+2026-06-16T06:48:52Z [ERROR] Task 8: status file reports state=failed; seed=421; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_8_attempt_2.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_8_attempt_2.log
+2026-06-16T06:48:52Z [ERROR] Task 8: validation failed; re-queueing for retry
+2026-06-16T06:49:02Z [INFO] Submitting task 8 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml split=test seed=421 resume_checkpoint=none attempt=3
+2026-06-16T06:49:02Z [INFO] Submitted task 8 (binary_train_multi_seed, train, configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml, seed=421, resume_checkpoint=none) as job 873619, attempt 3
+2026-06-16T06:49:12Z [INFO] Job 873619 for task 8 has left the Slurm queue; validating output
+2026-06-16T06:49:13Z [ERROR] Task 8: status file reports state=failed; seed=421; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_8_attempt_3.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_8_attempt_3.log
+2026-06-16T06:49:13Z [ERROR] Task 8: validation failed; re-queueing for retry
+2026-06-16T06:49:23Z [INFO] Submitting task 8 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml split=test seed=421 resume_checkpoint=none attempt=4
+2026-06-16T06:49:23Z [INFO] Submitted task 8 (binary_train_multi_seed, train, configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml, seed=421, resume_checkpoint=none) as job 873621, attempt 4
+2026-06-16T06:49:34Z [INFO] Job 873621 for task 8 has left the Slurm queue; validating output
+2026-06-16T06:49:34Z [ERROR] Task 8: status file reports state=failed; seed=421; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_8_attempt_4.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_8_attempt_4.log
+2026-06-16T06:49:34Z [ERROR] Task 8: permanent failure after 4 attempt(s)
+2026-06-16T06:49:44Z [INFO] Submitting task 9 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_real_msi_segformer_b0.yaml split=test seed=421 resume_checkpoint=none attempt=1
+2026-06-16T06:49:44Z [INFO] Submitted task 9 (binary_train_multi_seed, train, configs/binary/rgb_real_msi_segformer_b0.yaml, seed=421, resume_checkpoint=none) as job 873623, attempt 1
+2026-06-16T09:10:23Z [INFO] Job 873607 for task 2 has left the Slurm queue; validating output
+2026-06-16T09:10:23Z [INFO] Task 2 completed successfully
+2026-06-16T09:10:33Z [INFO] Submitting task 10 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_unetpp_resnet34.yaml split=test seed=422 resume_checkpoint=none attempt=1
+2026-06-16T09:10:33Z [INFO] Submitted task 10 (binary_train_multi_seed, train, configs/binary/synth_msi_unetpp_resnet34.yaml, seed=422, resume_checkpoint=none) as job 873684, attempt 1
+2026-06-16T09:14:37Z [INFO] Job 873614 for task 5 has left the Slurm queue; validating output
+2026-06-16T09:14:37Z [INFO] Task 5 completed successfully
+2026-06-16T09:14:47Z [INFO] Submitting task 11 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=422 resume_checkpoint=none attempt=1
+2026-06-16T09:14:47Z [INFO] Submitted task 11 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=422, resume_checkpoint=none) as job 873685, attempt 1
+2026-06-16T12:37:16Z [INFO] Job 873608 for task 3 has left the Slurm queue; validating output
+2026-06-16T12:37:16Z [INFO] Task 3 completed successfully
+2026-06-16T12:37:26Z [INFO] Submitting task 12 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_unetpp_resnet34.yaml split=test seed=422 resume_checkpoint=none attempt=1
+2026-06-16T12:37:26Z [INFO] Submitted task 12 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_unetpp_resnet34.yaml, seed=422, resume_checkpoint=none) as job 873785, attempt 1
+2026-06-16T13:11:44Z [INFO] Job 873612 for task 7 has left the Slurm queue; validating output
+2026-06-16T13:11:44Z [INFO] Task 7 completed successfully
+2026-06-16T13:11:55Z [INFO] Submitting task 13 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml split=test seed=422 resume_checkpoint=none attempt=1
+2026-06-16T13:11:55Z [INFO] Submitted task 13 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml, seed=422, resume_checkpoint=none) as job 873799, attempt 1
+2026-06-16T18:40:38Z [INFO] Job 873606 for task 1 has left the Slurm queue; validating output
+2026-06-16T18:40:39Z [INFO] Task 1 completed successfully
+2026-06-16T18:40:49Z [INFO] Submitting task 14 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=422 resume_checkpoint=none attempt=1
+2026-06-16T18:40:49Z [INFO] Submitted task 14 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=422, resume_checkpoint=none) as job 873984, attempt 1
+2026-06-16T18:47:04Z [INFO] Job 873609 for task 4 has left the Slurm queue; validating output
+2026-06-16T18:47:05Z [ERROR] Task 4: missing status file outputs/slurm/status/retry-tsm4_20260616T064657Z/task_4_attempt_1.status
+2026-06-16T18:47:05Z [ERROR] Task 4: validation failed; re-queueing for retry
+2026-06-16T18:47:05Z [INFO] Job 873611 for task 6 has left the Slurm queue; validating output
+2026-06-16T18:47:05Z [ERROR] Task 6: missing status file outputs/slurm/status/retry-tsm4_20260616T064657Z/task_6_attempt_1.status
+2026-06-16T18:47:05Z [ERROR] Task 6: validation failed; re-queueing for retry
+2026-06-16T18:47:15Z [INFO] Submitting task 4 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_unetpp_resnet34.yaml split=test seed=421 resume_checkpoint=none attempt=2
+2026-06-16T18:47:15Z [INFO] Submitted task 4 (binary_train_multi_seed, train, configs/binary/synth_msi_unetpp_resnet34.yaml, seed=421, resume_checkpoint=none) as job 873992, attempt 2
+2026-06-16T18:47:15Z [INFO] Submitting task 6 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=421 resume_checkpoint=none attempt=2
+2026-06-16T18:47:15Z [INFO] Submitted task 6 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=421, resume_checkpoint=none) as job 873993, attempt 2
+2026-06-16T18:50:07Z [INFO] Job 873623 for task 9 has left the Slurm queue; validating output
+2026-06-16T18:50:07Z [ERROR] Task 9: missing status file outputs/slurm/status/retry-tsm4_20260616T064657Z/task_9_attempt_1.status
+2026-06-16T18:50:07Z [ERROR] Task 9: validation failed; re-queueing for retry
+2026-06-16T18:50:18Z [INFO] Submitting task 9 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_real_msi_segformer_b0.yaml split=test seed=421 resume_checkpoint=none attempt=2
+2026-06-16T18:50:18Z [INFO] Submitted task 9 (binary_train_multi_seed, train, configs/binary/rgb_real_msi_segformer_b0.yaml, seed=421, resume_checkpoint=none) as job 873994, attempt 2
+2026-06-16T19:57:13Z [INFO] Job 873799 for task 13 has left the Slurm queue; validating output
+2026-06-16T19:57:18Z [INFO] Task 13 completed successfully
+2026-06-16T19:57:28Z [INFO] Submitting task 15 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_unetpp_resnet34.yaml split=test seed=423 resume_checkpoint=none attempt=1
+2026-06-16T19:57:28Z [INFO] Submitted task 15 (binary_train_multi_seed, train, configs/binary/rgb_unetpp_resnet34.yaml, seed=423, resume_checkpoint=none) as job 874023, attempt 1
+2026-06-16T21:11:04Z [INFO] Job 873684 for task 10 has left the Slurm queue; validating output
+2026-06-16T21:11:05Z [ERROR] Task 10: missing status file outputs/slurm/status/retry-tsm4_20260616T064657Z/task_10_attempt_1.status
+2026-06-16T21:11:05Z [ERROR] Task 10: validation failed; re-queueing for retry
+2026-06-16T21:11:15Z [INFO] Submitting task 10 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_unetpp_resnet34.yaml split=test seed=422 resume_checkpoint=none attempt=2
+2026-06-16T21:11:15Z [INFO] Submitted task 10 (binary_train_multi_seed, train, configs/binary/synth_msi_unetpp_resnet34.yaml, seed=422, resume_checkpoint=none) as job 874054, attempt 2
+2026-06-16T21:11:25Z [INFO] Job 874054 for task 10 has left the Slurm queue; validating output
+2026-06-16T21:11:27Z [ERROR] Task 10: status file reports state=failed; seed=422; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_10_attempt_2.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_10_attempt_2.log
+2026-06-16T21:11:27Z [ERROR] Task 10: validation failed; re-queueing for retry
+2026-06-16T21:11:38Z [INFO] Submitting task 10 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_unetpp_resnet34.yaml split=test seed=422 resume_checkpoint=none attempt=3
+2026-06-16T21:11:38Z [INFO] Submitted task 10 (binary_train_multi_seed, train, configs/binary/synth_msi_unetpp_resnet34.yaml, seed=422, resume_checkpoint=none) as job 874055, attempt 3
+2026-06-16T21:11:48Z [INFO] Job 874055 for task 10 has left the Slurm queue; validating output
+2026-06-16T21:11:48Z [ERROR] Task 10: status file reports state=failed; seed=422; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_10_attempt_3.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_10_attempt_3.log
+2026-06-16T21:11:48Z [ERROR] Task 10: validation failed; re-queueing for retry
+2026-06-16T21:11:58Z [INFO] Submitting task 10 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_unetpp_resnet34.yaml split=test seed=422 resume_checkpoint=none attempt=4
+2026-06-16T21:11:58Z [INFO] Submitted task 10 (binary_train_multi_seed, train, configs/binary/synth_msi_unetpp_resnet34.yaml, seed=422, resume_checkpoint=none) as job 874056, attempt 4
+2026-06-16T21:12:08Z [INFO] Job 874056 for task 10 has left the Slurm queue; validating output
+2026-06-16T21:12:08Z [ERROR] Task 10: status file reports state=failed; seed=422; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_10_attempt_4.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_10_attempt_4.log
+2026-06-16T21:12:08Z [ERROR] Task 10: permanent failure after 4 attempt(s)
+2026-06-16T21:12:18Z [INFO] Submitting task 16 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_deeplabv3plus_resnet34.yaml split=test seed=423 resume_checkpoint=none attempt=1
+2026-06-16T21:12:18Z [INFO] Submitted task 16 (binary_train_multi_seed, train, configs/binary/rgb_deeplabv3plus_resnet34.yaml, seed=423, resume_checkpoint=none) as job 874057, attempt 1
+2026-06-16T21:12:29Z [INFO] Job 874057 for task 16 has left the Slurm queue; validating output
+2026-06-16T21:12:30Z [ERROR] Task 16: status file reports state=failed; seed=423; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_16_attempt_1.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_16_attempt_1.log
+2026-06-16T21:12:30Z [ERROR] Task 16: validation failed; re-queueing for retry
+2026-06-16T21:12:40Z [INFO] Submitting task 16 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_deeplabv3plus_resnet34.yaml split=test seed=423 resume_checkpoint=none attempt=2
+2026-06-16T21:12:40Z [INFO] Submitted task 16 (binary_train_multi_seed, train, configs/binary/rgb_deeplabv3plus_resnet34.yaml, seed=423, resume_checkpoint=none) as job 874058, attempt 2
+2026-06-16T21:12:50Z [INFO] Job 874058 for task 16 has left the Slurm queue; validating output
+2026-06-16T21:12:50Z [ERROR] Task 16: status file reports state=failed; seed=423; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_16_attempt_2.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_16_attempt_2.log
+2026-06-16T21:12:50Z [ERROR] Task 16: validation failed; re-queueing for retry
+2026-06-16T21:13:00Z [INFO] Submitting task 16 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_deeplabv3plus_resnet34.yaml split=test seed=423 resume_checkpoint=none attempt=3
+2026-06-16T21:13:00Z [INFO] Submitted task 16 (binary_train_multi_seed, train, configs/binary/rgb_deeplabv3plus_resnet34.yaml, seed=423, resume_checkpoint=none) as job 874059, attempt 3
+2026-06-16T21:13:11Z [INFO] Job 874059 for task 16 has left the Slurm queue; validating output
+2026-06-16T21:13:13Z [ERROR] Task 16: status file reports state=failed; seed=423; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_16_attempt_3.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_16_attempt_3.log
+2026-06-16T21:13:13Z [ERROR] Task 16: validation failed; re-queueing for retry
+2026-06-16T21:13:23Z [INFO] Submitting task 16 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_deeplabv3plus_resnet34.yaml split=test seed=423 resume_checkpoint=none attempt=4
+2026-06-16T21:13:23Z [INFO] Submitted task 16 (binary_train_multi_seed, train, configs/binary/rgb_deeplabv3plus_resnet34.yaml, seed=423, resume_checkpoint=none) as job 874060, attempt 4
+2026-06-16T21:13:33Z [INFO] Job 874060 for task 16 has left the Slurm queue; validating output
+2026-06-16T21:13:33Z [ERROR] Task 16: status file reports state=failed; seed=423; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_16_attempt_4.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_16_attempt_4.log
+2026-06-16T21:13:33Z [ERROR] Task 16: permanent failure after 4 attempt(s)
+2026-06-16T21:13:43Z [INFO] Submitting task 17 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_segformer_b0.yaml split=test seed=423 resume_checkpoint=none attempt=1
+2026-06-16T21:13:43Z [INFO] Submitted task 17 (binary_train_multi_seed, train, configs/binary/rgb_segformer_b0.yaml, seed=423, resume_checkpoint=none) as job 874061, attempt 1
+2026-06-16T21:13:54Z [INFO] Job 874061 for task 17 has left the Slurm queue; validating output
+2026-06-16T21:13:54Z [ERROR] Task 17: status file reports state=failed; seed=423; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_17_attempt_1.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_17_attempt_1.log
+2026-06-16T21:13:54Z [ERROR] Task 17: validation failed; re-queueing for retry
+2026-06-16T21:14:04Z [INFO] Submitting task 17 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_segformer_b0.yaml split=test seed=423 resume_checkpoint=none attempt=2
+2026-06-16T21:14:04Z [INFO] Submitted task 17 (binary_train_multi_seed, train, configs/binary/rgb_segformer_b0.yaml, seed=423, resume_checkpoint=none) as job 874062, attempt 2
+2026-06-16T21:14:14Z [INFO] Job 874062 for task 17 has left the Slurm queue; validating output
+2026-06-16T21:14:14Z [ERROR] Task 17: status file reports state=failed; seed=423; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_17_attempt_2.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_17_attempt_2.log
+2026-06-16T21:14:14Z [ERROR] Task 17: validation failed; re-queueing for retry
+2026-06-16T21:14:24Z [INFO] Submitting task 17 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_segformer_b0.yaml split=test seed=423 resume_checkpoint=none attempt=3
+2026-06-16T21:14:24Z [INFO] Submitted task 17 (binary_train_multi_seed, train, configs/binary/rgb_segformer_b0.yaml, seed=423, resume_checkpoint=none) as job 874063, attempt 3
+2026-06-16T21:14:34Z [INFO] Job 874063 for task 17 has left the Slurm queue; validating output
+2026-06-16T21:14:34Z [ERROR] Task 17: status file reports state=failed; seed=423; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_17_attempt_3.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_17_attempt_3.log
+2026-06-16T21:14:34Z [ERROR] Task 17: validation failed; re-queueing for retry
+2026-06-16T21:14:44Z [INFO] Submitting task 17 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_segformer_b0.yaml split=test seed=423 resume_checkpoint=none attempt=4
+2026-06-16T21:14:45Z [INFO] Submitted task 17 (binary_train_multi_seed, train, configs/binary/rgb_segformer_b0.yaml, seed=423, resume_checkpoint=none) as job 874064, attempt 4
+2026-06-16T21:14:55Z [INFO] Job 874064 for task 17 has left the Slurm queue; validating output
+2026-06-16T21:14:59Z [ERROR] Task 17: status file reports state=failed; seed=423; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_17_attempt_4.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_17_attempt_4.log
+2026-06-16T21:14:59Z [ERROR] Task 17: permanent failure after 4 attempt(s)
+2026-06-16T21:15:09Z [INFO] Submitting task 18 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/real_msi_deeplabv3plus_resnet34.yaml split=test seed=423 resume_checkpoint=none attempt=1
+2026-06-16T21:15:09Z [INFO] Submitted task 18 (binary_train_multi_seed, train, configs/binary/real_msi_deeplabv3plus_resnet34.yaml, seed=423, resume_checkpoint=none) as job 874071, attempt 1
+2026-06-16T21:15:09Z [INFO] Job 873685 for task 11 has left the Slurm queue; validating output
+2026-06-16T21:15:09Z [ERROR] Task 11: missing status file outputs/slurm/status/retry-tsm4_20260616T064657Z/task_11_attempt_1.status
+2026-06-16T21:15:09Z [ERROR] Task 11: validation failed; re-queueing for retry
+2026-06-16T21:15:19Z [INFO] Submitting task 11 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=422 resume_checkpoint=none attempt=2
+2026-06-16T21:15:19Z [INFO] Submitted task 11 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=422, resume_checkpoint=none) as job 874072, attempt 2
+2026-06-16T21:15:19Z [INFO] Job 874071 for task 18 has left the Slurm queue; validating output
+2026-06-16T21:15:20Z [ERROR] Task 18: status file reports state=failed; seed=423; message=train failed; see outputs/slurm/status/retry-tsm4_20260616T064657Z/task_18_attempt_1.log; job_log=outputs/slurm/status/retry-tsm4_20260616T064657Z/task_18_attempt_1.log
+2026-06-16T21:15:20Z [ERROR] Task 18: validation failed; re-queueing for retry
+2026-06-16T21:15:30Z [INFO] Submitting task 18 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/real_msi_deeplabv3plus_resnet34.yaml split=test seed=423 resume_checkpoint=none attempt=2
+2026-06-16T21:15:30Z [INFO] Submitted task 18 (binary_train_multi_seed, train, configs/binary/real_msi_deeplabv3plus_resnet34.yaml, seed=423, resume_checkpoint=none) as job 874073, attempt 2
+2026-06-17T00:37:41Z [INFO] Job 873785 for task 12 has left the Slurm queue; validating output
+2026-06-17T00:37:41Z [ERROR] Task 12: missing status file outputs/slurm/status/retry-tsm4_20260616T064657Z/task_12_attempt_1.status
+2026-06-17T00:37:41Z [ERROR] Task 12: validation failed; re-queueing for retry
+2026-06-17T00:37:51Z [INFO] Submitting task 12 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_unetpp_resnet34.yaml split=test seed=422 resume_checkpoint=none attempt=2
+2026-06-17T00:37:51Z [INFO] Submitted task 12 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_unetpp_resnet34.yaml, seed=422, resume_checkpoint=none) as job 874154, attempt 2
+2026-06-17T01:49:36Z [INFO] Job 873993 for task 6 has left the Slurm queue; validating output
+2026-06-17T01:49:37Z [INFO] Task 6 completed successfully
+2026-06-17T01:49:47Z [INFO] Submitting task 19 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_unetpp_resnet34.yaml split=test seed=423 resume_checkpoint=none attempt=1
+2026-06-17T01:49:47Z [INFO] Submitted task 19 (binary_train_multi_seed, train, configs/binary/synth_msi_unetpp_resnet34.yaml, seed=423, resume_checkpoint=none) as job 874189, attempt 1
+2026-06-17T03:02:36Z [INFO] Job 873994 for task 9 has left the Slurm queue; validating output
+2026-06-17T03:02:37Z [INFO] Task 9 completed successfully
+2026-06-17T03:02:47Z [INFO] Submitting task 20 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_deeplabv3plus_resnet34.yaml split=test seed=423 resume_checkpoint=none attempt=1
+2026-06-17T03:02:47Z [INFO] Submitted task 20 (binary_train_multi_seed, train, configs/binary/synth_msi_deeplabv3plus_resnet34.yaml, seed=423, resume_checkpoint=none) as job 874214, attempt 1
+2026-06-17T03:11:44Z [INFO] Job 873992 for task 4 has left the Slurm queue; validating output
+2026-06-17T03:11:45Z [INFO] Task 4 completed successfully
+2026-06-17T03:11:55Z [INFO] Submitting task 21 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=423 resume_checkpoint=none attempt=1
+2026-06-17T03:11:55Z [INFO] Submitted task 21 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=423, resume_checkpoint=none) as job 874215, attempt 1
+2026-06-17T04:35:04Z [INFO] Job 874072 for task 11 has left the Slurm queue; validating output
+2026-06-17T04:35:05Z [INFO] Task 11 completed successfully
+2026-06-17T04:35:15Z [INFO] Submitting task 22 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_real_msi_unetpp_resnet34.yaml split=test seed=423 resume_checkpoint=none attempt=1
+2026-06-17T04:35:15Z [INFO] Submitted task 22 (binary_train_multi_seed, train, configs/binary/rgb_real_msi_unetpp_resnet34.yaml, seed=423, resume_checkpoint=none) as job 874252, attempt 1
+2026-06-17T05:26:31Z [INFO] Job 874214 for task 20 has left the Slurm queue; validating output
+2026-06-17T05:26:32Z [INFO] Task 20 completed successfully
+2026-06-17T05:26:42Z [INFO] Submitting task 23 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml split=test seed=423 resume_checkpoint=none attempt=1
+2026-06-17T05:26:42Z [INFO] Submitted task 23 (binary_train_multi_seed, train, configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml, seed=423, resume_checkpoint=none) as job 874271, attempt 1
+2026-06-17T05:51:16Z [INFO] Job 874215 for task 21 has left the Slurm queue; validating output
+2026-06-17T05:51:18Z [INFO] Task 21 completed successfully
+2026-06-17T05:51:28Z [INFO] Submitting task 24 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_real_msi_segformer_b0.yaml split=test seed=423 resume_checkpoint=none attempt=1
+2026-06-17T05:51:28Z [INFO] Submitted task 24 (binary_train_multi_seed, train, configs/binary/rgb_real_msi_segformer_b0.yaml, seed=423, resume_checkpoint=none) as job 874284, attempt 1
+2026-06-17T06:41:11Z [INFO] Job 873984 for task 14 has left the Slurm queue; validating output
+2026-06-17T06:41:13Z [ERROR] Task 14: missing status file outputs/slurm/status/retry-tsm4_20260616T064657Z/task_14_attempt_1.status
+2026-06-17T06:41:13Z [ERROR] Task 14: validation failed; re-queueing for retry
+2026-06-17T06:41:23Z [INFO] Submitting task 14 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=422 resume_checkpoint=none attempt=2
+2026-06-17T06:41:23Z [INFO] Submitted task 14 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=422, resume_checkpoint=none) as job 874303, attempt 2
+2026-06-17T06:43:45Z [INFO] Job 874073 for task 18 has left the Slurm queue; validating output
+2026-06-17T06:43:45Z [INFO] Task 18 completed successfully
+2026-06-17T06:43:55Z [INFO] Submitting task 25 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_unetpp_resnet34.yaml split=test seed=423 resume_checkpoint=none attempt=1
+2026-06-17T06:43:55Z [INFO] Submitted task 25 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_unetpp_resnet34.yaml, seed=423, resume_checkpoint=none) as job 874304, attempt 1
+2026-06-17T06:52:32Z [INFO] Job 874189 for task 19 has left the Slurm queue; validating output
+2026-06-17T06:52:32Z [INFO] Task 19 completed successfully
+2026-06-17T06:52:42Z [INFO] Submitting task 26 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml split=test seed=423 resume_checkpoint=none attempt=1
+2026-06-17T06:52:43Z [INFO] Submitted task 26 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml, seed=423, resume_checkpoint=none) as job 874311, attempt 1
+2026-06-17T07:57:42Z [INFO] Job 874023 for task 15 has left the Slurm queue; validating output
+2026-06-17T07:57:42Z [ERROR] Task 15: missing status file outputs/slurm/status/retry-tsm4_20260616T064657Z/task_15_attempt_1.status
+2026-06-17T07:57:42Z [ERROR] Task 15: validation failed; re-queueing for retry
+2026-06-17T07:57:52Z [INFO] Submitting task 15 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_unetpp_resnet34.yaml split=test seed=423 resume_checkpoint=none attempt=2
+2026-06-17T07:57:52Z [INFO] Submitted task 15 (binary_train_multi_seed, train, configs/binary/rgb_unetpp_resnet34.yaml, seed=423, resume_checkpoint=none) as job 874347, attempt 2
+2026-06-17T08:51:37Z [INFO] Job 874154 for task 12 has left the Slurm queue; validating output
+2026-06-17T08:51:40Z [INFO] Task 12 completed successfully
+2026-06-17T08:51:50Z [INFO] Submitting task 27 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=423 resume_checkpoint=none attempt=1
+2026-06-17T08:51:51Z [INFO] Submitted task 27 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=423, resume_checkpoint=none) as job 874373, attempt 1
+2026-06-17T11:13:35Z [INFO] Job 874271 for task 23 has left the Slurm queue; validating output
+2026-06-17T11:13:35Z [INFO] Task 23 completed successfully
+2026-06-17T11:13:45Z [INFO] Submitting task 28 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_unetpp_resnet34.yaml split=test seed=424 resume_checkpoint=none attempt=1
+2026-06-17T11:13:46Z [INFO] Submitted task 28 (binary_train_multi_seed, train, configs/binary/rgb_unetpp_resnet34.yaml, seed=424, resume_checkpoint=none) as job 874431, attempt 1
+2026-06-17T11:30:51Z [INFO] Job 874284 for task 24 has left the Slurm queue; validating output
+2026-06-17T11:30:52Z [INFO] Task 24 completed successfully
+2026-06-17T11:31:02Z [INFO] Submitting task 29 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_segformer_b0.yaml split=test seed=424 resume_checkpoint=none attempt=1
+2026-06-17T11:31:02Z [INFO] Submitted task 29 (binary_train_multi_seed, train, configs/binary/rgb_segformer_b0.yaml, seed=424, resume_checkpoint=none) as job 874467, attempt 1
+2026-06-17T14:47:02Z [INFO] Job 874467 for task 29 has left the Slurm queue; validating output
+2026-06-17T14:47:02Z [INFO] Task 29 completed successfully
+2026-06-17T14:47:12Z [INFO] Submitting task 30 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/real_msi_unetpp_resnet34.yaml split=test seed=424 resume_checkpoint=none attempt=1
+2026-06-17T14:47:12Z [INFO] Submitted task 30 (binary_train_multi_seed, train, configs/binary/real_msi_unetpp_resnet34.yaml, seed=424, resume_checkpoint=none) as job 874556, attempt 1
+2026-06-17T16:35:35Z [INFO] Job 874252 for task 22 has left the Slurm queue; validating output
+2026-06-17T16:35:35Z [ERROR] Task 22: missing status file outputs/slurm/status/retry-tsm4_20260616T064657Z/task_22_attempt_1.status
+2026-06-17T16:35:35Z [ERROR] Task 22: validation failed; re-queueing for retry
+2026-06-17T16:35:45Z [INFO] Submitting task 22 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_real_msi_unetpp_resnet34.yaml split=test seed=423 resume_checkpoint=none attempt=2
+2026-06-17T16:35:46Z [INFO] Submitted task 22 (binary_train_multi_seed, train, configs/binary/rgb_real_msi_unetpp_resnet34.yaml, seed=423, resume_checkpoint=none) as job 874600, attempt 2
+2026-06-17T17:06:39Z [INFO] Job 874431 for task 28 has left the Slurm queue; validating output
+2026-06-17T17:06:39Z [INFO] Task 28 completed successfully
+2026-06-17T17:06:49Z [INFO] Submitting task 31 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/real_msi_deeplabv3plus_resnet34.yaml split=test seed=424 resume_checkpoint=none attempt=1
+2026-06-17T17:06:49Z [INFO] Submitted task 31 (binary_train_multi_seed, train, configs/binary/real_msi_deeplabv3plus_resnet34.yaml, seed=424, resume_checkpoint=none) as job 874613, attempt 1
+2026-06-17T18:20:51Z [INFO] Job 874556 for task 30 has left the Slurm queue; validating output
+2026-06-17T18:20:51Z [INFO] Task 30 completed successfully
+2026-06-17T18:21:01Z [INFO] Submitting task 32 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/real_msi_segformer_b0.yaml split=test seed=424 resume_checkpoint=none attempt=1
+2026-06-17T18:21:02Z [INFO] Submitted task 32 (binary_train_multi_seed, train, configs/binary/real_msi_segformer_b0.yaml, seed=424, resume_checkpoint=none) as job 874649, attempt 1
+2026-06-17T18:25:38Z [INFO] Job 874373 for task 27 has left the Slurm queue; validating output
+2026-06-17T18:25:39Z [INFO] Task 27 completed successfully
+2026-06-17T18:25:49Z [INFO] Submitting task 33 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_unetpp_resnet34.yaml split=test seed=424 resume_checkpoint=none attempt=1
+2026-06-17T18:25:49Z [INFO] Submitted task 33 (binary_train_multi_seed, train, configs/binary/synth_msi_unetpp_resnet34.yaml, seed=424, resume_checkpoint=none) as job 874650, attempt 1
+2026-06-17T18:41:42Z [INFO] Job 874303 for task 14 has left the Slurm queue; validating output
+2026-06-17T18:41:42Z [ERROR] Task 14: missing status file outputs/slurm/status/retry-tsm4_20260616T064657Z/task_14_attempt_2.status
+2026-06-17T18:41:42Z [ERROR] Task 14: validation failed; re-queueing for retry
+2026-06-17T18:41:52Z [INFO] Submitting task 14 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=422 resume_checkpoint=none attempt=3
+2026-06-17T18:41:52Z [INFO] Submitted task 14 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=422, resume_checkpoint=none) as job 874662, attempt 3
+2026-06-17T18:44:14Z [INFO] Job 874304 for task 25 has left the Slurm queue; validating output
+2026-06-17T18:44:14Z [ERROR] Task 25: missing status file outputs/slurm/status/retry-tsm4_20260616T064657Z/task_25_attempt_1.status
+2026-06-17T18:44:14Z [ERROR] Task 25: validation failed; re-queueing for retry
+2026-06-17T18:44:24Z [INFO] Submitting task 25 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_unetpp_resnet34.yaml split=test seed=423 resume_checkpoint=none attempt=2
+2026-06-17T18:44:24Z [INFO] Submitted task 25 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_unetpp_resnet34.yaml, seed=423, resume_checkpoint=none) as job 874663, attempt 2
+2026-06-17T18:46:56Z [INFO] Job 874311 for task 26 has left the Slurm queue; validating output
+2026-06-17T18:46:57Z [INFO] Task 26 completed successfully
+2026-06-17T18:47:07Z [INFO] Submitting task 34 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_deeplabv3plus_resnet34.yaml split=test seed=424 resume_checkpoint=none attempt=1
+2026-06-17T18:47:07Z [INFO] Submitted task 34 (binary_train_multi_seed, train, configs/binary/synth_msi_deeplabv3plus_resnet34.yaml, seed=424, resume_checkpoint=none) as job 874676, attempt 1
+2026-06-17T19:39:50Z [INFO] Job 874613 for task 31 has left the Slurm queue; validating output
+2026-06-17T19:39:51Z [INFO] Task 31 completed successfully
+2026-06-17T19:40:01Z [INFO] Submitting task 35 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=424 resume_checkpoint=none attempt=1
+2026-06-17T19:40:01Z [INFO] Submitted task 35 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=424, resume_checkpoint=none) as job 874693, attempt 1
+2026-06-17T19:58:15Z [INFO] Job 874347 for task 15 has left the Slurm queue; validating output
+2026-06-17T19:58:16Z [ERROR] Task 15: missing status file outputs/slurm/status/retry-tsm4_20260616T064657Z/task_15_attempt_2.status
+2026-06-17T19:58:16Z [ERROR] Task 15: validation failed; re-queueing for retry
+2026-06-17T19:58:26Z [INFO] Submitting task 15 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_unetpp_resnet34.yaml split=test seed=423 resume_checkpoint=none attempt=3
+2026-06-17T19:58:26Z [INFO] Submitted task 15 (binary_train_multi_seed, train, configs/binary/rgb_unetpp_resnet34.yaml, seed=423, resume_checkpoint=none) as job 874697, attempt 3
+2026-06-17T22:50:38Z [INFO] Job 874650 for task 33 has left the Slurm queue; validating output
+2026-06-17T22:50:38Z [INFO] Task 33 completed successfully
+2026-06-17T22:50:48Z [INFO] Submitting task 36 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_real_msi_unetpp_resnet34.yaml split=test seed=424 resume_checkpoint=none attempt=1
+2026-06-17T22:50:48Z [INFO] Submitted task 36 (binary_train_multi_seed, train, configs/binary/rgb_real_msi_unetpp_resnet34.yaml, seed=424, resume_checkpoint=none) as job 874759, attempt 1
+2026-06-17T23:00:05Z [INFO] Job 874600 for task 22 has left the Slurm queue; validating output
+2026-06-17T23:00:06Z [INFO] Task 22 completed successfully
+2026-06-17T23:00:16Z [INFO] Submitting task 37 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml split=test seed=424 resume_checkpoint=none attempt=1
+2026-06-17T23:00:16Z [INFO] Submitted task 37 (binary_train_multi_seed, train, configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml, seed=424, resume_checkpoint=none) as job 874766, attempt 1
+2026-06-17T23:09:54Z [INFO] Job 874693 for task 35 has left the Slurm queue; validating output
+2026-06-17T23:09:55Z [INFO] Task 35 completed successfully
+2026-06-17T23:10:05Z [INFO] Submitting task 38 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_real_msi_segformer_b0.yaml split=test seed=424 resume_checkpoint=none attempt=1
+2026-06-17T23:10:05Z [INFO] Submitted task 38 (binary_train_multi_seed, train, configs/binary/rgb_real_msi_segformer_b0.yaml, seed=424, resume_checkpoint=none) as job 874767, attempt 1
+2026-06-18T00:07:22Z [INFO] Job 874649 for task 32 has left the Slurm queue; validating output
+2026-06-18T00:07:27Z [INFO] Task 32 completed successfully
+2026-06-18T00:07:37Z [INFO] Submitting task 39 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_unetpp_resnet34.yaml split=test seed=424 resume_checkpoint=none attempt=1
+2026-06-18T00:07:37Z [INFO] Submitted task 39 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_unetpp_resnet34.yaml, seed=424, resume_checkpoint=none) as job 874792, attempt 1
+2026-06-18T01:12:54Z [INFO] Job 874676 for task 34 has left the Slurm queue; validating output
+2026-06-18T01:12:55Z [INFO] Task 34 completed successfully
+2026-06-18T01:13:05Z [INFO] Submitting task 40 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml split=test seed=424 resume_checkpoint=none attempt=1
+2026-06-18T01:13:05Z [INFO] Submitted task 40 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml, seed=424, resume_checkpoint=none) as job 874817, attempt 1
+2026-06-18T03:00:22Z [INFO] Job 874662 for task 14 has left the Slurm queue; validating output
+2026-06-18T03:00:27Z [INFO] Task 14 completed successfully
+2026-06-18T03:00:37Z [INFO] Submitting task 41 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_real_msi_unetpp_resnet34.yaml split=test seed=425 resume_checkpoint=none attempt=1
+2026-06-18T03:00:37Z [INFO] Submitted task 41 (binary_train_multi_seed, train, configs/binary/rgb_real_msi_unetpp_resnet34.yaml, seed=425, resume_checkpoint=none) as job 874866, attempt 1
+2026-06-18T03:12:39Z [INFO] Job 874697 for task 15 has left the Slurm queue; validating output
+2026-06-18T03:12:39Z [INFO] Task 15 completed successfully
+2026-06-18T03:12:49Z [INFO] Submitting task 42 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/real_msi_deeplabv3plus_resnet34.yaml split=test seed=426 resume_checkpoint=none attempt=1
+2026-06-18T03:12:49Z [INFO] Submitted task 42 (binary_train_multi_seed, train, configs/binary/real_msi_deeplabv3plus_resnet34.yaml, seed=426, resume_checkpoint=none) as job 874867, attempt 1
+2026-06-18T04:35:07Z [INFO] Job 874759 for task 36 has left the Slurm queue; validating output
+2026-06-18T04:35:08Z [INFO] Task 36 completed successfully
+2026-06-18T04:35:18Z [INFO] Submitting task 43 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=426 resume_checkpoint=none attempt=1
+2026-06-18T04:35:18Z [INFO] Submitted task 43 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=426, resume_checkpoint=none) as job 874904, attempt 1
+2026-06-18T04:42:13Z [INFO] Job 874767 for task 38 has left the Slurm queue; validating output
+2026-06-18T04:42:18Z [INFO] Task 38 completed successfully
+2026-06-18T04:42:28Z [INFO] Submitting task 44 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_real_msi_unetpp_resnet34.yaml split=test seed=426 resume_checkpoint=none attempt=1
+2026-06-18T04:42:28Z [INFO] Submitted task 44 (binary_train_multi_seed, train, configs/binary/rgb_real_msi_unetpp_resnet34.yaml, seed=426, resume_checkpoint=none) as job 874905, attempt 1
+2026-06-18T05:08:31Z [INFO] Job 874867 for task 42 has left the Slurm queue; validating output
+2026-06-18T05:08:36Z [INFO] Task 42 completed successfully
+2026-06-18T05:08:46Z [INFO] Submitting task 45 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml split=test seed=426 resume_checkpoint=none attempt=1
+2026-06-18T05:08:46Z [INFO] Submitted task 45 (binary_train_multi_seed, train, configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml, seed=426, resume_checkpoint=none) as job 874918, attempt 1
+2026-06-18T05:23:49Z [INFO] Job 874663 for task 25 has left the Slurm queue; validating output
+2026-06-18T05:23:49Z [INFO] Task 25 completed successfully
+2026-06-18T05:23:59Z [INFO] Submitting task 46 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_real_msi_segformer_b0.yaml split=test seed=426 resume_checkpoint=none attempt=1
+2026-06-18T05:23:59Z [INFO] Submitted task 46 (binary_train_multi_seed, train, configs/binary/rgb_real_msi_segformer_b0.yaml, seed=426, resume_checkpoint=none) as job 874925, attempt 1
+2026-06-18T06:36:27Z [INFO] Job 874766 for task 37 has left the Slurm queue; validating output
+2026-06-18T06:36:27Z [INFO] Task 37 completed successfully
+2026-06-18T06:36:38Z [INFO] Submitting task 47 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_unetpp_resnet34.yaml split=test seed=426 resume_checkpoint=none attempt=1
+2026-06-18T06:36:38Z [INFO] Submitted task 47 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_unetpp_resnet34.yaml, seed=426, resume_checkpoint=none) as job 874958, attempt 1
+2026-06-18T07:43:23Z [INFO] Job 874792 for task 39 has left the Slurm queue; validating output
+2026-06-18T07:43:23Z [INFO] Task 39 completed successfully
+2026-06-18T07:43:34Z [INFO] Submitting task 48 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml split=test seed=426 resume_checkpoint=none attempt=1
+2026-06-18T07:43:34Z [INFO] Submitted task 48 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_deeplabv3plus_resnet34.yaml, seed=426, resume_checkpoint=none) as job 874983, attempt 1
+2026-06-18T08:58:41Z [INFO] Job 874817 for task 40 has left the Slurm queue; validating output
+2026-06-18T08:58:41Z [INFO] Task 40 completed successfully
+2026-06-18T08:58:51Z [INFO] Submitting task 49 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_synth_msi_segformer_b0.yaml split=test seed=426 resume_checkpoint=none attempt=1
+2026-06-18T08:58:51Z [INFO] Submitted task 49 (binary_train_multi_seed, train, configs/binary/rgb_synth_msi_segformer_b0.yaml, seed=426, resume_checkpoint=none) as job 875023, attempt 1
+2026-06-18T09:13:26Z [INFO] Job 874904 for task 43 has left the Slurm queue; validating output
+2026-06-18T09:13:27Z [INFO] Task 43 completed successfully
+2026-06-18T09:13:37Z [INFO] Submitting task 50 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_unetpp_resnet34.yaml split=test seed=427 resume_checkpoint=none attempt=1
+2026-06-18T09:13:37Z [INFO] Submitted task 50 (binary_train_multi_seed, train, configs/binary/rgb_unetpp_resnet34.yaml, seed=427, resume_checkpoint=none) as job 875031, attempt 1
+2026-06-18T09:18:52Z [INFO] Job 874918 for task 45 has left the Slurm queue; validating output
+2026-06-18T09:18:52Z [INFO] Task 45 completed successfully
+2026-06-18T09:19:02Z [INFO] Submitting task 51 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_deeplabv3plus_resnet34.yaml split=test seed=427 resume_checkpoint=none attempt=1
+2026-06-18T09:19:02Z [INFO] Submitted task 51 (binary_train_multi_seed, train, configs/binary/rgb_deeplabv3plus_resnet34.yaml, seed=427, resume_checkpoint=none) as job 875038, attempt 1
+2026-06-18T10:51:56Z [INFO] Job 874925 for task 46 has left the Slurm queue; validating output
+2026-06-18T10:51:56Z [INFO] Task 46 completed successfully
+2026-06-18T10:52:06Z [INFO] Submitting task 52 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_segformer_b0.yaml split=test seed=427 resume_checkpoint=none attempt=1
+2026-06-18T10:52:06Z [INFO] Submitted task 52 (binary_train_multi_seed, train, configs/binary/rgb_segformer_b0.yaml, seed=427, resume_checkpoint=none) as job 875078, attempt 1
+2026-06-18T11:46:34Z [INFO] Job 875038 for task 51 has left the Slurm queue; validating output
+2026-06-18T11:46:36Z [INFO] Task 51 completed successfully
+2026-06-18T11:46:46Z [INFO] Submitting task 53 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/real_msi_unetpp_resnet34.yaml split=test seed=427 resume_checkpoint=none attempt=1
+2026-06-18T11:46:46Z [INFO] Submitted task 53 (binary_train_multi_seed, train, configs/binary/real_msi_unetpp_resnet34.yaml, seed=427, resume_checkpoint=none) as job 875103, attempt 1
+2026-06-18T11:53:10Z [INFO] Job 874866 for task 41 has left the Slurm queue; validating output
+2026-06-18T11:53:12Z [INFO] Task 41 completed successfully
+2026-06-18T11:53:22Z [INFO] Submitting task 54 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/real_msi_deeplabv3plus_resnet34.yaml split=test seed=427 resume_checkpoint=none attempt=1
+2026-06-18T11:53:22Z [INFO] Submitted task 54 (binary_train_multi_seed, train, configs/binary/real_msi_deeplabv3plus_resnet34.yaml, seed=427, resume_checkpoint=none) as job 875107, attempt 1
+2026-06-18T11:58:10Z [INFO] Job 874905 for task 44 has left the Slurm queue; validating output
+2026-06-18T11:58:10Z [INFO] Task 44 completed successfully
+2026-06-18T11:58:20Z [INFO] Submitting task 55 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/real_msi_segformer_b0.yaml split=test seed=427 resume_checkpoint=none attempt=1
+2026-06-18T11:58:20Z [INFO] Submitted task 55 (binary_train_multi_seed, train, configs/binary/real_msi_segformer_b0.yaml, seed=427, resume_checkpoint=none) as job 875109, attempt 1
+2026-06-18T11:59:11Z [INFO] Job 874983 for task 48 has left the Slurm queue; validating output
+2026-06-18T11:59:13Z [INFO] Task 48 completed successfully
+2026-06-18T11:59:23Z [INFO] Submitting task 56 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_unetpp_resnet34.yaml split=test seed=427 resume_checkpoint=none attempt=1
+2026-06-18T11:59:23Z [INFO] Submitted task 56 (binary_train_multi_seed, train, configs/binary/synth_msi_unetpp_resnet34.yaml, seed=427, resume_checkpoint=none) as job 875110, attempt 1
+2026-06-18T15:02:44Z [INFO] Job 875078 for task 52 has left the Slurm queue; validating output
+2026-06-18T15:02:44Z [INFO] Task 52 completed successfully
+2026-06-18T15:02:54Z [INFO] Submitting task 57 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_deeplabv3plus_resnet34.yaml split=test seed=427 resume_checkpoint=none attempt=1
+2026-06-18T15:02:55Z [INFO] Submitted task 57 (binary_train_multi_seed, train, configs/binary/synth_msi_deeplabv3plus_resnet34.yaml, seed=427, resume_checkpoint=none) as job 875239, attempt 1
+2026-06-18T15:10:32Z [INFO] Job 875107 for task 54 has left the Slurm queue; validating output
+2026-06-18T15:10:33Z [INFO] Task 54 completed successfully
+2026-06-18T15:10:43Z [INFO] Submitting task 58 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/synth_msi_segformer_b0.yaml split=test seed=427 resume_checkpoint=none attempt=1
+2026-06-18T15:10:43Z [INFO] Submitted task 58 (binary_train_multi_seed, train, configs/binary/synth_msi_segformer_b0.yaml, seed=427, resume_checkpoint=none) as job 875240, attempt 1
+2026-06-18T15:25:25Z [INFO] Job 875031 for task 50 has left the Slurm queue; validating output
+2026-06-18T15:25:25Z [INFO] Task 50 completed successfully
+2026-06-18T15:25:35Z [INFO] Submitting task 59 try 1/3: group=binary_train_multi_seed kind=train config=configs/binary/rgb_real_msi_unetpp_resnet34.yaml split=test seed=427 resume_checkpoint=none attempt=1
+2026-06-18T15:25:35Z [INFO] Submitted task 59 (binary_train_multi_seed, train, configs/binary/rgb_real_msi_unetpp_resnet34.yaml, seed=427, resume_checkpoint=none) as job 875247, attempt 1
+2026-06-18T15:31:10Z [INFO] Job 875110 for task 56 has left the Slurm queue; validating output
+2026-06-18T15:31:10Z [INFO] Task 56 completed successfully
+2026-06-18T15:33:02Z [INFO] Job 875023 for task 49 has left the Slurm queue; validating output
+2026-06-18T15:33:02Z [INFO] Task 49 completed successfully
+2026-06-18T15:56:39Z [INFO] Job 875103 for task 53 has left the Slurm queue; validating output
+2026-06-18T15:56:39Z [INFO] Task 53 completed successfully
+2026-06-18T16:48:50Z [INFO] Job 875109 for task 55 has left the Slurm queue; validating output
+2026-06-18T16:48:52Z [INFO] Task 55 completed successfully
+2026-06-18T17:37:33Z [INFO] Job 874958 for task 47 has left the Slurm queue; validating output
+2026-06-18T17:37:33Z [INFO] Task 47 completed successfully
+2026-06-18T17:46:49Z [INFO] Job 875240 for task 58 has left the Slurm queue; validating output
+2026-06-18T17:46:53Z [INFO] Task 58 completed successfully
+2026-06-18T18:22:35Z [INFO] Job 875239 for task 57 has left the Slurm queue; validating output
+2026-06-18T18:22:35Z [INFO] Task 57 completed successfully
+2026-06-18T20:56:08Z [INFO] Job 875247 for task 59 has left the Slurm queue; validating output
+2026-06-18T20:56:09Z [INFO] Task 59 completed successfully
+2026-06-18T20:56:09Z [INFO] Skipping summary for 225154; no successful runs
+2026-06-18T20:56:09Z [INFO] Skipping summary for 141735; no successful runs
+2026-06-18T20:56:09Z [INFO] Skipping summary for 141732; no successful runs
+2026-06-18T20:56:09Z [INFO] Skipping summary for 400722; no successful runs
+2026-06-18T20:56:09Z [INFO] Skipping summary for 412883; no successful runs
+2026-06-18T20:56:09Z [INFO] Skipping summary for 414915; no successful runs
+2026-06-18T20:56:09Z [ERROR] Completed with 5 permanent failure(s). See outputs/slurm/status/retry-tsm4_20260616T064657Z/failed_tasks.tsv

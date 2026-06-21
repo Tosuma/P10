@@ -1,0 +1,6 @@
+task_id	group	kind	config	split	seed	attempts	state
+0	binary_train_multi_seed	train	configs/binary/rgb_deeplabv3plus_resnet34.yaml	test	421	4	failed
+8	binary_train_multi_seed	train	configs/binary/rgb_real_msi_deeplabv3plus_resnet34.yaml	test	421	4	failed
+10	binary_train_multi_seed	train	configs/binary/synth_msi_unetpp_resnet34.yaml	test	422	4	failed
+16	binary_train_multi_seed	train	configs/binary/rgb_deeplabv3plus_resnet34.yaml	test	423	4	failed
+17	binary_train_multi_seed	train	configs/binary/rgb_segformer_b0.yaml	test	423	4	failed
